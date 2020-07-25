@@ -49,17 +49,17 @@
 
 \section{Features}
 \begin{itemize}
-    \item General purpose 8-bit Timer/Counter module.
-    \item Two independent output compare units.
+    \item General purpose 16-bit PWM/Counter module.
+    \item Two independent output compare units and One input capture unit
     \item Variable PWM.
-    \item Three independent interrupt sources (TOV0, OCF0A, and OCF0B).
+    \item Four independent interrupt sources (TOV0, OCF0A, OCF1B and ICF1).
     \item Clear timer on compare match (auto reload)
 \end{itemize}
 
 \section{Block Diagram}
 \begin{figure}[H]
     \begin{center}
-        \includegraphics[height=0.6\textheight]{Timer0BlockDiagram.png}
+        \includegraphics[height=0.6\textheight]{Timer1BlockDiagram.png}
     \end{center}
 \end{figure}
 
@@ -68,22 +68,23 @@
     \begin{tabular}{c|p{5.5cm}}
         \textbf{Parameter} & \textbf{Description}\\
         \hline
-        BOTTOM & counter reaches 0x00\\
-        MAX & ounter reaches 0xFF\\
-        TOP & counter reaches highest value (depends on mode of operation can be 0xFF, OCR0A).        
+        BOTTOM & counter reaches 0x0000\\
+        MAX & ounter reaches 0xFFFF\\
+        TOP & counter reaches highest value (depends on mode of operation can be 0xFF, 0x1FF, 0x3FF, OCR1A, ICR1)
     \end{tabular}
 \end{minipage}
 \begin{minipage}{0.5\textwidth}
-    \begin{tabular}{c|p{6cm}}
-        \textbf{Register - 8 bit} & \textbf{Name}\\
+    \begin{tabular}{c|p{5.5cm}}
+        \textbf{Register - 16 bit} & \textbf{Name}\\
         \hline
-        \regFormat{TCNT0} & Timer/Counter0 count value\\
-        \regFormat{TCCR0A} & Timer/Coutner0 Control Register A\\
-        \regFormat{TCCR0B} & Timer/Coutner0 Control Register B\\
-        \regFormat{OCBR0A} & Output compare register A\\
-        \regFormat{OCBR0B} & Output compare register B\\
-        \regFormat{TIFR0} & Timer Interrupt Flag Register\\
-        \regFormat{TIMSK0} & Timer interrupt Mask Register\\
+        \regFormat{TCN10} & Timer/Counter1count value\\
+        \regFormat{TCCR1A} & Timer/Coutner1 Control Register A\\
+        \regFormat{TCCR1B} & Timer/Coutner1 Control Register B\\
+        \regFormat{OCBR1A} & Output compare register A\\
+        \regFormat{OCBR1B} & Output compare register B\\
+        \regFormat{TIFR1} & Timer Interrupt Flag Register\\
+        \regFormat{TIMSK1} & Timer interrupt Mask Register\\
+        \regFormat{(ICR1)} & Input Capture Register\\
     \end{tabular}
 \end{minipage}
 

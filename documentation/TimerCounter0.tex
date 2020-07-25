@@ -99,7 +99,7 @@
     \item External clock source is from \pinFormat{T0} pin.
     \item While Internal Clock source can be clocked via a prescalar.
     \item The output of this unit is the timer clock ($clk_{T0}$).
-    \item It uses \bitFormat{CS[2:0]} bits in \regFormat{TCCR0B} register to select the source.
+    \item It uses \bitFormat{CS0[2:0]} bits in \regFormat{TCCR0B} register to select the source.
 \end{itemize}
 
 
@@ -120,7 +120,7 @@
     \end{tabular}
 \end{minipage}
 \begin{itemize}
-    \item The main part of the 8-bit Timer/Counter is the programmable bi-directional counter unit.
+    \item The main part of the 8-bit Timer/Counter is the programmable bi-directional counter.
     \item Depending the mode of operation the counter is cleared, incremented, or decremented at each timer clock ($clk_{T0}$).
     \item Counting sequence is determined by \bitFormat{WGM0[1:0]} bits of \regFormat{TCCR0A} -Timer/Counter0 Control register A and \bitFormat{WGM02} bit of \regFormat{TCCR0B} - Timer/Counter0 Control register B.
     \item The Timer/Counter0 Overflow flag \bitFormat{TOV0} is set and can generate interrupt according to the mode.
@@ -147,7 +147,7 @@
     \end{center}
 \end{figure}
 \begin{itemize}
-    \item This unit is used for changing the state of \pinFormat{OC0A} and \pinFormat{OC0B0} pins by configuring the \bitFormat{COM0x[1:0]} bits.
+    \item This unit is used for changing the state of \pinFormat{OC0A} and \pinFormat{OC0B} pins by configuring the \bitFormat{COM0x[1:0]} bits.
     \item But, general I/O port function is overriiden by DDR reigster.
 \end{itemize}
 

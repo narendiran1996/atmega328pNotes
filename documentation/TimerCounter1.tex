@@ -88,7 +88,91 @@
     \end{tabular}
 \end{minipage}
 
-\section{Timer/Counter0 Units}
+\textbf{Note: } 
+\begin{itemize}
+    \item The CNT1, OCR1A/B, and ICR1 are 16-bit registers that can be accessed by the CPU via the 8-bit data bus.
+    \item \textbf{For 16-bit write, the high byte must be written before the low byte.}
+    \item \textbf{For 16-bit read, the low byte must be read before the high byte.}
+\end{itemize}
+\section{Timer/Counter1 Units}
+
+\subsection{Clock Source/Select Unit}
+\begin{figure}[H]
+    \begin{center}
+        \includegraphics[width=0.5\textwidth]{Timer0ClockSelector.png}
+    \end{center}
+\end{figure}
+\begin{itemize}
+    \item The source for the Timer/Counter0 can be external or internal.
+    \item External clock source is from \pinFormat{T1} pin.
+    \item While Internal Clock source can be clocked via a prescalar.
+    \item The output of this unit is the timer clock ($clk_{T1}$).
+    \item It uses \bitFormat{CS1[2:0]} bits in \regFormat{TCCR1B} register to select the source.
+\end{itemize}
 
 
+\subsection{Counter Unit}
+\begin{minipage}{0.5\textwidth}
+    \includegraphics[width=1\textwidth]{Timer1CounterUnit.png}
+\end{minipage}
+\begin{minipage}{0.45\textwidth}
+    \begin{tabular}{c|p{5.5cm}}
+        \textbf{Signal} & \textbf{Description}\\
+        \hline  
+        count & Increment or decrement TCNT1 by 1\\
+        direction & Select between increment or decrement\\
+        clear & Clears TCNT1 to 0x0000\\
+        $clk_{T1}$ & Timer/Coutner1 clock\\
+        top & Signalize that TCNT1 has maximum value\\
+        bottom & Signalize that TCNT1 has minimum value(0x0000)\\
+    \end{tabular}
+\end{minipage}
+\begin{itemize}
+    \item The main part of the 16-bit Timer/Counter is the programmable bi-directional counter.
+    \item Counter high (TCNT1H) containing the upper eight bits of the counter, and counter low (TCNT1L) containing the lower eight bits.
+    \item Depending the mode of operation the counter is cleared, incremented, or decremented at each timer clock ($clk_{T1}$).
+    \item Counting sequence is determined by \bitFormat{WGM1[3:0]} bits of \regFormat{TCCR1A} -Timer/Counter1 Control register A and \regFormat{TCCR1B} - Timer/Counter1 Control register B.
+    \item The Timer/Counter1 Overflow flag \bitFormat{(TOV1)} is set and can generate interrupt according to the mode.
+\end{itemize}
+
+\subsection{Input Capture Unit}
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.75\textwidth]{Timer1InputCapture.png}
+\end{figure}
+\begin{itemize}
+    \item Can capture external events and give them time-stamp indicating time of occurance.
+    \item External signal can be from ICP1 pin or analog-comparator unit.
+    \item Usage : calculate frequency, duty-cycle, log of the signal
+    \item When a change of the logic level (an event) occurs on the input capture pin (\pinFormat{ICP1}), or on the analog comparator output (\pinFormat{ACO)}, and this change confirms to the setting of the edge detector, a capture will be triggered. 
+    \item When a capture is triggered, the 16-bit value of the counter (\regFormat{TCNT1}) is written to the input capture register (\regFormat{ICR1}).
+    \item The input capture flag (\bitFormat{ICF1}) is set at the same system clock as the \regFormat{TCNT1} value is copied into \regFormat{ICR1} register. 
+    \item If enabled (\bitFormat{ICIE1} = 1), the input capture flag generates an input capture interrupt.
+    \item \bitFormat{ICF1} flag is automatically cleared when the interrupt is executed and by writing on to i.
+    \item An input capture can be triggered by software by controlling the port of the \pinFormat{ICP1} pin.
+\end{itemize}
+
+\subsection{Output Compare Unit}
+\begin{figure}[H]
+    \begin{center}
+        \includegraphics[width=0.6\textwidth]{Timer1OutputCompare.png}
+    \end{center}
+\end{figure}
+\begin{itemize}
+    \item 16-bit comparator continuously compares \regFormat{TCNT1} with both \regFormat{OCR1A} and \regFormat{OCR1B}.
+    \item When \regFormat{TCNT1} equals \regFormat{OCR1A} or \regFormat{OCR1B}, the comparator signals a match which will set the output compare flag at the next timer clock cycle.
+    \item If interrupts are enabled, then output compare interrupt is generated.
+    \item The waveform generator uses the match signal to generate an output according to operating mode set by the \bitFormat{WGM1[3:0]} bits and compare output mode \bitFormat{COM0x[1:0]} bits.
+\end{itemize}
+
+\subsection{Compare Match Output Unit}
+\begin{figure}[H]
+    \begin{center}
+        \includegraphics[height=0.3\textheight]{Timer1ComparteMatchOutput.png}
+    \end{center}
+\end{figure}
+\begin{itemize}
+    \item This unit is used for changing the state of \pinFormat{OC1A} and \pinFormat{OC1B} pins by configuring the \bitFormat{COM1x[1:0]} bits.
+    \item But, general I/O port function is overriiden by DDR reigster.
+\end{itemize}
 \end{document}

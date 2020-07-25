@@ -361,7 +361,7 @@
 \begin{table}[H]
     \begin{center}
         \begin{tabular}{c|c|c|c}
-            \bitFormat{WGM0[2:0]} & \textbf{Mode of operation} & \textbf{TOP} & \textbf{TOV0 Flaf set on}\\
+            \bitFormat{WGM0[2:0]} & \textbf{Mode of operation} & \textbf{TOP} & \textbf{TOV0 Flag set on}\\
             \hline
             000 & Normal & 0xFF & MAX\\
             001 & PWM Phase Corrected & 0xFF & BOTTOM\\
@@ -391,7 +391,7 @@
 \begin{table}[H]
     \begin{center}
         \begin{tabular}{c|c}
-            \bitFormat{WGM0[2:0]} & \textbf{Description(Prescalar)}\\
+            \bitFormat{CS0[2:0]} & \textbf{Description(Prescalar)}\\
             \hline
             000 & No clock source(Timer/Counter Stopped)\\
             001 & $clk_{I/O}$ – no prescaling\\
@@ -400,7 +400,7 @@
             100 & $\frac{clk_{I/O}}{256}$\\\
             101 & $\frac{clk_{I/O}}{1024}$\\\
             110 & External clock source on \pinFormat{T0} pin. Clock on falling edge.\\
-            111 & External clock source on \pinFormat{T0} pin. Clock on rising- edge.\\
+            111 & External clock source on \pinFormat{T0} pin. Clock on rising edge.\\
         \end{tabular}
     \end{center}
 \end{table}
@@ -420,7 +420,7 @@
     \bitbox{1}{\small TOIE0}\\
 \end{bytefield}
 
-\quad Enable interrupts for compare match between \regFormat{TCNT0} and \regFormat{OCR0A} or \regFormat{TCNT0} and \regFormat{OCR0B} or overflow in \regFormat{TCNT}.
+\quad Enable interrupts for compare match between \regFormat{TCNT0} and \regFormat{OCR0A} or \regFormat{TCNT0} and \regFormat{OCR0B} or overflow in \regFormat{TCNT}0.
 
 \subsubsection*{TIFR0 – Timer/Counter 0 Interrupt Flag Register}
 \vspace*{0.5cm}
@@ -437,7 +437,7 @@
     \bitbox{1}{\small TOIE0}\\
 \end{bytefield}
 
-\quad FLag registers for interrupts on compare match between \regFormat{TCNT0} and \regFormat{OCR0A} or \regFormat{TCNT0} and \regFormat{OCR0B} or overflow in \regFormat{TCNT}.
+\quad FLag registers for interrupts on compare match between \regFormat{TCNT0} and \regFormat{OCR0A} or \regFormat{TCNT0} and \regFormat{OCR0B} or overflow in \regFormat{TCNT0}.
 \newpage
 
 

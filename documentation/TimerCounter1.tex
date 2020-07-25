@@ -483,12 +483,12 @@
 
 \begin{table}[H]
     \begin{center}
-        \begin{tabular}{c|p{4cm}|p{5.2cm}|p{5.2cm}}
+        \begin{tabular}{c|p{4.1cm}|p{4.5cm}|p{4.9cm}}
             \bitFormat{COM1x[1:0]} & \textbf{Non-PWM modes} & \textbf{Fast PWM} & \textbf{Phase Corrected PWM \& Phase and Frequency Corrected PWM}\\
             \hline
             00 & No output @ \pinFormat{PB1 - OC1A} or \pinFormat{PB2 - OC1B} pin &   No output @ \pinFormat{PB1 - OC1A} or \pinFormat{PB2 - OC1B} pin & No output @ \pinFormat{PB1 - OC1A} or \pinFormat{PB2 - OC1B} pin \\
             \hline
-            01 & Toggle  No output @ \pinFormat{PB1 - OC1A} or \pinFormat{PB2 - OC1B} pin on compare Match. & When \bitFormat{WGM[3:0]} == 1110 or 1111, Toggle \pinFormat{OC1A} pin on compare match & When \bitFormat{WGM[3:0]} == 1110 or 1111, Toggle \pinFormat{OC1A} pin on comapre match.\\
+            01 &  No output @ \pinFormat{PB1 - OC1A} or \pinFormat{PB2 - OC1B} pin on compare Match. & When \bitFormat{WGM[3:0]} == 1110 or 1111, Toggle \pinFormat{OC1A} pin on compare match & When \bitFormat{WGM[3:0]} == 1110 or 1111, Toggle \pinFormat{OC1A} pin on comapre match.\\
             \hline
             10 & Clear \pinFormat{PB1 - OC1A} or \pinFormat{PB2 - OC1B} pin on compare Match. & Clear \pinFormat{PB1 - OC1A} or \pinFormat{PB2 - OC1B} on compare match and  set \pinFormat{PB1 - OC1A} or \pinFormat{PB2 - OC1B} at BOTTOM & Clear \pinFormat{PD5 - OC0B} on compare match when up-counting and set \pinFormat{PB1 - OC1A} or \pinFormat{PB2 - OC1B} on compare match when down-counting.\\
             \hline
@@ -498,6 +498,159 @@
 \end{table}
 
 
+\begin{table}[H]
+    \begin{center}
+        \begin{tabular}{c|c|c|c}
+            \bitFormat{WGM1[3:0]} & \textbf{Mode of operation} & \textbf{TOP} & \textbf{TOV1 Flag set on}\\
+            \hline
+            0000 & Normal 0xFFFF & MAX\\
+            0001 & PWM Phase corrected – 8bit & 0x00FF & BOTTOM\\
+            0010 & PWM Phase corrected – 9bit & 0x01FF & BOTTOM\\
+            0011 & PWM Phase corrected – 10bit & 0x03FF & BOTTOM\\
+            0100 & CTC & OCR1A & MAX\\
+            0101 & Fast PWM – 8bit & 0x00FF & TOP\\
+            0110 & Fast PWM – 9bit & 0x01FF & TOP\\
+            0111 & Fast PWM – 10bit & 0x03FF & TOP\\
+            1000 & PWM, phase and frequency corrected & ICR1 & BOTTOM\\
+            1001 & PWM, phase and frequency corrected & OCR1A & BOTTOM\\
+            1010 & PWM, phase corrected & ICR1 & BOTTOM\\
+            1011 & PWM, phase corrected & OCR1A & BOTTOM\\
+            1100 & CTC & ICR1 & MAX\\
+            1110 & Fast PWM & ICR1 & TOP\\
+            1111 & Fast PWM & OCR1A & TOP\\
+        \end{tabular}
+    \end{center}
+\end{table}
 
+\subsubsection*{TCCR1B – Timer/Counter1 Control Register B}
+\vspace*{0.5cm}
+\begin{bytefield}[bitformatting={\large\bfseries},
+    endianness=big,bitwidth=0.125\linewidth]{8}
+    \bitheader[lsb=0]{0-7} \\
+    \bitbox{1}{\small ICNC1}
+    \bitbox{1}{\small ICES1}
+    \bitbox{1}{\small -}
+    \bitbox{1}{\small WGM13}
+    \bitbox{1}{\small WGM12}
+    \bitbox{1}{\small CS12}
+    \bitbox{1}{\small CS11}
+    \bitbox{1}{\small CS10}\\
+\end{bytefield}
+\begin{itemize}
+    \item \bitFormat{ICNC1 - Input Capture Noise Canceler} - activates the input capture noise canceler.
+    \item \bitFormat{ICES1 - Input Capture Edge Select} - selects which edge on the input capture pin (\pinFormat{ICP1}) that is used to trigger a capture event. [1 - Rising edge; 0 - falling edge;]
+\end{itemize}
+
+\begin{table}[H]
+    \begin{center}
+        \begin{tabular}{c|c}
+            \bitFormat{CS1[2:0]} & \textbf{Description(Prescalar)}\\
+            \hline
+            000 & No clock source(Timer/Counter Stopped)\\
+            001 & $clk_{I/O}$ – no prescaling\\
+            010 & $\frac{clk_{I/O}}{8}$\\
+            011 & $\frac{clk_{I/O}}{64}$\\\
+            100 & $\frac{clk_{I/O}}{256}$\\\
+            101 & $\frac{clk_{I/O}}{1024}$\\\
+            110 & External clock source on \pinFormat{T1} pin. Clock on falling edge.\\
+            111 & External clock source on \pinFormat{T1} pin. Clock on rising edge.\\
+        \end{tabular}
+    \end{center}
+\end{table}
+
+\subsubsection*{TCNT1H – Timer/Counter1 Counter Higher Byte}
+\vspace*{0.5cm}
+\begin{bytefield}[bitformatting={\large\bfseries},
+    endianness=big,bitwidth=0.125\linewidth]{8}
+    \bitheader[lsb=0]{0-7} \\
+    \bitbox{8}{TCNT1[15:8]}\\
+\end{bytefield}
+\subsubsection*{TCNT1L – Timer/Counter1 Counter Lower Byte}
+\vspace*{0.5cm}
+\begin{bytefield}[bitformatting={\large\bfseries},
+    endianness=big,bitwidth=0.125\linewidth]{8}
+    \bitheader[lsb=0]{0-7} \\
+    \bitbox{8}{TCNT1[7:0]}\\
+\end{bytefield}
+
+\subsubsection*{OCR1AH – Output Compare Register 1 A Higher Byte}
+\vspace*{0.5cm}
+\begin{bytefield}[bitformatting={\large\bfseries},
+    endianness=big,bitwidth=0.125\linewidth]{8}
+    \bitheader[lsb=0]{0-7} \\
+    \bitbox{8}{OCR1A[15:8]}\\
+\end{bytefield}
+\subsubsection*{OCR1AL – Output Compare Register 1 A Lower Byte}
+\vspace*{0.5cm}
+\begin{bytefield}[bitformatting={\large\bfseries},
+    endianness=big,bitwidth=0.125\linewidth]{8}
+    \bitheader[lsb=0]{0-7} \\
+    \bitbox{8}{OCR1A[7:0]}\\
+\end{bytefield}
+
+\subsubsection*{OCR1BH – Output Compare Register 1 B Higher Byte}
+\vspace*{0.5cm}
+\begin{bytefield}[bitformatting={\large\bfseries},
+    endianness=big,bitwidth=0.125\linewidth]{8}
+    \bitheader[lsb=0]{0-7} \\
+    \bitbox{8}{OCR1B[15:8]}\\
+\end{bytefield}
+\subsubsection*{OCR1BL – Output Compare Register 1 B Lower Byte}
+\vspace*{0.5cm}
+\begin{bytefield}[bitformatting={\large\bfseries},
+    endianness=big,bitwidth=0.125\linewidth]{8}
+    \bitheader[lsb=0]{0-7} \\
+    \bitbox{8}{OCR1B[7:0]}\\
+\end{bytefield}
+
+\subsubsection*{ICR1H – Input Capture Register 1 Higher Byte}
+\vspace*{0.5cm}
+\begin{bytefield}[bitformatting={\large\bfseries},
+    endianness=big,bitwidth=0.125\linewidth]{8}
+    \bitheader[lsb=0]{0-7} \\
+    \bitbox{8}{ICR1[15:8]}\\
+\end{bytefield}
+\subsubsection*{ICR1L – Input Capture Register 1 Lower Byte}
+\vspace*{0.5cm}
+\begin{bytefield}[bitformatting={\large\bfseries},
+    endianness=big,bitwidth=0.125\linewidth]{8}
+    \bitheader[lsb=0]{0-7} \\
+    \bitbox{8}{ICR1[7:0]}\\
+\end{bytefield}
+
+\subsubsection*{TIMSK1 – Timer/Counter 1 Interrupt Mask Register}
+\vspace*{0.5cm}
+\begin{bytefield}[bitformatting={\large\bfseries},
+    endianness=big,bitwidth=0.125\linewidth]{8}
+    \bitheader[lsb=0]{0-7} \\
+    \bitbox{1}{\small -}
+    \bitbox{1}{\small -}
+    \bitbox{1}{\small ICIE1}
+    \bitbox{1}{\small -}
+    \bitbox{1}{\small -}
+    \bitbox{1}{\small OCIE1B}
+    \bitbox{1}{\small OCIE1A}
+    \bitbox{1}{\small TOIE1}\\
+\end{bytefield}
+
+\quad Enable interrupts for compare match between \regFormat{TCNT1} and \regFormat{OCR1A} or \regFormat{TCNT1} and \regFormat{OCR1B} or overflow in \regFormat{TCNT1} or Input capture interrupt enable.
+
+
+\subsubsection*{TIFR1 – Timer/Counter 1 Interrupt Flag Register}
+\vspace*{0.5cm}
+\begin{bytefield}[bitformatting={\large\bfseries},
+    endianness=big,bitwidth=0.125\linewidth]{8}
+    \bitheader[lsb=0]{0-7} \\
+    \bitbox{1}{\small -}
+    \bitbox{1}{\small -}
+    \bitbox{1}{\small ICF1}
+    \bitbox{1}{\small -}
+    \bitbox{1}{\small -}
+    \bitbox{1}{\small OCIE1B}
+    \bitbox{1}{\small OCIE1A}
+    \bitbox{1}{\small TOIE1}\\
+\end{bytefield}
+
+\quad FLag registers for interrupts on compare match between \regFormat{TCNT0} and \regFormat{OCR0A} or \regFormat{TCNT0} and \regFormat{OCR0B} or overflow in \regFormat{TCNT1} or capture event occurs on the \pinFormat{ICP1} pin .
 
 \end{document}

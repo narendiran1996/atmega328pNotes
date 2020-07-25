@@ -90,7 +90,7 @@
 
 \textbf{Note: } 
 \begin{itemize}
-    \item The CNT1, OCR1A/B, and ICR1 are 16-bit registers that can be accessed by the CPU via the 8-bit data bus.
+    \item The \regFormat{CNT1, OCR1A/B, ICR1} are 16-bit registers that can be accessed by the CPU via the 8-bit data bus.
     \item \textbf{For 16-bit write, the high byte must be written before the low byte.}
     \item \textbf{For 16-bit read, the low byte must be read before the high byte.}
 \end{itemize}
@@ -119,17 +119,17 @@
     \begin{tabular}{c|p{5.5cm}}
         \textbf{Signal} & \textbf{Description}\\
         \hline  
-        count & Increment or decrement TCNT1 by 1\\
+        count & Increment or decrement \regFormat{TCNT1} by 1\\
         direction & Select between increment or decrement\\
-        clear & Clears TCNT1 to 0x0000\\
+        clear & Clears \regFormat{TCNT1} to 0x0000\\
         $clk_{T1}$ & Timer/Coutner1 clock\\
-        top & Signalize that TCNT1 has maximum value\\
-        bottom & Signalize that TCNT1 has minimum value(0x0000)\\
+        top & Signalize that \regFormat{TCNT1} has maximum value\\
+        bottom & Signalize that \regFormat{TCNT1} has minimum value(0x0000)\\
     \end{tabular}
 \end{minipage}
 \begin{itemize}
     \item The main part of the 16-bit Timer/Counter is the programmable bi-directional counter.
-    \item Counter high (TCNT1H) containing the upper eight bits of the counter, and counter low (TCNT1L) containing the lower eight bits.
+    \item Counter high (\regFormat{TCNT1H}) containing the upper eight bits of the counter, and counter low (\regFormat{TCNT1L}) containing the lower eight bits.
     \item Depending the mode of operation the counter is cleared, incremented, or decremented at each timer clock ($clk_{T1}$).
     \item Counting sequence is determined by \bitFormat{WGM1[3:0]} bits of \regFormat{TCCR1A} -Timer/Counter1 Control register A and \regFormat{TCCR1B} - Timer/Counter1 Control register B.
     \item The Timer/Counter1 Overflow flag \bitFormat{(TOV1)} is set and can generate interrupt according to the mode.
@@ -142,7 +142,7 @@
 \end{figure}
 \begin{itemize}
     \item Can capture external events and give them time-stamp indicating time of occurance.
-    \item External signal can be from ICP1 pin or analog-comparator unit.
+    \item External signal can be from \pinFormat{ICP1} pin or analog-comparator unit.
     \item Usage : calculate frequency, duty-cycle, log of the signal
     \item When a change of the logic level (an event) occurs on the input capture pin (\pinFormat{ICP1}), or on the analog comparator output (\pinFormat{ACO)}, and this change confirms to the setting of the edge detector, a capture will be triggered. 
     \item When a capture is triggered, the 16-bit value of the counter (\regFormat{TCNT1}) is written to the input capture register (\regFormat{ICR1}).
@@ -189,7 +189,7 @@
 
 \subsection{Normal Mode - Non-PWM Mode}
 \begin{itemize}
-    \item WGM1[3:0] $-->$ 000.
+    \item \bitFormat{WGM1[3:0]} $-->$ 000.
     \item Counter counts up and no counter clear.
     \item Overruns TOP(0XFFFF) and restarts from BOTTOM(0X0000).
     \item \bitFormat{TOV1} Flag is only set when overrun.
@@ -215,10 +215,10 @@
 
 \subsection{Clear Timer on Compare Match(CTC) Mode - Non-PWM Mode}
 \begin{itemize}
-    \item WGM1[3:0] $-->$ 0100 or 1100.
+    \item \bitFormat{WGM1[3:0]} $-->$ 0100 or 1100.
     \begin{itemize}
-        \item Counter value clears when \regFormat{TCNT1} reaches \regFormat{OCR1A} if WGM1[3:0] is 0100.
-        \item Counter value clears when \regFormat{TCNT1} reaches \regFormat{ICR1} if WGM1[3:0] is 1100.
+        \item Counter value clears when \regFormat{TCNT1} reaches \regFormat{OCR1A} if \bitFormat{WGM1[3:0]} is 0100.
+        \item Counter value clears when \regFormat{TCNT1} reaches \regFormat{ICR1} if \bitFormat{WGM1[3:0]} is 1100.
     \end{itemize}
     \item Interrupt can be generated each time \regFormat{TCNT1} reaches \regFormat{OCR1A} register value by \bitFormat{OCF1A} flag.
     \item Interrupt can be generated each time \regFormat{TCNT1} reaches \regFormat{ICR1} register value by \bitFormat{ICF1} flag.
@@ -258,17 +258,17 @@
 
 \subsection{Fast PWM Mode}
 \begin{itemize}
-    \item WGM1[3:0] $-->$ 0101 or 0110 or 0111 or 1110 or 1111.
+    \item \bitFormat{WGM1[3:0]} $-->$ 0101 or 0110 or 0111 or 1110 or 1111.
     \item Power Regulation, Rectification, DAC applications.
     \item Single slope operations causing high frequency PWM waveform.
     \item Counter starts from BOTTOM to TOP and then restarts from BOTTOM.
     \item TOP is defined by
     \begin{itemize}
-        \item TOP == 0x00FF if WGM1[3:0] $-->$ 0101
-        \item TOP == 0x01FF if WGM1[3:0] $-->$ 0110
-        \item TOP == 0x03FF if WGM1[3:0] $-->$ 0111
-        \item TOP ==   ICR1 if WGM1[3:0] $-->$ 1110
-        \item TOP ==  OCR1A if WGM1[3:0] $-->$ 1111
+        \item TOP == 0x00FF if \bitFormat{WGM1[3:0]} $-->$ 0101
+        \item TOP == 0x01FF if \bitFormat{WGM1[3:0]} $-->$ 0110
+        \item TOP == 0x03FF if \bitFormat{WGM1[3:0]} $-->$ 0111
+        \item TOP ==   \regFormat{ICR1} if \bitFormat{WGM1[3:0]} $-->$ 1110
+        \item TOP ==  \regFormat{OCR1A} if \bitFormat{WGM1[3:0]} $-->$ 1111
     \end{itemize}
     \item  When \bitFormat{COM1A[1:0]} == 01, the \pinFormat{OC1A} pin output can be set to toggle its match between \regFormat{TCNT1} and TOP to generate waveform.
     \begin{itemize}
@@ -350,18 +350,18 @@
 
 \subsection{Phase Correct PWM Mode}
 \begin{itemize}
-    \item WGM1[3:0] $-->$ 0001 or 0010 or 0011 or 1010 or 1011.    
+    \item \bitFormat{WGM1[3:0]} $-->$ 0001 or 0010 or 0011 or 1010 or 1011.    
     \item High resolution phase correct PWM.
     \item Motor control due to symmetric features
     \item Dual slope operations causing ower frequency PWM waveform.
     \item Counter starts from BOTTOM to TOP and then from TOP to BOTTOM.
     \item TOP is defined by
     \begin{itemize}
-        \item TOP == 0x00FF if WGM1[3:0] $-->$ 0001
-        \item TOP == 0x01FF if WGM1[3:0] $-->$ 0010
-        \item TOP == 0x03FF if WGM1[3:0] $-->$ 0011
-        \item TOP ==   ICR1 if WGM1[3:0] $-->$ 1010
-        \item TOP ==  OCR1A if WGM1[3:0] $-->$ 1011
+        \item TOP == 0x00FF if \bitFormat{WGM1[3:0]} $-->$ 0001
+        \item TOP == 0x01FF if \bitFormat{WGM1[3:0]} $-->$ 0010
+        \item TOP == 0x03FF if \bitFormat{WGM1[3:0]} $-->$ 0011
+        \item TOP ==   \regFormat{ICR1} if \bitFormat{WGM1[3:0]} $-->$ 1010
+        \item TOP ==  \regFormat{OCR1A} if \bitFormat{WGM1[3:0]} $-->$ 1011
     \end{itemize}
     \item  When \bitFormat{COM1A[1:0]} == 01, the \pinFormat{OC1A} pin output can be set to toggle its match between \regFormat{TCNT1} and TOP to generate waveform.
     \begin{itemize}
@@ -418,7 +418,7 @@
     \busref{TOV1} & 6{L} H 4{L} H 4{L} H 4{L} \\
 \end{tikztimingtable}
 
-\subsubsection{WGM[2:0] == 101}
+\subsubsection{WGM[2:0] == 1010}
 \begin{tikztimingtable}[
     timing/dslope=0.1,
     timing/.style={x=5ex,y=2ex},
@@ -431,7 +431,7 @@
     \busref{TOV1} & l H l 8{L} H 8{L} H l\\
 \end{tikztimingtable}
 
-\subsubsection{WGM[2:0] == 101}
+\subsubsection{WGM[2:0] == 1011}
 \begin{tikztimingtable}[
     timing/dslope=0.1,
     timing/.style={x=5ex,y=2ex},
@@ -443,6 +443,61 @@
     \busref{TCNT1} & 0.5U{} D{0x0000} 1D{0x0001};[dotted] 1.5D{};1D{\tiny ICR1- 1} 1D{\tiny ICR1}1D{\tiny ICR1-1} 1D{\tiny ICR1-2};[dotted] 1D{};1D{0x0001} 1D{0x0000} 1D{0x0001}[dotted] 1D{};1D{\tiny ICR1-1} 1D{\tiny ICR1} 1D{\tiny ICR1-1} 1D{\tiny ICR1-2};[dotted] 1D{};1D{0x0001} 1D{0x0000} 1d{0x0001};\\
     \busref{TOV1} & l H l 8{L} H 8{L} H l\\
 \end{tikztimingtable}
+
+\subsection{Phase and Frequency Corrected PWM Mode}
+\begin{itemize}
+    \item \bitFormat{WGM1[3:0]} $-->$ 1000 or 1001.
+    \item High resolution and Phase correctd PWM.
+    \item Dual-Slope.
+    \item Counter counts from BOTTOM to TOP and then from TOP to BOTTOM.
+    \begin{itemize}
+        \item TOP == \regFormat{OCR1A} if \bitFormat{WGM1[3:0]} $-->$ 1001
+        \item TOP == \regFormat{ICR1} if \bitFormat{WGM1[3:0]} $-->$ 1000
+    \end{itemize}
+    \item In Inverting Compare Mode \bitFormat{COM1x[1:0]} == 10 the \pinFormat{OC0x} pins is made 1 on compare match between \regFormat{TCNT1} and TOP when upcounting and made 0 on compare match between \regFormat{TCNT1} and TOP when downcounting.
+    \item In Non-Inverting Compare Mode \bitFormat{COM1x[1:0]} == 11, the \pinFormat{OC0x} pins is made 0 on compare match between \regFormat{TCNT1} and TOP when upcounting AND made 1 on compare match between \regFormat{TCNT1} and TOP when downcounting.
+    \item The Timer/Counter overflow flag (\bitFormat{TOV1}) is set each time the counter reaches BOTTOM.
+    \item The interrupt flag can be used to generate an interrupt each time the counter reaches the BOTTOM value.
+    \item The PWM frequency is given by 
+    \begin{center}
+        { \Large $f_{OC1xPWM} = \frac{f_{clkT1}}{2 * N * TOP}$ }
+    \end{center}
+\end{itemize}
+\newpage
+
+\section{Register Description}
+\subsubsection*{TCCR1A – Timer/Counter 1 Control Register A}
+\vspace*{0.5cm}
+\begin{bytefield}[bitformatting={\large\bfseries},
+    endianness=big,bitwidth=0.125\linewidth]{8}
+    \bitheader[lsb=0]{0-7} \\
+    \bitbox{1}{\small COM1A1}
+    \bitbox{1}{\small COM1A0}
+    \bitbox{1}{\small COM1B1}
+    \bitbox{1}{\small COM1B0}
+    \bitbox{1}{\small -}
+    \bitbox{1}{\small -}
+    \bitbox{1}{\small WGM11}
+    \bitbox{1}{\small WGM10}\\
+\end{bytefield}
+
+\begin{table}[H]
+    \begin{center}
+        \begin{tabular}{c|p{4cm}|p{5.2cm}|p{5.2cm}}
+            \bitFormat{COM1x[1:0]} & \textbf{Non-PWM modes} & \textbf{Fast PWM} & \textbf{Phase Corrected PWM \& Phase and Frequency Corrected PWM}\\
+            \hline
+            00 & No output @ \pinFormat{PB1 - OC1A} or \pinFormat{PB2 - OC1B} pin &   No output @ \pinFormat{PB1 - OC1A} or \pinFormat{PB2 - OC1B} pin & No output @ \pinFormat{PB1 - OC1A} or \pinFormat{PB2 - OC1B} pin \\
+            \hline
+            01 & Toggle  No output @ \pinFormat{PB1 - OC1A} or \pinFormat{PB2 - OC1B} pin on compare Match. & When \bitFormat{WGM[3:0]} == 1110 or 1111, Toggle \pinFormat{OC1A} pin on compare match & When \bitFormat{WGM[3:0]} == 1110 or 1111, Toggle \pinFormat{OC1A} pin on comapre match.\\
+            \hline
+            10 & Clear \pinFormat{PB1 - OC1A} or \pinFormat{PB2 - OC1B} pin on compare Match. & Clear \pinFormat{PB1 - OC1A} or \pinFormat{PB2 - OC1B} on compare match and  set \pinFormat{PB1 - OC1A} or \pinFormat{PB2 - OC1B} at BOTTOM & Clear \pinFormat{PD5 - OC0B} on compare match when up-counting and set \pinFormat{PB1 - OC1A} or \pinFormat{PB2 - OC1B} on compare match when down-counting.\\
+            \hline
+            11 & Set \pinFormat{PB1 - OC1A} or \pinFormat{PB2 - OC1B} pin on compare Match. & Set \pinFormat{PB1 - OC1A} or \pinFormat{PB2 - OC1B} on compare match and clear \pinFormat{PB1 - OC1A} or \pinFormat{PB2 - OC1B} at BOTTOM & Set \pinFormat{PD5 - OC0B} on compare match when up-counting and clear \pinFormat{PB1 - OC1A} or \pinFormat{PB2 - OC1B} on compare match when down-counting.\\
+        \end{tabular}
+    \end{center}
+\end{table}
+
+
 
 
 \end{document}

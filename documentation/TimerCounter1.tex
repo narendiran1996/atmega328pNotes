@@ -52,7 +52,7 @@
     \item General purpose 16-bit PWM/Counter module.
     \item Two independent output compare units and One input capture unit
     \item Variable PWM.
-    \item Four independent interrupt sources (TOV0, OCF0A, OCF1B and ICF1).
+    \item Four independent interrupt sources (TOV1, OCF0A, OCF1B and ICF1).
     \item Clear timer on compare match (auto reload)
 \end{itemize}
 
@@ -229,6 +229,9 @@
     \end{center}
     \item Here N is prescalar factor and can be (1, 8, 64, 256, or 1024).
 \end{itemize}
+
+
+\subsubsection{WGM1[3:0] == 0100}
 \begin{tikztimingtable}[
     timing/dslope=0.1,
     timing/.style={x=5ex,y=2ex},
@@ -240,10 +243,7 @@
     \busref{TCNT1} & 0.75U{} 1.5D{0x0000} 1.5D{0x0001};[dotted] 3D{};1.5D{OCR1A - 1} 1.5D{OCR1A}1.5D{0x0000} 1.5D{0x0001};[dotted] 3D{};1.5D{OCR1A - 1} 1.5D{OCR1A} 1.5D{0x0000} 0.75D{0x0001} \\
     \busref{OC1A} & 0.75L 9{L} 1.5H l 7{L} 1.5H l\\
 \end{tikztimingtable}
-\begin{center}
-    OR
-\end{center}
-\vspace*{0.5cm}
+\subsubsection{WGM1[3:0] == 1100}
 \begin{tikztimingtable}[
     timing/dslope=0.1,
     timing/.style={x=5ex,y=2ex},
@@ -264,21 +264,185 @@
     \item Counter starts from BOTTOM to TOP and then restarts from BOTTOM.
     \item TOP is defined by
     \begin{itemize}
-        \item TOP == 0xFF if WGM[2:0] $-->$ 011
-        \item TOP == OCR0A if WGM[2:0] $-->$ 111
+        \item TOP == 0x00FF if WGM1[3:0] $-->$ 0101
+        \item TOP == 0x01FF if WGM1[3:0] $-->$ 0110
+        \item TOP == 0x03FF if WGM1[3:0] $-->$ 0111
+        \item TOP ==   ICR1 if WGM1[3:0] $-->$ 1110
+        \item TOP ==  OCR1A if WGM1[3:0] $-->$ 1111
     \end{itemize}
-    \item  When \bitFormat{COM0A[1:0]} == 01, the \pinFormat{OC0A} pin output can be set to toggle its match between \regFormat{TCNT0} and TOP to generate waveform.
+    \item  When \bitFormat{COM1A[1:0]} == 01, the \pinFormat{OC1A} pin output can be set to toggle its match between \regFormat{TCNT1} and TOP to generate waveform.
     \begin{itemize}
-        \item The above is possible only when \bitFormat{WGM02} bit is set.
-        \item And only on \pinFormat{OC0A} pin and not on \pinFormat{OC0B} pin.
+        \item The above is possible only when \bitFormat{WGM12} bit is set.
+        \item And only on \pinFormat{OC1A} pin and not on \pinFormat{OC1B} pin.
     \end{itemize}
-    \item In Inverting Compare Mode \bitFormat{COM0A[1:0]} == 10 , the \pinFormat{OC0A} or \pinFormat{OC0B} pins is made 1 on compare match between \regFormat{TCNT0} and TOP and made 0 on reaching BOTTOM.
-    \item In Non-Inverting Compare Mode \bitFormat{COM0A[1:0]} == 11 , the \pinFormat{OC0A} or \pinFormat{OC0B} pins is made 0 on compare match between \regFormat{TCNT0} and TOP and 1 made  on reaching BOTTOM.
-    \item The Timer/Counter overflow flag (\bitFormat{TOV0}) is set each time the counter reaches TOP.
+    \item In Inverting Compare Mode \bitFormat{COM1A[1:0]} == 10 , the \pinFormat{OC1A} or \pinFormat{OC1B} pins is made 1 on compare match between \regFormat{TCNT1} and TOP and made 0 on reaching BOTTOM.
+    \item In Non-Inverting Compare Mode \bitFormat{COM1A[1:0]} == 11 , the \pinFormat{OC1A} or \pinFormat{OC1B} pins is made 0 on compare match between \regFormat{TCNT1} and TOP and 1 made  on reaching BOTTOM.
+    \item The Timer/Counter overflow flag (\bitFormat{TOV1}) is set each time the counter reaches TOP.
     \item The PWM frequency is given by 
     \begin{center}
-        { \Large $f_{OC0xPWM} = \frac{f_{clkT0}}{N * 256}$ }
+        { \Large $f_{OC1xPWM} = \frac{f_{clkT1}}{N * (1+ TOP)}$ }
     \end{center}
 \end{itemize}
+
+\subsubsection{WGM1[3:0] == 0101}
+\begin{tikztimingtable}[
+    timing/dslope=0.1,
+    timing/.style={x=5ex,y=2ex},
+    x=5ex,
+    timing/rowdist=3ex,
+    timing/name/.style={font=\sffamily\scriptsize}
+    ]
+    \busref{clk\_{T0}}  & 41{1c} c\\
+    \busref{TCNT1} & 0.5U{} D{0x0000} 1D{0x0001};[dotted] 1.5D{};1D{0x00FE} 1D{0x00FF}1D{0x0000} 1D{0x0001};[dotted] 1D{};1D{0x00FE} 1D{0x00FF} 1D{0x0000} 1D{0x0001} [dotted] 1D{};1D{0x00FE} 1D{0x00FF} 1D{0x0000} 1D{0x0001};[dotted] 1D{};1D{0x00FE} 1D{0x00FF};\\
+    \busref{TOV1} & 6{L} H 4{L} H 4{L} H 4{L} \\
+\end{tikztimingtable}
+
+\subsubsection{WGM1[3:0] == 0110}
+\begin{tikztimingtable}[
+    timing/dslope=0.1,
+    timing/.style={x=5ex,y=2ex},
+    x=5ex,
+    timing/rowdist=3ex,
+    timing/name/.style={font=\sffamily\scriptsize}
+    ]
+    \busref{clk\_{T0}}  & 41{1c} c\\
+    \busref{TCNT1} & 0.5U{} D{0x0000} 1D{0x0001};[dotted] 1.5D{};1D{0x01FE} 1D{0x01FF}1D{0x0000} 1D{0x0001};[dotted] 1D{};1D{0x01FE} 1D{0x01FF} 1D{0x0000} 1D{0x0001} [dotted] 1D{};1D{0x01FE} 1D{0x01FF} 1D{0x0000} 1D{0x0001};[dotted] 1D{};1D{0x01FE} 1D{0x01FF};\\
+    \busref{TOV1} & 6{L} H 4{L} H 4{L} H 4{L} \\
+\end{tikztimingtable}
+\subsubsection{WGM1[3:0] == 0111}
+\begin{tikztimingtable}[
+    timing/dslope=0.1,
+    timing/.style={x=5ex,y=2ex},
+    x=5ex,
+    timing/rowdist=3ex,
+    timing/name/.style={font=\sffamily\scriptsize}
+    ]
+    \busref{clk\_{T0}}  & 41{1c} c\\
+    \busref{TCNT1} & 0.5U{} D{0x0000} 1D{0x0001};[dotted] 1.5D{};1D{0x03FE} 1D{0x03FF}1D{0x0000} 1D{0x0001};[dotted] 1D{};1D{0x03FE} 1D{0x03FF} 1D{0x0000} 1D{0x0001} [dotted] 1D{};1D{0x03FE} 1D{0x03FF} 1D{0x0000} 1D{0x0001};[dotted] 1D{};1D{0x03FE} 1D{0x03FF};\\
+    \busref{TOV1} & 6{L} H 4{L} H 4{L} H 4{L} \\
+\end{tikztimingtable}
+
+\subsubsection{WGM1[3:0] == 1110}
+\begin{tikztimingtable}[
+    timing/dslope=0.1,
+    timing/.style={x=5ex,y=2ex},
+    x=5ex,
+    timing/rowdist=3ex,
+    timing/name/.style={font=\sffamily\scriptsize}
+    ]
+    \busref{clk\_{T0}}  & 41{1c} c\\
+    \busref{TCNT1} & 0.5U{} D{0x0000} 1D{0x001};[dotted] 1.5D{};1D{\tiny ICR1 -1} 1D{\tiny ICR1}1D{0x0000} 1D{0x0001};[dotted] 1D{};1D{\tiny ICR1 -1} 1D{\tiny ICR1} 1D{0x0000} 1D{0x0001} [dotted] 1D{};1D{\tiny ICR1 -1} 1D{\tiny ICR1} 1D{0x0000} 1D{0x0001};[dotted] 1D{};1D{\tiny ICR1 -1} 1D{\tiny ICR1};\\
+    \busref{TOV1} & 6{L} H 4{L} H 4{L} H 4{L} \\
+\end{tikztimingtable}
+
+\subsubsection{WGM1[3:0] == 1111}
+\begin{tikztimingtable}[
+    timing/dslope=0.1,
+    timing/.style={x=5ex,y=2ex},
+    x=5ex,
+    timing/rowdist=3ex,
+    timing/name/.style={font=\sffamily\scriptsize}
+    ]
+    \busref{clk\_{T0}}  & 41{1c} c\\
+    \busref{TCNT1} & 0.5U{} D{0x0000} 1D{0x001};[dotted] 1.5D{};1D{\tiny OCR1A -1} 1D{\tiny OCR1A}1D{0x0000} 1D{0x0001};[dotted] 1D{};1D{\tiny OCR1A -1} 1D{\tiny OCR1A} 1D{0x0000} 1D{0x0001} [dotted] 1D{};1D{\tiny OCR1A -1} 1D{\tiny OCR1A} 1D{0x0000} 1D{0x0001};[dotted] 1D{};1D{\tiny OCR1A -1} 1D{\tiny OCR1A};\\
+    \busref{TOV1} & 6{L} H 4{L} H 4{L} H 4{L} \\
+\end{tikztimingtable}
+
+\subsection{Phase Correct PWM Mode}
+\begin{itemize}
+    \item WGM1[3:0] $-->$ 0001 or 0010 or 0011 or 1010 or 1011.    
+    \item High resolution phase correct PWM.
+    \item Motor control due to symmetric features
+    \item Dual slope operations causing ower frequency PWM waveform.
+    \item Counter starts from BOTTOM to TOP and then from TOP to BOTTOM.
+    \item TOP is defined by
+    \begin{itemize}
+        \item TOP == 0x00FF if WGM1[3:0] $-->$ 0001
+        \item TOP == 0x01FF if WGM1[3:0] $-->$ 0010
+        \item TOP == 0x03FF if WGM1[3:0] $-->$ 0011
+        \item TOP ==   ICR1 if WGM1[3:0] $-->$ 1010
+        \item TOP ==  OCR1A if WGM1[3:0] $-->$ 1011
+    \end{itemize}
+    \item  When \bitFormat{COM1A[1:0]} == 01, the \pinFormat{OC1A} pin output can be set to toggle its match between \regFormat{TCNT1} and TOP to generate waveform.
+    \begin{itemize}
+        \item The above is possible only when \bitFormat{WGM12} bit is set.
+        \item And only on \pinFormat{OC1A} pin and not on \pinFormat{OC1B} pin.
+    \end{itemize}
+    \item In Inverting Compare Mode \bitFormat{COM1A[1:0]} == 10 , the \pinFormat{OC1A} or \pinFormat{OC1B} pins is made 1 on compare match between \regFormat{TCNT1} and TOP and made 0 on reaching BOTTOM.
+    \item In Non-Inverting Compare Mode \bitFormat{COM1A[1:0]} == 11 , the \pinFormat{OC1A} or \pinFormat{OC1B} pins is made 0 on compare match between \regFormat{TCNT1} and TOP and 1 made  on reaching BOTTOM.
+    \item The Timer/Counter overflow flag (\bitFormat{TOV1}) is set each time the counter reaches BOTTOM..
+    \item The PWM frequency is given by 
+    \begin{center}
+        { \Large $f_{OC1xPWM} = \frac{f_{clkT1}}{2 * N * TOP}$ }
+    \end{center}
+\end{itemize}
+
+
+\subsubsection{WGM1[3:0] == 0001}
+\begin{tikztimingtable}[
+    timing/dslope=0.1,
+    timing/.style={x=5ex,y=2ex},
+    x=5ex,
+    timing/rowdist=3ex,
+    timing/name/.style={font=\sffamily\scriptsize}
+    ]
+    \busref{clk\_{T1}}  & 41{1c} c\\
+    \busref{TCNT1} & 0.5U{} D{0x0000} 1D{0x0001};[dotted] 1.5D{};1D{0x00FE} 1D{0x00FF}1D{0x0000} 1D{0x0001};[dotted] 1D{};1D{0x00FE} 1D{0x00FF} 1D{0x0000} 1D{0x0001} [dotted] 1D{};1D{0x00FE} 1D{0x00FF} 1D{0x0000} 1D{0x0001};[dotted] 1D{};1D{0x00FE} 1D{0x00FF};\\
+    \busref{TOV1} & 6{L} H 4{L} H 4{L} H 4{L} \\
+\end{tikztimingtable}
+
+
+\subsubsection{WGM1[3:0] == 0010}
+\begin{tikztimingtable}[
+    timing/dslope=0.1,
+    timing/.style={x=5ex,y=2ex},
+    x=5ex,
+    timing/rowdist=3ex,
+    timing/name/.style={font=\sffamily\scriptsize}
+    ]
+    \busref{clk\_{T1}}  & 41{1c} c\\
+    \busref{TCNT1} & 0.5U{} D{0x0000} 1D{0x0001};[dotted] 1.5D{};1D{0x01FE} 1D{0x01FF}1D{0x0000} 1D{0x0001};[dotted] 1D{};1D{0x01FE} 1D{0x01FF} 1D{0x0000} 1D{0x0001} [dotted] 1D{};1D{0x01FE} 1D{0x01FF} 1D{0x0000} 1D{0x0001};[dotted] 1D{};1D{0x01FE} 1D{0x01FF};\\
+    \busref{TOV1} & 6{L} H 4{L} H 4{L} H 4{L} \\
+\end{tikztimingtable}
+
+\subsubsection{WGM1[3:0] == 0011}
+\begin{tikztimingtable}[
+    timing/dslope=0.1,
+    timing/.style={x=5ex,y=2ex},
+    x=5ex,
+    timing/rowdist=3ex,
+    timing/name/.style={font=\sffamily\scriptsize}
+    ]
+    \busref{clk\_{T1}}  & 41{1c} c\\
+    \busref{TCNT1} & 0.5U{} D{0x0000} 1D{0x0001};[dotted] 1.5D{};1D{0x03FE} 1D{0x03FF}1D{0x0000} 1D{0x0001};[dotted] 1D{};1D{0x03FE} 1D{0x03FF} 1D{0x0000} 1D{0x0001} [dotted] 1D{};1D{0x03FE} 1D{0x03FF} 1D{0x0000} 1D{0x0001};[dotted] 1D{};1D{0x03FE} 1D{0x03FF};\\
+    \busref{TOV1} & 6{L} H 4{L} H 4{L} H 4{L} \\
+\end{tikztimingtable}
+
+\subsubsection{WGM[2:0] == 101}
+\begin{tikztimingtable}[
+    timing/dslope=0.1,
+    timing/.style={x=5ex,y=2ex},
+    x=5ex,
+    timing/rowdist=3ex,
+    timing/name/.style={font=\sffamily\scriptsize}
+    ]
+    \busref{clk\_{T1}}  & 41{1c}\\
+    \busref{TCNT1} & 0.5U{} D{0x0000} 1D{0x0001};[dotted] 1.5D{};1D{\tiny OCR1A - 1} 1D{\tiny OCR1A}1D{\tiny OCR01-1} 1D{\tiny OCR1A-2};[dotted] 1D{};1D{0x0001} 1D{0x0000} 1D{0x0001}[dotted] 1D{};1D{\tiny OCR1A-1} 1D{\tiny OCR1A} 1D{\tiny OCR1A-1} 1D{\tiny OCR1A-2};[dotted] 1D{};1D{0x0001} 1D{0x0000} 1d{0x0001};\\
+    \busref{TOV1} & l H l 8{L} H 8{L} H l\\
+\end{tikztimingtable}
+
+\subsubsection{WGM[2:0] == 101}
+\begin{tikztimingtable}[
+    timing/dslope=0.1,
+    timing/.style={x=5ex,y=2ex},
+    x=5ex,
+    timing/rowdist=3ex,
+    timing/name/.style={font=\sffamily\scriptsize}
+    ]
+    \busref{clk\_{T1}}  & 41{1c}\\
+    \busref{TCNT1} & 0.5U{} D{0x0000} 1D{0x0001};[dotted] 1.5D{};1D{\tiny ICR1- 1} 1D{\tiny ICR1}1D{\tiny ICR1-1} 1D{\tiny ICR1-2};[dotted] 1D{};1D{0x0001} 1D{0x0000} 1D{0x0001}[dotted] 1D{};1D{\tiny ICR1-1} 1D{\tiny ICR1} 1D{\tiny ICR1-1} 1D{\tiny ICR1-2};[dotted] 1D{};1D{0x0001} 1D{0x0000} 1d{0x0001};\\
+    \busref{TOV1} & l H l 8{L} H 8{L} H l\\
+\end{tikztimingtable}
+
 
 \end{document}

@@ -175,4 +175,110 @@
     \item This unit is used for changing the state of \pinFormat{OC1A} and \pinFormat{OC1B} pins by configuring the \bitFormat{COM1x[1:0]} bits.
     \item But, general I/O port function is overriiden by DDR reigster.
 \end{itemize}
+
+
+\section{Modes of Operation}
+\begin{itemize}
+    \item The mode of operation can be defined by combination of waveform generation mode (\bitFormat{WGM1[3:0]}) and compare output mode(\bitFormat{COM1[1:0]}) bits.
+    \item The waveform generation mode (\bitFormat{WGM1[3:0]}) bits affect the counting sequence.
+    \item For non-PWM mode, \bitFormat{COM1[1:0]} bits control if the output should be set, cleared or toggled at a compare match.
+    \item For PWM mode, \bitFormat{COM1[1:0]} bits control if the PWM generated should be inverted or non-inverted.
+\end{itemize}
+
+
+
+\subsection{Normal Mode - Non-PWM Mode}
+\begin{itemize}
+    \item WGM1[3:0] $-->$ 000.
+    \item Counter counts up and no counter clear.
+    \item Overruns TOP(0XFFFF) and restarts from BOTTOM(0X0000).
+    \item \bitFormat{TOV1} Flag is only set when overrun.
+    \item We have to clear \bitFormat{TOV1} flag inorder to have next running.
+    \item But, if we use interrupt we don’t need to clear it as interrupt automatically clear the \bitFormat{TOV1} flag.
+    \item The input capture unit can be used to capture events at \pinFormat{ICP1} pin or \pinFormat{ACO} pin.
+    \item The timing can be seen below.
+\end{itemize}
+
+\begin{tikztimingtable}[
+    timing/dslope=0.1,
+    timing/.style={x=5ex,y=2ex},
+    x=5ex,
+    timing/rowdist=3ex,
+    timing/name/.style={font=\sffamily\scriptsize}
+    ]
+    \busref{clk\_{T1}}  & 41{c}\\
+    \busref{TCNT1} & u{} D{0x0000} D{0x0001};[dotted] 2D{};D{0xFFFE} D{0xFFFF}D{0x0000} D{0x0001};[dotted] 2D{};D{0xFFFE} D{0xFFFF}D{0x0000} D{0x0001};[dotted] 2D{};D{0xFFFE} D{0xFFFF}D{0x0000} D{0x0001}\\
+    \busref{TOV1} & l 6{L} H 5{L} H 5{L} H 1{L}\\
+\end{tikztimingtable}
+
+
+
+\subsection{Clear Timer on Compare Match(CTC) Mode - Non-PWM Mode}
+\begin{itemize}
+    \item WGM1[3:0] $-->$ 0100 or 1100.
+    \begin{itemize}
+        \item Counter value clears when \regFormat{TCNT1} reaches \regFormat{OCR1A} if WGM1[3:0] is 0100.
+        \item Counter value clears when \regFormat{TCNT1} reaches \regFormat{ICR1} if WGM1[3:0] is 1100.
+    \end{itemize}
+    \item Interrupt can be generated each time \regFormat{TCNT1} reaches \regFormat{OCR1A} register value by \bitFormat{OCF1A} flag.
+    \item Interrupt can be generated each time \regFormat{TCNT1} reaches \regFormat{ICR1} register value by \bitFormat{ICF1} flag.
+    \item When \bitFormat{COM1A[1:0]} == 01, the \pinFormat{OC1A} pin output can be set to toggle its match between \regFormat{TCNT1} and \regFormat{OCR1A} or \regFormat{ICR1} register to generate waveform.
+    \item The frequency of the waveform its
+    \begin{center}
+        { \Large $f_{OC1A} = \frac{f_{clkT1}}{2 * N * (1 + OCR1A)}$ }
+    \end{center}
+    \item Here N is prescalar factor and can be (1, 8, 64, 256, or 1024).
+\end{itemize}
+\begin{tikztimingtable}[
+    timing/dslope=0.1,
+    timing/.style={x=5ex,y=2ex},
+    x=5ex,
+    timing/rowdist=3ex,
+    timing/name/.style={font=\sffamily\scriptsize}
+    ]
+    \busref{clk\_{T1}}  & 28{1.5c}\\
+    \busref{TCNT1} & 0.75U{} 1.5D{0x0000} 1.5D{0x0001};[dotted] 3D{};1.5D{OCR1A - 1} 1.5D{OCR1A}1.5D{0x0000} 1.5D{0x0001};[dotted] 3D{};1.5D{OCR1A - 1} 1.5D{OCR1A} 1.5D{0x0000} 0.75D{0x0001} \\
+    \busref{OC1A} & 0.75L 9{L} 1.5H l 7{L} 1.5H l\\
+\end{tikztimingtable}
+\begin{center}
+    OR
+\end{center}
+\vspace*{0.5cm}
+\begin{tikztimingtable}[
+    timing/dslope=0.1,
+    timing/.style={x=5ex,y=2ex},
+    x=5ex,
+    timing/rowdist=3ex,
+    timing/name/.style={font=\sffamily\scriptsize}
+    ]
+    \busref{clk\_{T1}}  & 28{1.5c}\\
+    \busref{TCNT1} & 0.75U{} 1.5D{0x0000} 1.5D{0x0001};[dotted] 3D{};1.5D{ICR1 - 1} 1.5D{ICR1}1.5D{0x0000} 1.5D{0x0001};[dotted] 3D{};1.5D{ICR1 - 1} 1.5D{ICR1} 1.5D{0x0000} 0.75D{0x0001} \\
+    \busref{OC1A} & 0.75L 9{L} 1.5H l 7{L} 1.5H l\\
+\end{tikztimingtable}
+
+\subsection{Fast PWM Mode}
+\begin{itemize}
+    \item WGM1[3:0] $-->$ 0101 or 0110 or 0111 or 1110 or 1111.
+    \item Power Regulation, Rectification, DAC applications.
+    \item Single slope operations causing high frequency PWM waveform.
+    \item Counter starts from BOTTOM to TOP and then restarts from BOTTOM.
+    \item TOP is defined by
+    \begin{itemize}
+        \item TOP == 0xFF if WGM[2:0] $-->$ 011
+        \item TOP == OCR0A if WGM[2:0] $-->$ 111
+    \end{itemize}
+    \item  When \bitFormat{COM0A[1:0]} == 01, the \pinFormat{OC0A} pin output can be set to toggle its match between \regFormat{TCNT0} and TOP to generate waveform.
+    \begin{itemize}
+        \item The above is possible only when \bitFormat{WGM02} bit is set.
+        \item And only on \pinFormat{OC0A} pin and not on \pinFormat{OC0B} pin.
+    \end{itemize}
+    \item In Inverting Compare Mode \bitFormat{COM0A[1:0]} == 10 , the \pinFormat{OC0A} or \pinFormat{OC0B} pins is made 1 on compare match between \regFormat{TCNT0} and TOP and made 0 on reaching BOTTOM.
+    \item In Non-Inverting Compare Mode \bitFormat{COM0A[1:0]} == 11 , the \pinFormat{OC0A} or \pinFormat{OC0B} pins is made 0 on compare match between \regFormat{TCNT0} and TOP and 1 made  on reaching BOTTOM.
+    \item The Timer/Counter overflow flag (\bitFormat{TOV0}) is set each time the counter reaches TOP.
+    \item The PWM frequency is given by 
+    \begin{center}
+        { \Large $f_{OC0xPWM} = \frac{f_{clkT0}}{N * 256}$ }
+    \end{center}
+\end{itemize}
+
 \end{document}

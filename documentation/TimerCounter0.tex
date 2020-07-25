@@ -161,7 +161,7 @@
 
 \subsection{Normal Mode - Non-PWM Mode}
 \begin{itemize}
-    \item WGM[2:0] $-->$ 000.
+    \item WGM0[2:0] $-->$ 000.
     \item Counter counts up and no counter clear.
     \item Overruns TOP(0XFF) and restarts from BOTTOM(0X00).
     \item \bitFormat{TOV0} Flag is only set when overrun.
@@ -184,7 +184,7 @@
 
 \subsection{Clear Timer on Compare Match(CTC) Mode - Non-PWM Mode}
 \begin{itemize}
-    \item WGM[2:0] $-->$ 010.
+    \item WGM0[2:0] $-->$ 010.
     \item Counter value clears when \regFormat{TCNT0} reaches \regFormat{OCR0A}.
     \item Interrupt can be generated each time \regFormat{TCNT0} reaches \regFormat{OCR0A} register value by \bitFormat{OCF0A} flag.
     \item When \bitFormat{COM0A[1:0]} == 01, the \pinFormat{OC0A} pin output can be set to toggle its match between \regFormat{TCNT0} and \regFormat{OCR0A} to generate waveform.
@@ -203,12 +203,12 @@
     ]
     \busref{clk\_{T0}}  & 28{1.5c}\\
     \busref{TCNT0} & 0.75U{} 1.5D{0x00} 1.5D{0x01};[dotted] 3D{};1.5D{OCR0A - 1} 1.5D{OCR0A}1.5D{0x00} 1.5D{0x01};[dotted] 3D{};1.5D{OCR0A - 1} 1.5D{OCR0A} 1.5D{0x00} 0.75D{0x01} \\
-    \busref{OCF0A} & 0.75L 9{L} 1.5H l 7{L} 1.5H l\\
+    \busref{OC0A} & 0.75L 9{L} 1.5H l 7{L} 1.5H l\\
 \end{tikztimingtable}
 
 \subsection{Fast PWM Mode}
 \begin{itemize}
-    \item WGM[2:0] $-->$ 011 or 111.
+    \item WGM0[2:0] $-->$ 011 or 111.
     \item Power Regulation, Rectification, DAC applications.
     \item Single slope operations causing high frequency PWM waveform.
     \item Counter starts from BOTTOM to TOP and then restarts from BOTTOM.

@@ -1,0 +1,490 @@
+\documentclass{article}
+
+\usepackage[a4paper, bottom=0.5in, top=0.5in, left=0.5in, right=0.5in]{geometry}
+\usepackage{wrapfig}
+\usepackage{natbib}
+\usepackage{url}
+\usepackage{xcolor}
+\usepackage{caption}
+\usepackage{hyperref}
+\hypersetup{
+    colorlinks=true,    
+    urlcolor=cyan,
+}
+\usepackage{bytefield}
+
+\usepackage{amsfonts}
+\usepackage{float}
+\usepackage{enumitem}
+
+\usepackage{minted}
+
+\usepackage{xparse} % NewDocumentCommand, IfValueTF, IFBooleanTF
+\usepackage{tikz-timing}[2014/10/29]
+\NewDocumentCommand{\busref}{som}{\texttt{%
+		#3%
+		\IfValueTF{#2}{[#2]}{}%
+		\IfBooleanTF{#1}{\#}{}%
+}}
+
+
+\newcommand{\bitFormat}[1]{\emph{\textbf{\textcolor{cyan}{#1}}}}
+
+\newcommand{\regFormat}[1]{\textbf{\textcolor{magenta}{#1}}}
+
+\newcommand{\pinFormat}[1]{\emph{\textcolor{red}{#1}}}
+
+
+\usepackage{graphicx}
+\graphicspath{ {./Resources/pics/} }
+
+
+
+\title{ATmega328P I/O Ports}
+\author{Narendiran S}
+\date{\today}
+
+\begin{document}
+\maketitle
+\subsection{Phase Corrected PWM Mode}
+\begin{minted}[bgcolor=lightgray]{c}
+ISR(TIMER0_OVF_vect)
+{
+} 
+ISR(TIMER0_COMPA_vect)
+{
+}
+ISR(TIMER0_COMPB_vect)
+{
+}
+\end{minted}
+\subsubsection{Non-Inverting PWM with TOP at MAX(0xFF)}
+\quad Frequency is chosen by PRESCALAR and Duty cycle by \regFormat{OCR0A} and/or \regFormat{OCR0B} register.
+\begin{itemize}
+    \item First, \bitFormat{WGM0[2:0]} bits are configured as 001 for Phase Corrected PWM Mode with TOP at MAX in \regFormat{TCCR0A} and \regFormat{TCCR0B} registers.
+    \item Next, \bitFormat{COM0A[1:0]} and/or \bitFormat{COM0B[1:0]} bits of \regFormat{TCCR0A} register are configured to make outputs \pinFormat{OC0A} and/or \pinFormat{OC0B} pins to generate PWM by comparing between \regFormat{OCR0A} and/or \regFormat{OCR0B} respectively. That is for Non-Inverting, \bitFormat{COM0x[1:0]} is written 10.
+    \item Next, the duty cycle value is loaded into \regFormat{OCR0A} and/or \regFormat{OCR0B} register for \pinFormat{OC0A} and/or \pinFormat{OC0B} bits.
+    \item Also, the \bitFormat{OCIE0A} and/or \bitFormat{OCIE0B} bits of \regFormat{TIMSK0} register  are enabled for Output Compare Interupts if needed.
+    \item The interrupt Service routine is written if needed for compare match.
+    \item Finally, Timer is started by setting \bitFormat{CS0[2:0]} bit as needed prescalar in \regFormat{TCR0B} register.
+    \item The timing for PWM on 10\% duty cycle \pinFormat{OC0A} and 75\% duty cycle\pinFormat{OC0B} pins are shown assuming .
+    \begin{itemize}
+        \item 0x19 for OCR0A.
+        \item 0xC0 for OCR0B.
+    \end{itemize}
+\end{itemize}
+
+\begin{tikztimingtable}[
+    timing/dslope=0.1,
+    timing/.style={x=5ex,y=2ex},
+    x=5ex,
+    timing/rowdist=3ex,
+    timing/name/.style={font=\sffamily\scriptsize}
+    ]
+    \busref{clk\_{T0}}  & 41{1c} \\
+    \busref{TCNT0} & 0.5U{} D{0x00} 1D{0x01};[dotted] 1.5D{};1D{0x19} [dotted] 1.5D{}; 1D{0xC0} [dotted] 1.5D{};1D{0xFF} 1D{0xFE}[dotted] 1.5D{}; 1D{0xC0} [dotted] 1.5D{}; 1D{0x19} [dotted] 1.5D{}; D{0x01} 1D{0x00}; [dotted] 1D{}\\
+    \busref{OC0A} & h H H H h L L L L L L L L L L L H H H H H h\\
+    \busref{OC0B} & h H H H H H H L L L L L L H H H H H H H H \\
+\end{tikztimingtable}
+
+\begin{minted}[bgcolor=lightgray]{c}
+// MOde of operation to phase_corrected_pwm_top_max Mode -- WGM0[2:0] === 001
+// WGM0[2](bit3) from TCCR0B, WGM0[1](bit1)  from TCCR0A, WGM0[0](bit0)  from TCCR0A
+TCCR0A = TCCR0A | (1<<0);
+TCCR0A = TCCR0A & ~(1<<1);
+TCCR0B = TCCR0B & ~(1<<3);	
+
+/* in timer0_phase_pwm_top_max, only two possiblites are there for COM0B[1:0] and COM0A[1:0] i.e) 10(Inverting) and 11(Non- inverting) */
+
+// here we set COM0A[1:0] as 10 for non-inverting
+// here we set COM0B[1:0] as 10 for non-inverting
+
+// which is reflected in PD6
+// COM0A[1](bit7) from TCCR0A, COM0A[0](bit6) from TCCR0A
+TCCR0A = TCCR0A | (1<<7);
+TCCR0A = TCCR0A & ~(1<<6);
+
+// which is reflected in PD65
+// COM0B[1](bit5) from TCCR0A, COM0B[0](bit4) from TCCR0A
+TCCR0A = TCCR0A | (1<<5);
+TCCR0A = TCCR0A & ~(1<<4);
+
+/* we use overflow flag -- which is set at every time TCN0 reaches TOP here 0xFF
+here, we toggle an led(PC0) at every overflow interrupt - this led(PC0) would give the frequency of PWM being generated -- done by PINC = PINC | 0X01;
+Also, we set the other leds(PC1 and PC2) so that they are make one when TCN0 reaches 0x00 */
+// Enable Interrupt when TCN0 overflows TOP - here 0xFF
+//  TOV0 bit is enabled
+TIMSK0 = TIMSK0 | (1<<0);
+
+
+// Next we set values for OCR0A and OCR0B
+// Since, TCNT0 goes till max(0xFF), we can choose OCR0A and OCR0B to any value below max(0xFFF)
+OCR0A = 0x19; // for 10% duty clcle
+OCR0B = 0xC0; // for 75% duty clcle
+
+// start the timer by selecting the prescalr
+//  use the same clock from I/O clock
+//  CS0[2:0] === 001
+// CS0[2](bit2) from TCCR0B,CS0[1](bit1) from TCCR0B,CS0[0](bit0) from TCCR0B
+TCCR0B = TCCR0B | (1<<0);
+TCCR0B = TCCR0B & ~(1<<1);
+TCCR0B = TCCR0B & ~(1<<2);
+
+//enabled global interrupt
+sei();
+\end{minted}
+
+\subsubsection{Inverting PWM with TOP at MAX(0xFF)}
+\quad Frequency is chosen by PRESCALAR and Duty cycle by \regFormat{OCR0A} and/or \regFormat{OCR0B} register.
+\begin{itemize}
+    \item First, \bitFormat{WGM0[2:0]} bits are configured as 001 for Phase Corrected PWM Mode with TOP at MAX in \regFormat{TCCR0A} and \regFormat{TCCR0B} registers.
+    \item Next, \bitFormat{COM0A[1:0]} and/or \bitFormat{COM0B[1:0]} bits of \regFormat{TCCR0A} register are configured to make outputs \pinFormat{OC0A} and/or \pinFormat{OC0B} pins to generate PWM by comparing between \regFormat{OCR0A} and/or \regFormat{OCR0B} respectively. That is for Inverting, \bitFormat{COM0x[1:0]} is written 11.
+    \item Next, the duty cycle value is loaded into \regFormat{OCR0A} and/or \regFormat{OCR0B} register for \pinFormat{OC0A} and/or \pinFormat{OC0B} bits.
+    \item Also, the \bitFormat{OCIE0A} and/or \bitFormat{OCIE0B} bits of \regFormat{TIMSK0} register  are enabled for Output Compare Interupts if needed.
+    \item The interrupt Service routine is written if needed for compare match.
+    \item Finally, Timer is started by setting \bitFormat{CS0[2:0]} bit as needed prescalar in \regFormat{TCR0B} register.
+    \item The timing for PWM on 10\% duty cycle \pinFormat{OC0A} and 75\% duty cycle\pinFormat{OC0B} pins are shown assuming .
+    \begin{itemize}
+        \item 0x19 for OCR0A.
+        \item 0xC0 for OCR0B.
+    \end{itemize}
+\end{itemize}
+
+\begin{tikztimingtable}[
+    timing/dslope=0.1,
+    timing/.style={x=5ex,y=2ex},
+    x=5ex,
+    timing/rowdist=3ex,
+    timing/name/.style={font=\sffamily\scriptsize}
+    ]
+    \busref{clk\_{T0}}  & 41{1c} \\
+    \busref{TCNT0} & 0.5U{} D{0x00} 1D{0x01};[dotted] 1.5D{};1D{0x19} [dotted] 1.5D{}; 1D{0xC0} [dotted] 1.5D{};1D{0xFF} 1D{0xFE}[dotted] 1.5D{}; 1D{0xC0} [dotted] 1.5D{}; 1D{0x19} [dotted] 1.5D{}; D{0x01} 1D{0x00}; [dotted] 1D{}\\
+    \busref{OC0A} & l L L L l H H H H H H H H H H H L L L L L l\\
+    \busref{OC0B} & l L L L L L L H H H H H H L L L L L L L L\\
+\end{tikztimingtable}
+
+\begin{minted}[bgcolor=lightgray]{c}
+// MOde of operation to phase_corrected_pwm_top_max Mode -- WGM0[2:0] === 001
+// WGM0[2](bit3) from TCCR0B, WGM0[1](bit1)  from TCCR0A, WGM0[0](bit0)  from TCCR0A
+TCCR0A = TCCR0A | (1<<0);
+TCCR0A = TCCR0A & ~(1<<1);
+TCCR0B = TCCR0B & ~(1<<3);	
+
+/* in timer0_phase_pwm_top_max, only two possiblites are there for COM0B[1:0] and COM0A[1:0] i.e) 10(Inverting) and 11(Non- inverting) */
+
+// here we set COM0A[1:0] as 11 for inverting
+// here we set COM0B[1:0] as 11 for inverting
+
+// which is reflected in PD6
+// COM0A[1](bit7) from TCCR0A, COM0A[0](bit6) from TCCR0A
+TCCR0A = TCCR0A | (1<<7);
+TCCR0A = TCCR0A & ~(1<<6);
+
+// which is reflected in PD65
+// COM0B[1](bit5) from TCCR0A, COM0B[0](bit4) from TCCR0A
+TCCR0A = TCCR0A | (1<<5);
+TCCR0A = TCCR0A & ~(1<<4);
+
+/* we use overflow flag -- which is set at every time TCN0 reaches TOP here 0xFF
+here, we toggle an led(PC0) at every overflow interrupt - this led(PC0) would give the frequency of PWM being generated -- done by PINC = PINC | 0X01;
+Also, we set the other leds(PC1 and PC2) so that they are make one when TCN0 reaches 0x00 */
+// Enable Interrupt when TCN0 overflows TOP - here 0xFF
+//  TOV0 bit is enabled
+TIMSK0 = TIMSK0 | (1<<0);
+
+
+// Next we set values for OCR0A and OCR0B
+// Since, TCNT0 goes till max(0xFF), we can choose OCR0A and OCR0B to any value below max(0xFFF)
+OCR0A = 0x19; // for 10% duty clcle
+OCR0B = 0xC0; // for 75% duty clcle
+
+// start the timer by selecting the prescalr
+//  use the same clock from I/O clock
+//  CS0[2:0] === 001
+// CS0[2](bit2) from TCCR0B,CS0[1](bit1) from TCCR0B,CS0[0](bit0) from TCCR0B
+TCCR0B = TCCR0B | (1<<0);
+TCCR0B = TCCR0B & ~(1<<1);
+TCCR0B = TCCR0B & ~(1<<2);
+
+//enabled global interrupt
+sei();
+\end{minted}
+
+
+\subsubsection{Non-Inverting PWM with TOP at  OCR0A}
+\quad Frequency is chosen by \regFormat{OCR0A} and Duty cycle by \regFormat{OCR0B} register.
+\begin{itemize}
+    \item First, \bitFormat{WGM0[2:0]} bits are configured as 101 for Phase Corrected PWM Mode with OCR0A at MAX in \regFormat{TCCR0A} and \regFormat{TCCR0B} registers.
+    \item Next,  \bitFormat{COM0B[1:0]} bits of \regFormat{TCCR0A} register are configured to make output \pinFormat{OC0B} pins to generate PWM by comparing between \regFormat{OCR0B} respectively. That is for Non-Inverting, \bitFormat{COM0B[1:0]} is written 10.
+    \item The frequency of duty cycle is loaded into \regFormat{OCR0A} register.
+    \item Next, the duty cycle value is loaded into \regFormat{OCR0B} register for \pinFormat{OC0B} bits.
+    \item Also, the \bitFormat{OCIE0B} bits of \regFormat{TIMSK0} register  are enabled for Output Compare Interupts if needed.
+    \item The interrupt Service routine is written if needed for compare match.
+    \item Finally, Timer is started by setting \bitFormat{CS0[2:0]} bit as needed prescalar in \regFormat{TCR0B} register.
+    \item The timing for PWM on 85\% duty cycle(0x60)  \pinFormat{OC0B} pins are shown assuming .
+    \begin{itemize}
+        \item 0x70 for OCR0A.
+        \item 0x60 for OCR0B.
+    \end{itemize}
+\end{itemize}
+
+\begin{tikztimingtable}[
+    timing/dslope=0.1,
+    timing/.style={x=5ex,y=2ex},
+    x=5ex,
+    timing/rowdist=3ex,
+    timing/name/.style={font=\sffamily\scriptsize}
+    ]
+    \busref{clk\_{T0}}  & 41{1c} \\
+    \busref{TCNT0} & 0.5U{} D{0x00} 1D{0x01};[dotted] 1.5D{}; D{0x60} [dotted] .5D{}; D{0x70} D{0x6A} [dotted] 0.5D{}; D{0x60} [dotted] 1.5D{}; D{0x01} D{0x00}1D{0x01};[dotted] 1.5D{}; D{0x60} [dotted] .5D{}; D{0x70} D{0x6A} [dotted] 0.5D{}; D{0x60} [dotted] d{};\\
+    \busref{OC0B} & u H H H h L L L L H H H HHH h h LLlLl H h\\
+\end{tikztimingtable}
+
+\begin{minted}[bgcolor=lightgray]{c}
+// MOde of operation to phase_corrected_pwm_top_max Mode -- WGM0[2:0] === 101
+// WGM0[2](bit3) from TCCR0B, WGM0[1](bit1)  from TCCR0A, WGM0[0](bit0)  from TCCR0A
+TCCR0A = TCCR0A | (1<<0);
+TCCR0A = TCCR0A & ~(1<<1);
+TCCR0B = TCCR0B | (1<<3);		
+
+// here we set COM0A[1:0] as 10 for non-inverting
+// which is reflected in PD5
+// COM0B[1](bit5) from TCCR0A, COM0B[0](bit4) from TCCR0A
+TCCR0A = TCCR0A | (1<<5);
+TCCR0A = TCCR0A & ~(1<<4);
+    
+// Next we set values for OCR0A and OCR0B
+// Since, TCNT0 goes till OCR0A, we can choose OCR0B to any value below OCR0A
+OCR0A = 0x70; // for freqeuncy
+OCR0B = 0x60; // for pwm duty cylc
+
+// start the timer by selecting the prescalr
+//  use the same clock from I/O clock
+//  CS0[2:0] === 001
+// CS0[2](bit2) from TCCR0B,CS0[1](bit1) from TCCR0B,CS0[0](bit0) from TCCR0B
+TCCR0B = TCCR0B | (1<<0);
+TCCR0B = TCCR0B & ~(1<<1);
+TCCR0B = TCCR0B & ~(1<<2);
+
+//enabled global interrupt
+sei();
+\end{minted}
+
+\subsubsection{Inverting PWM with TOP at  OCR0A}
+\quad Frequency is chosen by \regFormat{OCR0A} and Duty cycle by \regFormat{OCR0B} register.
+\begin{itemize}
+    \item First, \bitFormat{WGM0[2:0]} bits are configured as 101 for Phase Corrected PWM Mode with OCR0A at MAX in \regFormat{TCCR0A} and \regFormat{TCCR0B} registers.
+    \item Next,  \bitFormat{COM0B[1:0]} bits of \regFormat{TCCR0A} register are configured to make output \pinFormat{OC0B} pins to generate PWM by comparing between \regFormat{OCR0B} respectively. That is for Inverting, \bitFormat{COM0B[1:0]} is written 11.
+    \item The frequency of duty cycle is loaded into \regFormat{OCR0A} register.
+    \item Next, the duty cycle value is loaded into \regFormat{OCR0B} register for \pinFormat{OC0B} bits.
+    \item Also, the \bitFormat{OCIE0B} bits of \regFormat{TIMSK0} register  are enabled for Output Compare Interupts if needed.
+    \item The interrupt Service routine is written if needed for compare match.
+    \item Finally, Timer is started by setting \bitFormat{CS0[2:0]} bit as needed prescalar in \regFormat{TCR0B} register.
+    \item The timing for PWM on 85\% duty cycle(0x60)  \pinFormat{OC0B} pins are shown assuming .
+    \begin{itemize}
+        \item 0x70 for OCR0A.
+        \item 0x60 for OCR0B.
+    \end{itemize}
+\end{itemize}
+
+\begin{tikztimingtable}[
+    timing/dslope=0.1,
+    timing/.style={x=5ex,y=2ex},
+    x=5ex,
+    timing/rowdist=3ex,
+    timing/name/.style={font=\sffamily\scriptsize}
+    ]
+    \busref{clk\_{T0}}  & 41{1c} \\
+    \busref{TCNT0} & 0.5U{} D{0x00} 1D{0x01};[dotted] 1.5D{}; D{0x60} [dotted] .5D{}; D{0x70} D{0x6A} [dotted] 0.5D{}; D{0x60} [dotted] 1.5D{}; D{0x01} D{0x00}1D{0x01};[dotted] 1.5D{}; D{0x60} [dotted] .5D{}; D{0x70} D{0x6A} [dotted] 0.5D{}; D{0x60} [dotted] d{};\\
+    \busref{OC0B} & u L L L l H H H H L L L LLL l l HHhHh L l\\
+\end{tikztimingtable}
+
+\begin{minted}[bgcolor=lightgray]{c}
+// MOde of operation to phase_corrected_pwm_top_max Mode -- WGM0[2:0] === 101
+// WGM0[2](bit3) from TCCR0B, WGM0[1](bit1)  from TCCR0A, WGM0[0](bit0)  from TCCR0A
+TCCR0A = TCCR0A | (1<<0);
+TCCR0A = TCCR0A & ~(1<<1);
+TCCR0B = TCCR0B | (1<<3);		
+
+// here we set COM0A[1:0] as 11 for inverting
+// which is reflected in PD5
+// COM0B[1](bit5) from TCCR0A, COM0B[0](bit4) from TCCR0A
+TCCR0A = TCCR0A | (1<<5);
+TCCR0A = TCCR0A | (1<<4);
+    
+// Next we set values for OCR0A and OCR0B
+// Since, TCNT0 goes till OCR0A, we can choose OCR0B to any value below OCR0A
+OCR0A = 0x70; // for freqeuncy
+OCR0B = 0x60; // for pwm duty cylc
+
+// start the timer by selecting the prescalr
+//  use the same clock from I/O clock
+//  CS0[2:0] === 001
+// CS0[2](bit2) from TCCR0B,CS0[1](bit1) from TCCR0B,CS0[0](bit0) from TCCR0B
+TCCR0B = TCCR0B | (1<<0);
+TCCR0B = TCCR0B & ~(1<<1);
+TCCR0B = TCCR0B & ~(1<<2);
+
+//enabled global interrupt
+sei();
+\end{minted}
+
+
+\subsubsection{Toggling mode square Wave} 
+\quad Frequency is chosen by \regFormat{OCR0A} register.
+\begin{itemize}
+    \item First, \bitFormat{WGM0[2:0]} bits are configured as 101 for Phase Corrected PWM Mode with OCR0A at MAX in \regFormat{TCCR0A} and \regFormat{TCCR0B} registers.
+    \item Next, \bitFormat{COM0A[1:0]} bits of \regFormat{TCCR0A} register are configured to make output \pinFormat{OC0A} pins to generate PWM by comparing between \regFormat{OCR0A}. That is for Toggling square wave \bitFormat{COM0A[1:0]} is written 01.
+    \item The frequency of duty cycle is loaded into \regFormat{OCR0A} register.
+    \item Also, the \bitFormat{OCIE0A} bits of \regFormat{TIMSK0} register  are enabled for Output Compare Interupts if needed.
+    \item The interrupt Service routine is written if needed for compare match.
+    \item Finally, Timer is started by setting \bitFormat{CS0[2:0]} bit as needed prescalar in \regFormat{TCR0B} register.
+    \item The timing for squared wave on \pinFormat{OC0A} pins are shown assuming.
+    \begin{itemize}
+        \item 0x70 for OCR0A.
+    \end{itemize}
+\end{itemize}
+
+\begin{tikztimingtable}[
+    timing/dslope=0.1,
+    timing/.style={x=5ex,y=2ex},
+    x=5ex,
+    timing/rowdist=3ex,
+    timing/name/.style={font=\sffamily\scriptsize}
+    ]
+    \busref{clk\_{T0}}  & 41{1c} \\
+    \busref{TCNT0} & 0.5U{} D{0x00} D{0x01} [dotted] 2D{}; D{0x60} [dotted] .5D{}; D{0x70} D{0x00} D{0x01} [dotted] 2D{}; D{0x60} [dotted] .5D{}; D{0x70} D{0x00} D{0x01}[dotted] 2D{}; D{0x60} [dotted] .5D{};D{0x70} d{0x00}\\
+    \busref{OC0A} & u L L L l  l H H h L L L l l HHh LL L  L HH h l\\
+\end{tikztimingtable}
+
+\begin{minted}[bgcolor=lightgray]{c}
+// MOde of operation to phase_corrected_pwm_top_max Mode -- WGM0[2:0] === 101
+// WGM0[2](bit3) from TCCR0B, WGM0[1](bit1)  from TCCR0A, WGM0[0](bit0)  from TCCR0A
+TCCR0A = TCCR0A | (1<<0);
+TCCR0A = TCCR0A & ~(1<<1);
+TCCR0B = TCCR0B | (1<<3);	
+
+// here we set COM0B[1:0] as 01 for toggling of OC0A
+// which is reflected in PD6
+// COM0A[1](bit7) from TCCR0A, COM0A[0](bit6) from TCCR0A
+TCCR0A = TCCR0A & ~(1<<7);
+TCCR0A = TCCR0A | (1<<6);
+
+// Next we set values for OCR0A and OCR0B
+// Since, TCNT0 goes till OCR0A, we can choose OCR0B to any value below OCR0A
+OCR0A = 0x70; // for freqeuncy
+
+// start the timer by selecting the prescalr
+//  use the same clock from I/O clock
+//  CS0[2:0] === 001
+// CS0[2](bit2) from TCCR0B,CS0[1](bit1) from TCCR0B,CS0[0](bit0) from TCCR0B
+TCCR0B = TCCR0B | (1<<0);
+TCCR0B = TCCR0B & ~(1<<1);
+TCCR0B = TCCR0B & ~(1<<2);
+
+//enabled global interrupt
+sei();
+\end{minted}
+
+\subsubsection{Application I - PWM generation}
+\begin{minted}[bgcolor=lightgray]{c}
+void Timer0_PhaseCorrectedPWMGeneration(uint32_t On_time_us, uint32_t Off_time_us)
+{
+	// Since, it is dual slope, the time would be doubled for one cylce, so we divide by 2
+	uint32_t total_time = (On_time_us>>1) + (Off_time_us>>1);
+	uint32_t on_time_us = On_time_us >> 1;
+		
+	// MOde of operation to phase_corrected_phase_top_max Mode -- WGM0[2:0] === 101
+	// WGM0[2](bit3) from TCCR0B, WGM0[1](bit1)  from TCCR0A, WGM0[0](bit0)  from TCCR0A
+	TCCR0A = TCCR0A | (1<<0);
+	TCCR0A = TCCR0A & ~(1<<1);
+	TCCR0B = TCCR0B | (1<<3);	
+
+	// which is reflected in PD5
+	// COM0B[1](bit5) from TCCR0A, COM0B[0](bit4) from TCCR0A
+	TCCR0A = TCCR0A | (1<<5);
+	TCCR0A = TCCR0A & ~(1<<4);
+	
+	if(total_time <=3)
+	{
+		// if total_time <= 3us -- so we stop clock
+		
+		OCR0A = 0;
+		// start timer by setting the clock prescalar
+		//  use the same clock from I/O clock
+		//  CS0[2:0] === 001
+		// CS0[2](bit2) from TCCR0B,CS0[1](bit1) from TCCR0B,CS0[0](bit0) from TCCR0B
+		TCCR0B = TCCR0B & ~(1<<0);
+		TCCR0B = TCCR0B & ~(1<<1);
+		TCCR0B = TCCR0B & ~(1<<2);
+	}
+	else if((3 < total_time)  && (total_time <= 16))
+	{
+		OCR0A = ((total_time * 16) >> 0) - 1;
+		OCR0B = ((on_time_us * 16) >> 0) - 1;
+		// start timer by setting the clock prescalar
+		//  use the same clock from I/O clock
+		//  CS0[2:0] === 001
+		// CS0[2](bit2) from TCCR0B,CS0[1](bit1) from TCCR0B,CS0[0](bit0) from TCCR0B
+		TCCR0B = TCCR0B | (1<<0);
+		TCCR0B = TCCR0B & ~(1<<1);
+		TCCR0B = TCCR0B & ~(1<<2);
+	}
+	else if((16 < total_time)  && (total_time <= 128))
+	{
+		OCR0A = ((total_time * 16) >> 3) - 1;
+		OCR0B = ((on_time_us * 16) >> 3) - 1;
+		// start timer by setting the clock prescalar
+		//  dived by 8 from I/O clock
+		//  CS0[2:0] === 010
+		// CS0[2](bit2) from TCCR0B,CS0[1](bit1) from TCCR0B,CS0[0](bit0) from TCCR0B
+		TCCR0B = TCCR0B & ~(1<<0);
+		TCCR0B = TCCR0B | (1<<1);
+		TCCR0B = TCCR0B & ~(1<<2);
+	}
+	else if((128 < total_time)  && (total_time <= 1024))
+	{
+		OCR0A = ((total_time * 16) >> 6) - 1;
+		OCR0B = ((on_time_us * 16) >> 6) - 1;
+		// start timer by setting the clock prescalar
+		//  dived by 64 from I/O clock
+		//  CS0[2:0] === 011
+		// CS0[2](bit2) from TCCR0B,CS0[1](bit1) from TCCR0B,CS0[0](bit0) from TCCR0B
+		TCCR0B = TCCR0B | (1<<0);
+		TCCR0B = TCCR0B | (1<<1);
+		TCCR0B = TCCR0B & ~(1<<2);
+		
+	}
+	else if((1024 < total_time)  && (total_time <= 4096))
+	{
+		OCR0A = ((total_time * 16) >> 8) - 1;
+		OCR0B = ((on_time_us * 16) >> 8) - 1;
+		// start timer by setting the clock prescalar
+		//  divide by256 from I/O clock
+		//  CS0[2:0] === 100
+		// CS0[2](bit2) from TCCR0B,CS0[1](bit1) from TCCR0B,CS0[0](bit0) from TCCR0B
+		TCCR0B = TCCR0B & ~(1<<0);
+		TCCR0B = TCCR0B & ~(1<<1);
+		TCCR0B = TCCR0B | (1<<2);
+		
+	}
+	else if(total_time > 4096)
+	{
+		// dont' cross more than 4.096ms
+	}
+}
+void PWMGeneration(double duty_cycle_percent,uint32_t freqeuncy)
+{
+	double total_time_us = (1000000.0/freqeuncy);	
+	double on_time_us = (duty_cycle_percent/100.0) * total_time_us;
+	if (on_time_us<1.0)
+	{
+		on_time_us = 1;
+	}
+	
+	// max time = 8ms -- min freqency = 125 Hz
+	//  min time = 8us -- max frequency = 250000 = 125khz
+	Timer0_PhaseCorrectedPWMGeneration(on_time_us, total_time_us - on_time_us);
+}
+\end{minted}
+\end{document}

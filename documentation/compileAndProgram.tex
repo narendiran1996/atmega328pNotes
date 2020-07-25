@@ -1,0 +1,197 @@
+\documentclass{article}
+
+\usepackage[a4paper, left=0.5in, right=0.5in, bottom=0.5in, top=0.5in]{geometry}
+\usepackage{hyperref} 
+\hypersetup{
+    colorlinks=true,      
+    urlcolor=blue
+}
+
+\usepackage{enumitem}
+\usepackage{xcolor}
+\usepackage{natbib}
+
+\usepackage{minted}
+
+\usepackage{ragged2e}
+\begin{document}
+\justify
+
+\subsection*{GCC\cite{toolChain}}
+\begin{itemize}
+    \item GNU Compiler Collectin - compiler system.
+    \item Supports various language, processor and host operating system.
+    \item AVR GCC - Reffering to GCC targeting AVR.
+    \item AVR GCC translates high-level langues to assembly.
+    \item AVR GCC three language - C, C++, Ada.
+\end{itemize}
+
+\subsection*{GNU Binutils\cite{toolChain}} 
+Source : \href{https://www.nongnu.org/avr-libc/user-manual/overview.html}{Tool Chain overview}
+\begin{itemize}
+    \item Binary Utilites - contains the GNU assembler(gas), GNU linker(ld), etc.
+    \item avr-as - The assembler.
+    \item avr-ld - The linker.
+    \item avr-objcopy - Copy and translate object files to different format.
+    \item avr-objdump - Display information from object file including disassembly.
+    \item avr-size - List section sizes and total sizes.
+    \item avr-nm - List symbols from objects files.
+    \item avr-strings - List printable strings from files.
+    \item avr-readelf - Display contents of ELF files.
+    \item avr-addr2line - Convert addresses to file and line.
+\end{itemize}
+
+\subsection*{avr-lib\cite{toolChain}}
+\quad Open source standard C Libary - standard C Libary and Libary function specifit to AVR.
+
+
+
+\subsection*{Compiler Options\cite{compilerOptimize}} \label{optimization}
+\emph{-On} -- for optimization level; n indicates the optimization level; 0 being the default no optimization; 
+\begin{itemize}
+    \item \emph{-O0} -- reduces compilation time and this is default
+    \item \emph{-O} and \emph{-O1} -- the compiler tries to reduce code size and execution time, without performing any optimizations that take a great deal of compilation time.
+    \item \emph{-O2} --  Optimize even more than \emph{-O1}
+    \item \emph{-O3} --  Optimize even more than \emph{-O2}
+    \item \emph{-Os} -- Optimize for size and enables all \emph{-O2} optimization but not expected to increase code size
+    \item \emph{-Ofast} -- enables all \emph{-O3} optimzations and disregarads strict standard compliance
+    \item \emph{-Og} -- Optimize for debugging experience
+\end{itemize}
+
+
+\subsection*{Compilation} 
+\begin{itemize}
+    \item Will create the .obj object binary files.
+    \item Use \emph{avr-gcc} along with following options
+    \begin{itemize}
+        \item Optimization option \emph{-On} - use \emph{-Os} generally.
+        \item Warning option \emph{-Wall} - enables all the warning
+        \item Debug option \emph{-g} - Produce debugging information.
+        \item MCU option \emph{-mmcu} - the actual MCU - \href{https://www.nongnu.org/avr-libc/user-manual/#supp_devices}{Supported MCU}
+        \item C file option \emph{-c} - the actual c file.
+        \item Output file name \emph{-o} - Output file name
+    \end{itemize}
+    \item To see the object binary file use \emph{avr-objdump -S fileName.o}
+    \mint[bgcolor=lightgray]{shell}{avr-gcc -Os -Wall -g -mmcu=atmega8 -c hello.c -o hello.o}
+\end{itemize}
+
+
+\subsection*{Linking}
+\begin{itemize}
+    \item Link the bianary object file to binary elf file.
+    \item Use \emph{avr-gcc} along with following options
+    \begin{itemize}
+        \item Optimization option \emph{-On} - use \emph{-Os} generally.
+        \item Warning option \emph{-Wall} - enables all the warning
+        \item Debug option \emph{-g} - Produce debugging information.
+        \item MCU option \emph{-mmcu} - the actual MCU - \href{https://www.nongnu.org/avr-libc/user-manual/#supp_devices}{Supported MCU}
+        \item .obj file option - the actual .obj file.
+        \item Output file name \emph{-o} - Output file name
+
+    \end{itemize}
+    \item To see the object binary file use \emph{avr-objdump -S fileName.elf}
+    \mint[bgcolor=lightgray]{shell}{avr-gcc -Os -Wall -g -mmcu=atmega8 hello.o -o hello.elf}
+\end{itemize}
+
+\subsection*{Generating the hex file}
+\begin{itemize}
+    \item The Intel hex file is what we program into procesosr.
+    \item Use \emph{avr-objcopy} along with following options
+    \begin{itemize}
+        \item section Option \emph{-j} -- which sections to copy - generally .text and .data section
+        \item Output format option \emph{-O} - what Output format should be used - eg) ihex
+        \item The input .elf file
+        \item The output .hex file
+    \end{itemize}
+    \mint[bgcolor=lightgray]{shell}{avr-objcopy -j .text -j .data -O ihex hello.elf hello.hex}
+
+\end{itemize}
+
+\section*{AVRDUDE\cite{avrdude}}
+\subsection*{Introduction}
+\begin{itemize}
+    \item AVRDUDE - AVR Downloader UploDEr is a program for downloading and uploading the on-chip memories of Atmel's AVR microcontroller.
+    \item Can program Flash, EEPROM, fuse ,lock bits and  signature bytes.
+    \item Can read or write all chip memory types mentioned above.
+    \item Supports varieous programmers from STK500, AVRISP, mkII, JTAG ICE, PPI, serial bit-bang adapters, etc.
+    \item The STK500, JTAG ICE, etc uses serial port to communicate.
+    \item The JTAGICE, AVRISP, USBasp, USBtinyISP uses USB using \emph{libusb}.
+\end{itemize}
+
+
+\subsection*{Command Line Options}
+\begin{itemize}
+    \item \emph{-p partno} -- the mandatory option which specifies the MCU.
+    \item \emph{-b baudrate} -- Specify the Baudrate.
+    \item \emph{-c programmer-id} -- Specify the pgorammer used. eg)arduino, avrisp, avrisp2, avrispmkII, avrispv2, jtag1, stk500, stk500v1, stk500v2, usbasp, usbtiny, etc.
+    \item \emph{-C config-file} -- Configuration data file.
+    \item \emph{-e} -- Causes a chip erase of FLash ROM, EEPROM to 0xff and clears all lock bits.
+    \item \emph{-F} -- Override device signature check.
+    \item \emph{-P port} -- Specifty the port to be used.
+    \item \emph{-u} -- Used if you want to write fuse bits - this cuases disabling the safemode for fuse bits.
+    \item \emph{-t} -- uses interactive terminal mode instead of up or downloading files.
+    \item \emph{-v} -- Verbose
+    \item \emph{-U memtype:op:filename[:format]}
+    \begin{itemize}
+        \item \emph{memtype} -- Memory types are 
+        \begin{enumerate}[label=(\roman*)]
+            \item \emph{calibration} -- One or more bytes of RC oscillator calibration data.
+            \item \emph{eeprom} -- The EEPROM.
+            \item \emph{efuse} -- The extended fuse byte
+            \item \emph{flash} -- The flash ROM of device
+            \item \emph{fuse} -- The fuse byte in devices with a single fuse byte.
+            \item \emph{hfuse} -- The high fuse byte.
+            \item \emph{lfuse} -- The low fuse byte.
+            \item \emph{lock} - The lock byte.
+            \item \emph{signature} - The three device signature byte (device ID).
+        \end{enumerate}
+        \item \emph{op} -- Operations are
+        \begin{enumerate}[label=(\roman*)]
+            \item \emph{r} -- Read the specifed device memory and write to specified file.
+            \item \emph{w} -- read the specifed file and write to specifed device memory.
+            \item \emph{v} -- read the specified device memory and the specified file and perform a verify operation .
+        \end{enumerate}
+        \item The \emph{filename} can be either a fileName,  immediate byte value (in decimal, binary,hexadecimal, etc)
+        \item \emph{format} is optional and can 
+        \begin{enumerate}
+            \item \emph{i} - Intel hex
+            \item \emph{r} - raw binary
+            \item \emph{e} - the elf files
+            \item \emph{m} - immediate mode
+            \item \emph{d} - decimal
+            \item \emph{b} - binary(0b)
+            \item \emph{d} - hexadecimal(0x)
+        \end{enumerate}
+    \end{itemize}
+\end{itemize}
+
+
+\subsection*{Example}
+
+\subsubsection*{Downloading hex file into device Flash}
+\begin{minted}[bgcolor=lightgray]{bash}
+    avrdude -p atmega8 -b 19200 -c stk500 -p /dev/ttyUSB0 -v -U flash:w:hello.hex:i
+\end{minted}
+
+\subsubsection*{Uploading Flash from device into file}
+\begin{minted}[bgcolor=lightgray]{bash}
+    avrdude -p atmega8 -b 19200 -c stk500 -p /dev/ttyUSB0 -v -U flash:r:"./readFashMemory.bin":r
+\end{minted}
+
+\subsubsection*{Reading Device signature}
+\begin{minted}[bgcolor=lightgray]{bash}
+    avrdude -p atmega8 -b 19200 -c stk500 -p /dev/ttyUSB0 -v -U signature:r:"deviceSinature.text":h
+\end{minted}
+
+
+\subsubsection*{Writing the High fuse}
+\begin{minted}[bgcolor=lightgray]{bash}
+    avrdude -p atmega8 -b 19200 -c stk500 -p /dev/ttyUSB0 -v -U hfuse:w:0x65:m
+\end{minted}
+
+Also see this\cite{alsosee}.
+
+\bibliographystyle{plain}
+\bibliography{ReferenceM}
+
+\end{document}

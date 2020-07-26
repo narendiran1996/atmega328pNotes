@@ -1087,7 +1087,7 @@ TIFR1 = TIFR1 | 0x02;
 \end{minted}
 
 \subsection{Fast PWM Mode}
-\begin{minted}[bgcolor=lightgray]{c}
+\begin{minted}[breaklines,bgcolor=lightgray]{c}
 ISR(TIMER1_OVF_vect)
 {
 } 
@@ -1104,7 +1104,7 @@ ISR(TIMER1_COMPB_vect)
     \item First, \bitFormat{WGM1[3:0]} bits are configured as 0101 or 0110 or 0111 for Fast PWM Mode with TOP at MAX in \regFormat{TCCR1A} and \regFormat{TCCR1B} registers.
     \item Next, \bitFormat{COM1A[1:0]} and/or \bitFormat{COM1B[1:0]} bits of \regFormat{TCCR1A} register are configured to make outputs \pinFormat{OC1A} and/or \pinFormat{OC01} pins to generate PWM by comparing between \regFormat{OCR1A} and/or \regFormat{OCR1B} respectively. That is for Non-Inverting, \bitFormat{COM1x[1:0]} is written 10.
     \item Next, the duty cycle value is loaded into \regFormat{OCR1A} and/or \regFormat{OCR1B} register for \pinFormat{OC1A} and/or \pinFormat{OC1B} pins.
-    \item Also, the \bitFormat{OCIE0A} and/or \bitFormat{OCIE0B} bits of \regFormat{TIMSK0} register  are enabled for Output Compare Interupts if needed.
+    \item Also, the \bitFormat{OCIE1A} and/or \bitFormat{OCIE1B} bits of \regFormat{TIMSK1} register  are enabled for Output Compare Interupts if needed.
     \item The interrupt Service routine is written if needed for compare match and/or overflow.
     \item Finally, Timer is started by setting \bitFormat{CS1[2:0]} bit as needed prescalar in \regFormat{TCR1B} register.
     \item The timing for PWM on 10\% duty cycle \pinFormat{OC1A} and 75\% duty cycle\pinFormat{OC1B} pins are shown assuming .
@@ -1129,7 +1129,7 @@ ISR(TIMER1_COMPB_vect)
     \busref{OC1B} & u H H H h HHH h L L L L l H H H h HHH Hhl\\
 \end{tikztimingtable}
 
-\begin{minted}[bgcolor=lightgray]{c}
+\begin{minted}[breaklines,bgcolor=lightgray]{c}
 /* TCNT1 starts from 0X0000 goes upto TOP and restarts from 0X00*/
 /* Mode of operation:
     WGM1[3:0] --> 0101 --	TOP--> 0X00FF
@@ -1219,7 +1219,7 @@ sei();
     \busref{OC0B} & u LLLl LLL l HHHH h LLL l LLL Llh\\
 \end{tikztimingtable}
 
-\begin{minted}[bgcolor=lightgray]{c}
+\begin{minted}[breaklines,bgcolor=lightgray]{c}
 /* TCNT1 starts from 0X0000 goes upto TOP and restarts from 0X00*/
 /* Mode of operation:
     WGM1[3:0] --> 0101 --	TOP--> 0X00FF
@@ -1287,7 +1287,7 @@ sei();
     \item Also, the \bitFormat{OCIE01B} bits of \regFormat{TIMSK1} register  are enabled for Output Compare Interupts if needed.
     \item The interrupt Service routine is written if needed for compare match.
     \item Finally, Timer is started by setting \bitFormat{CS1[2:0]} bit as needed prescalar in \regFormat{TCR1B} register.
-    \item The timing for PWM on 85\% duty cycle(0x60)  \pinFormat{OC1B} pins are shown assuming .
+    \item The timing for PWM on 37\% duty cycle \pinFormat{OC1B} pins are shown assuming .
     \begin{itemize}
         \item 0x7869 for OCR0A.
         \item 0x1A20 for OCR0B.
@@ -1306,7 +1306,7 @@ sei();
     \busref{OC1B} & u H H H h  h L L l H H H h h LLl HH H  H LL l h\\
 \end{tikztimingtable}
 
-\begin{minted}[bgcolor=lightgray]{c}
+\begin{minted}[breaklines,bgcolor=lightgray]{c}
 /* TCNT1 starts from 0X0000 goes upto TOP and restarts from 0X00*/
 /* Mode of operation:
     WGM1[3:0] --> 0101 --	TOP--> 0X00FF
@@ -1361,7 +1361,7 @@ sei();
     \item Also, the \bitFormat{OCIE01B} bits of \regFormat{TIMSK1} register  are enabled for Output Compare Interupts if needed.
     \item The interrupt Service routine is written if needed for compare match.
     \item Finally, Timer is started by setting \bitFormat{CS1[2:0]} bit as needed prescalar in \regFormat{TCR1B} register.
-    \item The timing for PWM on 85\% duty cycle(0x60)  \pinFormat{OC1B} pins are shown assuming .
+    \item The timing for PWM on 37\% duty cycle(0x60)  \pinFormat{OC1B} pins are shown assuming .
     \begin{itemize}
         \item 0x7869 for OCR0A.
         \item 0x1A20 for OCR0B.
@@ -1380,7 +1380,7 @@ sei();
     \busref{OC1B} & u L L L l  l H H h L L L l l HHh LL L  L HH h l\\
 \end{tikztimingtable}
 
-\begin{minted}[bgcolor=lightgray]{c}
+\begin{minted}[breaklines,bgcolor=lightgray]{c}
 /* TCNT1 starts from 0X0000 goes upto TOP and restarts from 0X00*/
 /* Mode of operation:
     WGM1[3:0] --> 0101 --	TOP--> 0X00FF
@@ -1426,5 +1426,627 @@ sei();
 \end{minted}
 
 
+
+\subsubsection{Toggling mode square Wave} 
+\quad Frequency is chosen by \regFormat{OCR1A} register.
+\begin{itemize}
+    \item First, \bitFormat{WGM1[3:0]} bits are configured as 1111 for Fast PWM Mode with \regFormat{OCR1A} at MAX in \regFormat{TCCR1A} and \regFormat{TCCR1B} registers.
+    \item Next, \bitFormat{COM1A[1:0]} bits of \regFormat{TCCR1A} register are configured to make output \pinFormat{OC1A} pins to generate PWM by comparing between \regFormat{OCR1A} and \regFormat{TCNT1}. That is for Toggling square wave \bitFormat{COM1A[1:0]} is written 01.
+    \item The frequency of duty cycle is loaded into \regFormat{OCR1A} register.
+    \item Also, the \bitFormat{OCIE1A} bits of \regFormat{TIMSK1} register  are enabled for Output Compare Interupts if needed.
+    \item The interrupt Service routine is written if needed for compare match.
+    \item Finally, Timer is started by setting \bitFormat{CS1[2:0]} bit as needed prescalar in \regFormat{TCR1B} register.
+    \item The timing for squared wave on \pinFormat{OC1A} pins are shown assuming.
+    \begin{itemize}
+        \item 0x1234 for OCR1A.
+    \end{itemize}
+\end{itemize}
+
+\begin{tikztimingtable}[
+    timing/dslope=0.1,
+    timing/.style={x=5ex,y=2ex},
+    x=5ex,
+    timing/rowdist=3ex,
+    timing/name/.style={font=\sffamily\scriptsize}
+    ]
+    \busref{clk\_{T1}}  & 41{1c} \\
+    \busref{TCNT1} & 0.5U{} D{0x000} D{0x001} [dotted] 2D{}; D{0x1234} D{0x0000} D{0x0001} [dotted] 2D{};  D{0x1234} D{0x0000} D{0x0001}[dotted] 2D{};;D{0x1234} D{0x0000} D{0x0001} [dotted] 2D{}; D{0x1234}\\
+    \busref{OC1A} & u L L L L H H H H H L L L L L H H H H H L\\
+\end{tikztimingtable}
+
+\begin{minted}[breaklines,bgcolor=lightgray]{c}
+/* TCNT1 starts from 0X0000 goes upto TOP and restarts from 0X00*/
+/* Mode of operation:
+WGM1[3:0] --> 0101 --	TOP--> 0X00FF
+WGM1[3:0] --> 0110 --	TOP--> 0x01FF
+WGM1[3:0] --> 0111 --	TOP--> 0x03FF
+WGM1[3:0] --> 1110 --	TOP--> ICR1
+WGM1[3:0] --> 1111 --	TOP--> OCR1A
+*/	
+// we take OCR1A for custom frequency 
+// choose WGM1[3:0] --> 1111 for OCR1A as TOP for custom frequency
+TCCR1A = TCCR1A | (1<<WGM10);
+TCCR1A = TCCR1A | (1<<WGM11);
+TCCR1B = TCCR1B | (1<<WGM12);
+TCCR1B = TCCR1B | (1<<WGM13);	
+
+// here we set COM1B[1:0] as 01 for toggling of OC1A
+// which is reflected in PB1
+// COM1B[1](bit5) from TCCR1A, COM1B[0](bit4) from TCCR1A
+TCCR1A = TCCR1A & ~(1<<5);
+TCCR1A = TCCR1A | (1<<4);
+
+OCR1A = 0x1234; // for freqeuncy
+
+
+// start timer by setting the clock prescalar
+// SAME AS from I/O clock
+// same-- CS1[2:0] === 001
+// CS1[2](bit2) from TCCR1B,CS1[1](bit1) from TCCR1B,CS1[0](bit0) from TCCR1B
+TCCR1B = TCCR1B | (1<<CS10);
+TCCR1B = TCCR1B & ~(1<<CS11);
+TCCR1B = TCCR1B & ~(1<<CS12);
+
+//enabled global interrupt
+sei();
+}
+\end{minted}
+
+
+\subsubsection{Application I - PWM generation}
+\begin{minted}[breaklines,bgcolor=lightgray]{c}
+void Timer1_FastPWMGeneration(uint32_t on_time_us, uint32_t off_time_us)
+{
+	uint32_t total_time = on_time_us + off_time_us;
+	
+	/* TCNT1 starts from 0X0000 goes upto TOP and restarts from 0X00*/
+	/* Mode of operation:
+		WGM1[3:0] --> 0101 --	TOP--> 0X00FF
+		WGM1[3:0] --> 0110 --	TOP--> 0x01FF
+		WGM1[3:0] --> 0111 --	TOP--> 0x03FF
+		WGM1[3:0] --> 1110 --	TOP--> ICR1
+		WGM1[3:0] --> 1111 --	TOP--> OCR1A
+	*/
+	
+	// we take OCR1A for custom frequency and OCR1B for PWM on time(duty cycle)
+	
+	// choose WGM1[3:0] --> 1111 for OCR1A as TOP for custom frequency
+	TCCR1A = TCCR1A | (1<<WGM10);
+	TCCR1A = TCCR1A | (1<<WGM11);
+	TCCR1B = TCCR1B | (1<<WGM12);
+	TCCR1B = TCCR1B | (1<<WGM13);
+	
+
+	// COM1B[1](bit5) from TCCR1A, COM1B[0](bit4) from TCCR1A
+	TCCR1A = TCCR1A | (1<<COM1B0);
+	TCCR1A = TCCR1A | (1<<COM1B1);
+	
+	if(total_time <4)
+	{
+		// if total_time <= 3us -- so we stop clock
+		
+		OCR1A = 0;
+		OCR1B = 0;
+		// start timer by setting the clock prescalar
+		//  use the same clock from I/O clock
+		//  CS1[2:0] === 001
+		// CS1[2](bit2) from TCCR1B,CS1[1](bit1) from TCCR1B,CS1[0](bit0) from TCCR1B
+		TCCR1B = TCCR1B & ~(1<<0);
+		TCCR1B = TCCR1B & ~(1<<1);
+		TCCR1B = TCCR1B & ~(1<<2);
+	}
+	else if((3 < total_time)  && (total_time <= 4000))
+	{
+		OCR1A = ((total_time * 16) >> 0) - 1;
+		OCR1B = ((on_time_us * 16) >> 0) - 1;
+		// start timer by setting the clock prescalar
+		//  use the same clock from I/O clock
+		//  CS1[2:0] === 001
+		// CS1[2](bit2) from TCCR1B,CS1[1](bit1) from TCCR1B,CS1[0](bit0) from TCCR1B
+		TCCR1B = TCCR1B | (1<<0);
+		TCCR1B = TCCR1B & ~(1<<1);
+		TCCR1B = TCCR1B & ~(1<<2);
+	}
+	else if((4000 < total_time)  && (total_time <= 32000))
+	{
+		OCR1A = ((total_time * 16) >> 3) - 1;
+		OCR1B = ((on_time_us * 16) >> 3) - 1;
+		// start timer by setting the clock prescalar
+		//  dived by 8 from I/O clock
+		//  CS1[2:0] === 010
+		// CS1[2](bit2) from TCCR1B,CS1[1](bit1) from TCCR1B,CS1[0](bit0) from TCCR1B
+		TCCR1B = TCCR1B & ~(1<<0);
+		TCCR1B = TCCR1B | (1<<1);
+		TCCR1B = TCCR1B & ~(1<<2);
+	}
+	else if((32000 < total_time)  && (total_time <= 260000))
+	{
+		OCR1A = ((total_time * 16) >> 6) - 1;
+		OCR1B = ((on_time_us * 16) >> 6) - 1;
+		// start timer by setting the clock prescalar
+		//  dived by 64 from I/O clock
+		//  CS1[2:0] === 011
+		// CS1[2](bit2) from TCCR1B,CS1[1](bit1) from TCCR1B,CS1[0](bit0) from TCCR1B
+		TCCR1B = TCCR1B | (1<<0);
+		TCCR1B = TCCR1B | (1<<1);
+		TCCR1B = TCCR1B & ~(1<<2);
+		
+	}
+	else if((260000 < total_time)  && (total_time <= 1000000))
+	{
+		OCR1A = ((total_time * 16) >> 8) - 1;
+		OCR1B = ((on_time_us * 16) >> 8) - 1;
+		// start timer by setting the clock prescalar
+		//  divide by256 from I/O clock
+		//  CS1[2:0] === 100
+		// CS1[2](bit2) from TCCR1B,CS1[1](bit1) from TCCR1B,CS1[0](bit0) from TCCR1B
+		TCCR1B = TCCR1B & ~(1<<0);
+		TCCR1B = TCCR1B & ~(1<<1);
+		TCCR1B = TCCR1B | (1<<2);
+		
+	}
+	else if(total_time > 1000000)
+	{
+		// dont' cross more than 1s
+	}
+}
+void PWMGeneration(double duty_cycle_percent,uint32_t freqeuncy)
+{
+	double total_time_us = (1000000.0/freqeuncy);
+	double on_time_us = (duty_cycle_percent/100.0) * total_time_us;
+	if (on_time_us<1.0)
+	{
+		on_time_us = 1;
+	}
+	
+	// max time = 1S -- min freqency = 1 Hz
+	//  min time = 4us -- max frequency = 250000 = 250khz
+	Timer1_FastPWMGeneration(on_time_us, total_time_us - on_time_us);
+}
+\end{minted}
+
+
+\subsection{Phase Corrected PWM Mode}
+\begin{minted}[breaklines,bgcolor=lightgray]{c}
+ISR(TIMER1_OVF_vect)
+{
+} 
+ISR(TIMER1_COMPA_vect)
+{
+}
+ISR(TIMER1_COMPB_vect)
+{
+}
+\end{minted}
+
+\subsubsection{Non-Inverting PWM with TOP at MAX(0x00FF or 0x01FF or 0x03FF)}
+\quad Frequency is chosen by PRESCALAR and Duty cycle by \regFormat{OCR1A} and/or \regFormat{OCR1B} register.
+\begin{itemize}
+    \item First, \bitFormat{WGM1[3:0]} bits are configured as 0001 or 0010 or 0011 for Phase Corrected PWM Mode with TOP at MAX in \regFormat{TCCR1A} and \regFormat{TCCR1B} registers.
+    \item Next, \bitFormat{COM1A[1:0]} and/or \bitFormat{COM1B[1:0]} bits of \regFormat{TCCR1A} register are configured to make outputs \pinFormat{OC1A} and/or \pinFormat{OC01} pins to generate PWM by comparing between \regFormat{OCR1A} and/or \regFormat{OCR1B} respectively. That is for Non-Inverting, \bitFormat{COM1x[1:0]} is written 10.
+    \item Next, the duty cycle value is loaded into \regFormat{OCR1A} and/or \regFormat{OCR1B} register for \pinFormat{OC1A} and/or \pinFormat{OC1B} pins.
+    \item Also, the \bitFormat{OCIE1A} and/or \bitFormat{OCIE1B} bits of \regFormat{TIMSK1} register  are enabled for Output Compare Interupts if needed.
+    \item The interrupt Service routine is written if needed for compare match.
+    \item Finally, Timer is started by setting \bitFormat{CS1[2:0]} bit as needed prescalar in \regFormat{TCR1B} register.
+    \item The timing for PWM on 10\% duty cycle \pinFormat{OC1A} and 75\% duty cycle\pinFormat{OC1B} pins are shown assuming .
+    \begin{itemize}
+        \item WGM1[3:0] === 0011 --	TOP equals 0x03FF
+        \item 0x66 for OCR1A.
+        \item 0x2FF for OCR1B.
+    \end{itemize}
+\end{itemize}
+
+\begin{tikztimingtable}[
+    timing/dslope=0.1,
+    timing/.style={x=5ex,y=2ex},
+    x=5ex,
+    timing/rowdist=3ex,
+    timing/name/.style={font=\sffamily\scriptsize}
+    ]
+    \busref{clk\_{T1}}  & 41{1c} \\
+    \busref{TCNT1} & 0.5U{} D{0x0000} 1D{0x0001};[dotted] .5D{};1D{0x0066}  [dotted] 1D{};1D{0x02FF} [dotted] .5D{}; 1D{0x03FE}  1D{0x03FF} 1D{0x03FE} [dotted] .5D{}; 1D{0x02FF}[dotted] 1D{}; 1D{0x0066} [dotted] .5D{}; 1D{0x0001}; 1D{0x0000}; 1D{0x0001};[dotted] .5D{};1D{0x0066}  [dotted] 1D{};1D{0x02FF} [dotted] .5D{};\\
+    \busref{OC1A} & u H H h L L L L LLLL L  H H HH H L L L l\\
+    \busref{OC1B} & u H HHH h L L L L L H H H h HHH HHhlL\\
+\end{tikztimingtable}
+
+\begin{minted}[breaklines,bgcolor=lightgray]{c}
+/* TCNT1 starts from 0X0000 goes upto TOP and from TOP to BOTTOM*/
+/* Mode of operation:
+    WGM1[3:0] --> 0001 --	TOP--> 0X00FF
+    WGM1[3:0] --> 0010 --	TOP--> 0x01FF
+    WGM1[3:0] --> 0011 --	TOP--> 0x03FF
+    WGM1[3:0] --> 1010 --	TOP--> ICR1
+    WGM1[3:0] --> 1011 --	TOP--> OCR1A
+*/	
+// we take 0x03FF for fixed frequency and OCR1B for PWM on time(duty cycle)	
+// choose WGM1[3:0] --> 0011 for 0x03FF as TOP for custom frequency
+TCCR1A = TCCR1A | (1<<WGM10);
+TCCR1A = TCCR1A | (1<<WGM11);
+TCCR1B = TCCR1B & ~(1<<WGM12);
+TCCR1B = TCCR1B & ~(1<<WGM13);
+
+/* in timer0_phase_pwm_top_max, only two possiblites are there for COM0B[1:0] and COM0A[1:0] i.e) 10(Inverting) and 11(Non- inverting) */
+
+// here we set COM0A[1:0] as 10 for non-inverting
+// here we set COM0B[1:0] as 10 for non-inverting
+
+// which is reflected in PD6
+// COM1A[1](bit7) from TCCR1A, COM1A[0](bit6) from TCCR1A
+TCCR1A = TCCR1A | (1<<COM1A1);
+TCCR1A = TCCR1A & ~(1<<COM1A0);
+
+// which is reflected in PD65
+// COM1B[1](bit5) from TCCR1A, COM1B[0](bit4) from TCCR1A	
+TCCR1A = TCCR1A | (1<<COM1B1);
+TCCR1A = TCCR1A & ~(1<<COM1B0);
+
+// Enable Interrupt when TOV1 overflows TOP - here 0x03FF
+//  TOIE1 bit is enabled
+TIMSK1 = TIMSK1 | (1<<TOIE1);
+
+/* we use OCF1A flag - which is set at every time TCN0 reaches OCR1A */
+TIMSK1 = TIMSK1 | (1<<OCIE1A);
+/* we use OCF1B flag - which is set at every time TCN0 reaches OCR1B */
+TIMSK1 = TIMSK1 | (1<<OCIE1B);
+
+// Next we set values for OCR1A and OCR2B
+// Since, TCNT1 goes till max(0x3FF), we can choose OCR1A and OCR1B to any value below max(0x03FF)
+OCR1A = 102; // for 10% duty clcle
+OCR1B = 767; // for 75% duty clcle
+
+// start timer by setting the clock prescalar
+// SAME AS from I/O clock
+// same-- CS1[2:0] === 001
+// CS1[2](bit2) from TCCR1B,CS1[1](bit1) from TCCR1B,CS1[0](bit0) from TCCR1B
+TCCR1B = TCCR1B | (1<<CS10);
+TCCR1B = TCCR1B & ~(1<<CS11);
+TCCR1B = TCCR1B & ~(1<<CS12);
+
+//enabled global interrupt
+sei();
+\end{minted}
+
+\subsubsection{Inverting PWM with TOP at MAX(0x00FF or 0x01FF or 0x03FF)}
+\quad Frequency is chosen by PRESCALAR and Duty cycle by \regFormat{OCR1A} and/or \regFormat{OCR1B} register.
+\begin{itemize}
+    \item First, \bitFormat{WGM1[3:0]} bits are configured as 0001 or 0010 or 0011 for Phase Corrected PWM Mode with TOP at MAX in \regFormat{TCCR1A} and \regFormat{TCCR1B} registers.
+    \item Next, \bitFormat{COM1A[1:0]} and/or \bitFormat{COM1B[1:0]} bits of \regFormat{TCCR1A} register are configured to make outputs \pinFormat{OC1A} and/or \pinFormat{OC01} pins to generate PWM by comparing between \regFormat{OCR1A} and/or \regFormat{OCR1B} respectively. That is for Inverting, \bitFormat{COM1x[1:0]} is written 11.
+    \item Next, the duty cycle value is loaded into \regFormat{OCR1A} and/or \regFormat{OCR1B} register for \pinFormat{OC1A} and/or \pinFormat{OC1B} pins.
+    \item Also, the \bitFormat{OCIE1A} and/or \bitFormat{OCIE1B} bits of \regFormat{TIMSK1} register  are enabled for Output Compare Interupts if needed.
+    \item The interrupt Service routine is written if needed for compare match.
+    \item Finally, Timer is started by setting \bitFormat{CS1[2:0]} bit as needed prescalar in \regFormat{TCR1B} register.
+    \item The timing for PWM on 10\% duty cycle \pinFormat{OC1A} and 75\% duty cycle\pinFormat{OC1B} pins are shown assuming .
+    \begin{itemize}
+        \item WGM1[3:0] === 0011 --	TOP equals 0x03FF
+        \item 0x66 for OCR1A.
+        \item 0x2FF for OCR1B.
+    \end{itemize}
+\end{itemize}
+
+\begin{tikztimingtable}[
+    timing/dslope=0.1,
+    timing/.style={x=5ex,y=2ex},
+    x=5ex,
+    timing/rowdist=3ex,
+    timing/name/.style={font=\sffamily\scriptsize}
+    ]
+    \busref{clk\_{T1}}  & 41{1c} \\
+    \busref{TCNT1} & 0.5U{} D{0x0000} 1D{0x0001};[dotted] .5D{};1D{0x0066}  [dotted] 1D{};1D{0x02FF} [dotted] .5D{}; 1D{0x03FE}  1D{0x03FF} 1D{0x03FE} [dotted] .5D{}; 1D{0x02FF}[dotted] 1D{}; 1D{0x0066} [dotted] .5D{}; 1D{0x0001}; 1D{0x0000}; 1D{0x0001};[dotted] .5D{};1D{0x0066}  [dotted] 1D{};1D{0x02FF} [dotted] .5D{};\\
+    \busref{OC1A} & u L L l H H H H HHHH H  L L LL L H H H h\\
+    \busref{OC1B} & u L LLL l H H H H H L L L l LLL LLlhH\\
+\end{tikztimingtable}
+
+\begin{minted}[breaklines,bgcolor=lightgray]{c}
+/* TCNT1 starts from 0X0000 goes upto TOP and from TOP to BOTTOM*/
+/* Mode of operation:
+    WGM1[3:0] --> 0001 --	TOP--> 0X00FF
+    WGM1[3:0] --> 0010 --	TOP--> 0x01FF
+    WGM1[3:0] --> 0011 --	TOP--> 0x03FF
+    WGM1[3:0] --> 1010 --	TOP--> ICR1
+    WGM1[3:0] --> 1011 --	TOP--> OCR1A
+*/	
+// we take 0x03FF for fixed frequency and OCR1B for PWM on time(duty cycle)	
+// choose WGM1[3:0] --> 0011 for 0x03FF as TOP for custom frequency
+TCCR1A = TCCR1A | (1<<WGM10);
+TCCR1A = TCCR1A | (1<<WGM11);
+TCCR1B = TCCR1B & ~(1<<WGM12);
+TCCR1B = TCCR1B & ~(1<<WGM13);
+
+/* in timer0_phase_pwm_top_max, only two possiblites are there for COM0B[1:0] and COM0A[1:0] i.e) 10(Inverting) and 11(Non- inverting) */
+
+// here we set COM0A[1:0] as 11 for inverting
+// here we set COM0B[1:0] as 11 for inverting
+
+// which is reflected in PD6
+// COM1A[1](bit7) from TCCR1A, COM1A[0](bit6) from TCCR1A
+TCCR1A = TCCR1A | (1<<COM1A1);
+TCCR1A = TCCR1A | (1<<COM1A0);
+
+// which is reflected in PD65
+// COM1B[1](bit5) from TCCR1A, COM1B[0](bit4) from TCCR1A	
+TCCR1A = TCCR1A | (1<<COM1B1);
+TCCR1A = TCCR1A | (1<<COM1B0);
+
+// Enable Interrupt when TOV1 overflows TOP - here 0x03FF
+//  TOIE1 bit is enabled
+TIMSK1 = TIMSK1 | (1<<TOIE1);
+
+/* we use OCF1A flag - which is set at every time TCN0 reaches OCR1A */
+TIMSK1 = TIMSK1 | (1<<OCIE1A);
+/* we use OCF1B flag - which is set at every time TCN0 reaches OCR1B */
+TIMSK1 = TIMSK1 | (1<<OCIE1B);
+
+// Next we set values for OCR1A and OCR2B
+// Since, TCNT1 goes till max(0x3FF), we can choose OCR1A and OCR1B to any value below max(0x03FF)
+OCR1A = 102; // for 10% duty clcle
+OCR1B = 767; // for 75% duty clcle
+
+// start timer by setting the clock prescalar
+// SAME AS from I/O clock
+// same-- CS1[2:0] === 001
+// CS1[2](bit2) from TCCR1B,CS1[1](bit1) from TCCR1B,CS1[0](bit0) from TCCR1B
+TCCR1B = TCCR1B | (1<<CS10);
+TCCR1B = TCCR1B & ~(1<<CS11);
+TCCR1B = TCCR1B & ~(1<<CS12);
+
+//enabled global interrupt
+sei();
+\end{minted}
+
+\subsubsection{Non-Inverting PWM with TOP at OCR1A}
+\quad Frequency is chosen by \regFormat{OCR1A} and Duty cycle by \regFormat{OCR1B} register.
+\begin{itemize}
+    \item First, \bitFormat{WGM1[3:0]} bits are configured as 1011 for Phase Corrected PWM Mode with OCR1A at MAX in \regFormat{TCCR1A} and \regFormat{TCCR1B} registers.
+    \item Next,  \bitFormat{COM1B[1:0]} bits of \regFormat{TCCR1A} register are configured to make output \pinFormat{OC1B} pins to generate PWM by comparing between \regFormat{OCR1B} respectively. That is for Non-Inverting, \bitFormat{COM1B[1:0]} is written 10.
+    \item The frequency of duty cycle is loaded into \regFormat{OCR1A} register.
+    \item Next, the duty cycle value is loaded into \regFormat{OCR1B} register for \pinFormat{OC1B} bits.
+    \item Also, the \bitFormat{OCIE1B} bits of \regFormat{TIMSK1} register  are enabled for Output Compare Interupts if needed.
+    \item The interrupt Service routine is written if needed for compare match.
+    \item Finally, Timer is started by setting \bitFormat{CS1[2:0]} bit as needed prescalar in \regFormat{TCR1B} register.
+    \item The timing for PWM on 37\% duty cycle \pinFormat{OC1B} pins are shown assuming .
+    \begin{itemize}
+        \item 0x7869 for OCR1A.
+        \item 0x1A20 for OCR1B.
+    \end{itemize}
+\end{itemize}
+
+\begin{tikztimingtable}[
+    timing/dslope=0.1,
+    timing/.style={x=5ex,y=2ex},
+    x=5ex,
+    timing/rowdist=3ex,
+    timing/name/.style={font=\sffamily\scriptsize}
+    ]
+    \busref{clk\_{T0}}  & 41{1c} \\
+    \busref{TCNT0} & 0.5U{} D{0x0000} 1D{0x0001};[dotted] .5D{}; D{0x1A20} [dotted] 1.5D{}; D{0x7868} D{0x7869} D{0x786A} [dotted] 1.5D{};  D{0x1A20} [dotted] .5D{}; 1D{0x0001} D{0x0000}1D{0x0001};[dotted] .5D{}; D{0x1A20} [dotted] 1.5D{}; D{0x7868} D{0x7869} D{0x786A} \\
+    \busref{OC0B} & u H H  h L L LLLL L H H H HH L LLlL L\\
+\end{tikztimingtable}
+
+\begin{minted}[breaklines,bgcolor=lightgray]{c}/* TCNT1 starts from 0X0000 goes upto TOP and from TOP to BOTTOM*/
+/* Mode of operation:
+    WGM1[3:0] --> 0001 --
+    TOP--> 0X00FF
+    WGM1[3:0] --> 0010 --
+    TOP--> 0x01FF
+    WGM1[3:0] --> 0011 --
+    TOP--> 0x03FF
+    WGM1[3:0] --> 1010 --
+    TOP--> ICR1
+    WGM1[3:0] --> 1011 --
+    TOP--> OCR1A
+*/
+// we take 0x03FF for fixed frequency and OCR1B for PWM on time(duty cycle)
+// choose WGM1[3:0] --> 1011 for OCR1A as TOP for custom frequency
+TCCR1A = TCCR1A | (1<<WGM10);
+TCCR1A = TCCR1A | (1<<WGM11);
+TCCR1B = TCCR1B & ~(1<<WGM12);
+TCCR1B = TCCR1B | (1<<WGM13);		
+
+// here we set COM1A[1:0] as 10 for non-inverting
+// which is reflected in PD5
+// COM1B[1](bit5) from TCCR1A, COM0B[0](bit4) from TCCR1A
+TCCR1A = TCCR1A | (1<<5);
+TCCR1A = TCCR1A & ~(1<<4);
+    
+// Next we set values for OCR1A and OCR1B
+// Since, TCNT1 goes till OCR1A, we can choose OCR1B to any value below OCR1A
+OCR1A = 0x7869; // for freqeuncy
+OCR1B = 0x1A20; // for pwm duty cylc
+
+// start timer by setting the clock prescalar
+// SAME AS from I/O clock
+// same-- CS1[2:0] === 001
+// CS1[2](bit2) from TCCR1B,CS1[1](bit1) from TCCR1B,CS1[0](bit0) from TCCR1B
+TCCR1B = TCCR1B | (1<<CS10);
+TCCR1B = TCCR1B & ~(1<<CS11);
+TCCR1B = TCCR1B & ~(1<<CS12);
+//enabled global interrupt
+sei();
+\end{minted}
+
+\subsubsection{Inverting PWM with TOP at OCR1A}
+\quad Frequency is chosen by \regFormat{OCR1A} and Duty cycle by \regFormat{OCR1B} register.
+\begin{itemize}
+    \item First, \bitFormat{WGM1[3:0]} bits are configured as 1011 for Phase Corrected PWM Mode with OCR1A at MAX in \regFormat{TCCR1A} and \regFormat{TCCR1B} registers.
+    \item Next,  \bitFormat{COM1B[1:0]} bits of \regFormat{TCCR1A} register are configured to make output \pinFormat{OC1B} pins to generate PWM by comparing between \regFormat{OCR1B} respectively. That is for Inverting, \bitFormat{COM1B[1:0]} is written 11.
+    \item The frequency of duty cycle is loaded into \regFormat{OCR1A} register.
+    \item Next, the duty cycle value is loaded into \regFormat{OCR1B} register for \pinFormat{OC1B} bits.
+    \item Also, the \bitFormat{OCIE1B} bits of \regFormat{TIMSK1} register  are enabled for Output Compare Interupts if needed.
+    \item The interrupt Service routine is written if needed for compare match.
+    \item Finally, Timer is started by setting \bitFormat{CS1[2:0]} bit as needed prescalar in \regFormat{TCR1B} register.
+    \item The timing for PWM on 37\% duty cycle \pinFormat{OC1B} pins are shown assuming .
+    \begin{itemize}
+        \item 0x7869 for OCR1A.
+        \item 0x1A20 for OCR1B.
+    \end{itemize}
+\end{itemize}
+
+\begin{tikztimingtable}[
+    timing/dslope=0.1,
+    timing/.style={x=5ex,y=2ex},
+    x=5ex,
+    timing/rowdist=3ex,
+    timing/name/.style={font=\sffamily\scriptsize}
+    ]
+    \busref{clk\_{T0}}  & 41{1c} \\
+    \busref{TCNT0} & 0.5U{} D{0x0000} 1D{0x0001};[dotted] .5D{}; D{0x1A20} [dotted] 1.5D{}; D{0x7868} D{0x7869} D{0x786A} [dotted] 1.5D{};  D{0x1A20} [dotted] .5D{}; 1D{0x0001} D{0x0000}1D{0x0001};[dotted] .5D{}; D{0x1A20} [dotted] 1.5D{}; D{0x7868} D{0x7869} D{0x786A} \\
+    \busref{OC0B} & u L L  l H H HHHH H L L L LL H HHhH H\\
+\end{tikztimingtable}
+
+\begin{minted}[breaklines,bgcolor=lightgray]{c}
+/* TCNT1 starts from 0X0000 goes upto TOP and from TOP to BOTTOM*/
+/* Mode of operation:
+    WGM1[3:0] --> 0001 --
+    TOP--> 0X00FF
+    WGM1[3:0] --> 0010 --
+    TOP--> 0x01FF
+    WGM1[3:0] --> 0011 --
+    TOP--> 0x03FF
+    WGM1[3:0] --> 1010 --
+    TOP--> ICR1
+    WGM1[3:0] --> 1011 --
+    TOP--> OCR1A
+*/
+// we take 0x03FF for fixed frequency and OCR1B for PWM on time(duty cycle)
+// choose WGM1[3:0] --> 1011 for OCR1A as TOP for custom frequency
+TCCR1A = TCCR1A | (1<<WGM10);
+TCCR1A = TCCR1A | (1<<WGM11);
+TCCR1B = TCCR1B & ~(1<<WGM12);
+TCCR1B = TCCR1B | (1<<WGM13);		
+
+// here we set COM1A[1:0] as 11 for inverting
+// which is reflected in PD5
+// COM1B[1](bit5) from TCCR1A, COM0B[0](bit4) from TCCR1A
+TCCR1A = TCCR1A | (1<<5);
+TCCR1A = TCCR1A | (1<<4);
+    
+// Next we set values for OCR1A and OCR1B
+// Since, TCNT1 goes till OCR1A, we can choose OCR1B to any value below OCR1A
+OCR1A = 0x7869; // for freqeuncy
+OCR1B = 0x1A20; // for pwm duty cylc
+
+// start timer by setting the clock prescalar
+// SAME AS from I/O clock
+// same-- CS1[2:0] === 001
+// CS1[2](bit2) from TCCR1B,CS1[1](bit1) from TCCR1B,CS1[0](bit0) from TCCR1B
+TCCR1B = TCCR1B | (1<<CS10);
+TCCR1B = TCCR1B & ~(1<<CS11);
+TCCR1B = TCCR1B & ~(1<<CS12);
+//enabled global interrupt
+sei();
+\end{minted}
+
+\subsubsection{Application I - PWM generation}
+\begin{minted}[breaklines,bgcolor=lightgray]{c}
+void Timer1_PhaseCorrectedPWMGeneration(uint32_t On_time_us, uint32_t Off_time_us)
+{
+    // Since, it is dual slope, the time would be doubled for one cylce, so we divide by 2
+    uint32_t total_time = (On_time_us>>1) + (Off_time_us>>1);
+    uint32_t on_time_us = On_time_us >> 1;
+        
+    /* TCNT1 starts from 0X0000 goes upto TOP and from TOP to BOTTOM*/
+    /* Mode of operation:
+        WGM1[3:0] --> 0001 --
+        TOP--> 0X00FF
+        WGM1[3:0] --> 0010 --
+        TOP--> 0x01FF
+        WGM1[3:0] --> 0011 --
+        TOP--> 0x03FF
+        WGM1[3:0] --> 1010 --
+        TOP--> ICR1
+        WGM1[3:0] --> 1011 --
+        TOP--> OCR1A
+    */
+    // we take 0x03FF for fixed frequency and OCR1B for PWM on time(duty cycle)
+    // choose WGM1[3:0] --> 1011 for OCR1A as TOP for custom frequency
+    TCCR1A = TCCR1A | (1<<WGM10);
+    TCCR1A = TCCR1A | (1<<WGM11);
+    TCCR1B = TCCR1B & ~(1<<WGM12);
+    TCCR1B = TCCR1B | (1<<WGM13);
+
+    // COM1B[1](bit5) from TCCR1A, COM1B[0](bit4) from TCCR1A
+    TCCR1A = TCCR1A | (1<<COM1B0);
+    TCCR1A = TCCR1A | (1<<COM1B1);
+    
+    if(total_time <4)
+    {
+        // if total_time <= 3us -- so we stop clock
+        OCR1A = 0;
+        OCR1B = 0;
+        // start timer by setting the clock prescalar
+        // use the same clock from I/O clock
+        // CS1[2:0] === 001
+        // CS1[2](bit2) from TCCR1B,CS1[1](bit1) from TCCR1B,CS1[0](bit0) from TCCR1B
+        TCCR1B = TCCR1B & ~(1<<0);
+        TCCR1B = TCCR1B & ~(1<<1);
+        TCCR1B = TCCR1B & ~(1<<2);
+    }
+    else if((3 < total_time) && (total_time <= 4000))
+    {
+        OCR1A = ((total_time * 16) >> 0) - 1;
+        OCR1B = ((on_time_us * 16) >> 0) - 1;
+        // start timer by setting the clock prescalar
+        // use the same clock from I/O clock
+        // CS1[2:0] === 001
+        // CS1[2](bit2) from TCCR1B,CS1[1](bit1) from TCCR1B,CS1[0](bit0) from TCCR1B
+        TCCR1B = TCCR1B | (1<<0);
+        TCCR1B = TCCR1B & ~(1<<1);
+        TCCR1B = TCCR1B & ~(1<<2);
+    }
+    else if((4000 < total_time) && (total_time <= 32000))
+    {
+        OCR1A = ((total_time * 16) >> 3) - 1;
+        OCR1B = ((on_time_us * 16) >> 3) - 1;
+        // start timer by setting the clock prescalar
+        // dived by 8 from I/O clock
+        // CS1[2:0] === 010
+        // CS1[2](bit2) from TCCR1B,CS1[1](bit1) from TCCR1B,CS1[0](bit0) from TCCR1B
+        TCCR1B = TCCR1B & ~(1<<0);
+        TCCR1B = TCCR1B | (1<<1);
+        TCCR1B = TCCR1B & ~(1<<2);
+    }
+    else if((32000 < total_time) && (total_time <= 260000))
+    {
+        OCR1A = ((total_time * 16) >> 6) - 1;
+        OCR1B = ((on_time_us * 16) >> 6) - 1;
+        // start timer by setting the clock prescalar
+        // dived by 64 from I/O clock
+        // CS1[2:0] === 011
+        // CS1[2](bit2) from TCCR1B,CS1[1](bit1) from TCCR1B,CS1[0](bit0) from TCCR1B
+        TCCR1B = TCCR1B | (1<<0);
+        TCCR1B = TCCR1B | (1<<1);
+        TCCR1B = TCCR1B & ~(1<<2);
+    }
+    else if((260000 < total_time) && (total_time <= 1000000))
+    {
+        OCR1A = ((total_time * 16) >> 8) - 1;
+        OCR1B = ((on_time_us * 16) >> 8) - 1;
+        // start timer by setting the clock prescalar
+        // divide by256 from I/O clock
+        // CS1[2:0] === 100
+        // CS1[2](bit2) from TCCR1B,CS1[1](bit1) from TCCR1B,CS1[0](bit0) from TCCR1B
+        TCCR1B = TCCR1B & ~(1<<0);
+        TCCR1B = TCCR1B & ~(1<<1);
+        TCCR1B = TCCR1B | (1<<2);
+    }
+    else if(total_time > 1000000)
+    {
+        // dont' cross more than 1s
+    }
+}
+void PWMGeneration(double duty_cycle_percent,uint32_t freqeuncy)
+{
+    double total_time_us = (1000000.0/freqeuncy);	
+    double on_time_us = (duty_cycle_percent/100.0) * total_time_us;
+    if (on_time_us<1.0)
+    {
+        on_time_us = 1;
+    }
+    
+    // max time = 8ms -- min freqency = 125 Hz
+    //  min time = 8us -- max frequency = 250000 = 125khz
+    Timer1_PhaseCorrectedPWMGeneration(on_time_us, total_time_us - on_time_us);
+}
+\end{minted}
 
 \end{document}

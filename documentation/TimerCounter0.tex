@@ -705,7 +705,7 @@ TCCR0B = TCCR0B & ~(1<<0);
 
 \subsubsection{Application I - Delay in ms}
 
-\begin{minted}[bgcolor=lightgray]{c}
+\begin{minted}[breaklines,bgcolor=lightgray]{c}
 // minimum delay being 4us -- choose like that
 // use PRESCALAR OF 1 -- 3us - 16us -- usage 3us - 16us -- factor=0 -- CS0[2:0]=1
 // use PRESCALAR OF 8 -- 3us - 128us -- usage 17us - 128us -- factor=3 -- CS0[2:0]=2
@@ -738,7 +738,7 @@ while(delayInMs--)
 \end{minted}
 
 \subsection{Fast PWM Mode}
-\begin{minted}[bgcolor=lightgray]{c}
+\begin{minted}[breaklines,bgcolor=lightgray]{c}
 ISR(TIMER0_OVF_vect)
 {
 } 
@@ -778,7 +778,7 @@ ISR(TIMER0_COMPB_vect)
     \busref{OC0B} & u H H H h HHH h L L L L l H H H h HHH Hhl\\
 \end{tikztimingtable}
 
-\begin{minted}[bgcolor=lightgray]{c}
+\begin{minted}[breaklines,bgcolor=lightgray]{c}
 // MOde of operation to fast_pwm_top_max Mode -- WGM0[2:0] === 011
 // WGM0[2](bit3) from TCCR0B, WGM0[1](bit1)  from TCCR0A, WGM0[0](bit0)  from TCCR0A
 TCCR0A = TCCR0A | (1<<0);
@@ -856,7 +856,7 @@ sei();
     \busref{OC0A} & u LLLl h HHHHHHHh LLLl HHHHH\\
     \busref{OC0B} & u LLLl LLL l HHHH h LLL l LLL Llh\\
 \end{tikztimingtable}
-\begin{minted}[bgcolor=lightgray]{c}
+\begin{minted}[breaklines,bgcolor=lightgray]{c}
 // MOde of operation to fast_pwm_top_max Mode -- WGM0[2:0] === 011
 // WGM0[2](bit3) from TCCR0B, WGM0[1](bit1)  from TCCR0A, WGM0[0](bit0)  from TCCR0A
 TCCR0A = TCCR0A | (1<<0);
@@ -936,7 +936,7 @@ sei();
     \busref{OC0B} & u H H H h  h L L l H H H h h LLl HH H  H LL l h\\
 \end{tikztimingtable}
 
-\begin{minted}[bgcolor=lightgray]{c}
+\begin{minted}[breaklines,bgcolor=lightgray]{c}
 // MOde of operation to fast_pwm_top_max Mode -- WGM0[2:0] === 111
 // WGM0[2](bit3) from TCCR0B, WGM0[1](bit1)  from TCCR0A, WGM0[0](bit0)  from TCCR0A
 TCCR0A = TCCR0A | (1<<0);
@@ -995,7 +995,7 @@ sei();
     \busref{OC0B} & u L L L l  l H H h L L L l l HHh LL L  L HH h l\\
 \end{tikztimingtable}
 
-\begin{minted}[bgcolor=lightgray]{c}
+\begin{minted}[breaklines,bgcolor=lightgray]{c}
 // MOde of operation to fast_pwm_top_max Mode -- WGM0[2:0] === 111
 // WGM0[2](bit3) from TCCR0B, WGM0[1](bit1)  from TCCR0A, WGM0[0](bit0)  from TCCR0A
 TCCR0A = TCCR0A | (1<<0);
@@ -1049,11 +1049,11 @@ sei();
     timing/name/.style={font=\sffamily\scriptsize}
     ]
     \busref{clk\_{T0}}  & 41{1c} \\
-    \busref{TCNT0} & 0.5U{} D{0x00} D{0x01} [dotted] 2D{}; D{0x60} [dotted] .5D{}; D{0x70} D{0x00} D{0x01} [dotted] 2D{}; D{0x60} [dotted] .5D{}; D{0x70} D{0x00} D{0x01}[dotted] 2D{}; D{0x60} [dotted] .5D{};D{0x70} d{0x00}\\
-    \busref{OC0A} & u L L L l  l H H h L L L l l HHh LL L  L HH h l\\
+    \busref{TCNT0} & 0.5U{} D{0x00} D{0x01} [dotted] 2D{}; D{0x70} D{0x00} D{0x01} [dotted] 2D{};  D{0x70} D{0x00} D{0x01}[dotted] 2D{};;D{0x70} D{0x00} D{0x01} [dotted] 2D{}; D{0x70}\\
+    \busref{OC0A} & u L L L L H H H H H L L L L L H H H H H L\\
 \end{tikztimingtable}
 
-\begin{minted}[bgcolor=lightgray]{c}
+\begin{minted}[breaklines,bgcolor=lightgray]{c}
 // MOde of operation to fast_pwm_top_max Mode -- WGM0[2:0] === 111
 // WGM0[2](bit3) from TCCR0B, WGM0[1](bit1)  from TCCR0A, WGM0[0](bit0)  from TCCR0A
 TCCR0A = TCCR0A | (1<<0);
@@ -1083,7 +1083,7 @@ sei();
 \end{minted}
 
 \subsubsection{Application I - PWM generation}
-\begin{minted}[bgcolor=lightgray]{c}
+\begin{minted}[breaklines,bgcolor=lightgray]{c}
 void Timer0_FastPWMGeneration(uint32_t on_time_us, uint32_t off_time_us)
 {
 	uint32_t total_time = on_time_us + off_time_us;
@@ -1184,7 +1184,7 @@ void PWMGeneration(double duty_cycle_percent,uint32_t freqeuncy)
 
 
 \subsection{Phase Corrected PWM Mode}
-\begin{minted}[bgcolor=lightgray]{c}
+\begin{minted}[breaklines,bgcolor=lightgray]{c}
 ISR(TIMER0_OVF_vect)
 {
 } 
@@ -1224,7 +1224,7 @@ ISR(TIMER0_COMPB_vect)
     \busref{OC0B} & h H H H H H H L L L L L L H H H H H H H H \\
 \end{tikztimingtable}
 
-\begin{minted}[bgcolor=lightgray]{c}
+\begin{minted}[breaklines,bgcolor=lightgray]{c}
 // MOde of operation to phase_corrected_pwm_top_max Mode -- WGM0[2:0] === 001
 // WGM0[2](bit3) from TCCR0B, WGM0[1](bit1)  from TCCR0A, WGM0[0](bit0)  from TCCR0A
 TCCR0A = TCCR0A | (1<<0);
@@ -1300,7 +1300,7 @@ sei();
     \busref{OC0B} & l L L L L L L H H H H H H L L L L L L L L\\
 \end{tikztimingtable}
 
-\begin{minted}[bgcolor=lightgray]{c}
+\begin{minted}[breaklines,bgcolor=lightgray]{c}
 // MOde of operation to phase_corrected_pwm_top_max Mode -- WGM0[2:0] === 001
 // WGM0[2](bit3) from TCCR0B, WGM0[1](bit1)  from TCCR0A, WGM0[0](bit0)  from TCCR0A
 TCCR0A = TCCR0A | (1<<0);
@@ -1377,7 +1377,7 @@ sei();
     \busref{OC0B} & u H H H h L L L L H H H HHH h h LLlLl H h\\
 \end{tikztimingtable}
 
-\begin{minted}[bgcolor=lightgray]{c}
+\begin{minted}[breaklines,bgcolor=lightgray]{c}
 // MOde of operation to phase_corrected_pwm_top_max Mode -- WGM0[2:0] === 101
 // WGM0[2](bit3) from TCCR0B, WGM0[1](bit1)  from TCCR0A, WGM0[0](bit0)  from TCCR0A
 TCCR0A = TCCR0A | (1<<0);
@@ -1436,7 +1436,7 @@ sei();
     \busref{OC0B} & u L L L l H H H H L L L LLL l l HHhHh L l\\
 \end{tikztimingtable}
 
-\begin{minted}[bgcolor=lightgray]{c}
+\begin{minted}[breaklines,bgcolor=lightgray]{c}
 // MOde of operation to phase_corrected_pwm_top_max Mode -- WGM0[2:0] === 101
 // WGM0[2](bit3) from TCCR0B, WGM0[1](bit1)  from TCCR0A, WGM0[0](bit0)  from TCCR0A
 TCCR0A = TCCR0A | (1<<0);
@@ -1490,11 +1490,11 @@ sei();
     timing/name/.style={font=\sffamily\scriptsize}
     ]
     \busref{clk\_{T0}}  & 41{1c} \\
-    \busref{TCNT0} & 0.5U{} D{0x00} D{0x01} [dotted] 2D{}; D{0x60} [dotted] .5D{}; D{0x70} D{0x00} D{0x01} [dotted] 2D{}; D{0x60} [dotted] .5D{}; D{0x70} D{0x00} D{0x01}[dotted] 2D{}; D{0x60} [dotted] .5D{};D{0x70} d{0x00}\\
-    \busref{OC0A} & u L L L l  l H H h L L L l l HHh LL L  L HH h l\\
+    \busref{TCNT0} & 0.5U{} D{0x00} D{0x01} [dotted] 2D{}; D{0x70} D{0x69} [dotted] 2D{};  D{0x01} D{0x00}  D{0x01}  [dotted] 2D{}; D{0x70} D{0x69}  [dotted] 2D{}; D{0x001} D{0x00}D{0x01}\\
+    \busref{OC0A} & u L L L L H H H H H H H H H L L L L L L L\\
 \end{tikztimingtable}
 
-\begin{minted}[bgcolor=lightgray]{c}
+\begin{minted}[breaklines,bgcolor=lightgray]{c}
 // MOde of operation to phase_corrected_pwm_top_max Mode -- WGM0[2:0] === 101
 // WGM0[2](bit3) from TCCR0B, WGM0[1](bit1)  from TCCR0A, WGM0[0](bit0)  from TCCR0A
 TCCR0A = TCCR0A | (1<<0);
@@ -1524,7 +1524,7 @@ sei();
 \end{minted}
 
 \subsubsection{Application I - PWM generation}
-\begin{minted}[bgcolor=lightgray]{c}
+\begin{minted}[breaklines,bgcolor=lightgray]{c}
 void Timer0_PhaseCorrectedPWMGeneration(uint32_t On_time_us, uint32_t Off_time_us)
 {
 	// Since, it is dual slope, the time would be doubled for one cylce, so we divide by 2

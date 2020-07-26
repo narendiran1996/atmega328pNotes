@@ -189,11 +189,113 @@
     \bitbox{1}{\small U2Xn}
     \bitbox{1}{\small MPCMn}\\
 \end{bytefield}
+\subsubsection*{UCSRnB – USART Control and Status Register n B}
+\vspace*{0.5cm}
+\begin{bytefield}[bitformatting={\large\bfseries},
+    endianness=big,bitwidth=0.125\linewidth]{8}
+    \bitheader[lsb=0]{0-7} \\
+    \bitbox{1}{\small RXCIEn}
+    \bitbox{1}{\small TXCIEn}
+    \bitbox{1}{\small UDRIEn}
+    \bitbox{1}{\small RXENn}
+    \bitbox{1}{\small TXENn}
+    \bitbox{1}{\small UCSZn2}
+    \bitbox{1}{\small RXBn}
+    \bitbox{1}{\small TXB8n}\\
+\end{bytefield}
+\subsubsection*{UCSRnC – USART Control and Status Register n C}
+\vspace*{0.5cm}
+\begin{bytefield}[bitformatting={\large\bfseries},
+    endianness=big,bitwidth=0.125\linewidth]{8}
+    \bitheader[lsb=0]{0-7} \\
+    \bitbox{1}{\small UMSELn1}
+    \bitbox{1}{\small UMSELn0}
+    \bitbox{1}{\small UPMn1}
+    \bitbox{1}{\small UPMn0}
+    \bitbox{1}{\small USBSn}
+    \bitbox{1}{\small UCSZn1}
+    \bitbox{1}{\small UCSZn0}
+    \bitbox{1}{\small UCPOLn}\\
+\end{bytefield}
+
+
 \begin{itemize}
     \item \bitFormat{RXCn} - USART Receive Complete - Set when there are unread data in receive buffer.
     \item \bitFormat{TXCn} - USART Transmit Complete - Set when the entire frame in the transmit shift register has been shifted out and there are no new data currently present in the transmit buffer.
     \item \bitFormat{UDREn} - USART Data Register Empty - indicates if the transmit buffer is ready to receive new data. A one indicates buffer is expty and ready to transmit.
-    \item \bitFormat{U2Xn:} - Double the USART Transmission Speed - Affects only the asynchronous operation. One will increase the speeed of transfer rate in asynchronous opration.
+    \item \bitFormat{U2Xn} - Double the USART Transmission Speed - Affects only the asynchronous operation. One will increase the speeed of transfer rate in asynchronous opration.
+    \item \bitFormat{RXCIEn} - RX Complete Interrupt Enable n - Writing one will enabled Receive Complete intterrupt.
+    \item \bitFormat{TXCIEn} - TX Complete Interrupt Enable n - Writing one will enabled Transmit Complete intterrupt.
+    \item \bitFormat{UDRIen} - USART Data Register Empty Interrupt Enable n - Enable data register empty intterrupt.
+    \item \bitFormat{RXENn} - Receiver Enable - enable the receiever for reception.
+    \item \bitFormat{TXENn} - Transmitter Enable - enable the Transmitter for Transmission.
+    \item \bitFormat{UCSZn[2:0]} - Character Size n - select the number of data bits in a frame.
+    \item \bitFormat{RXB8n} - Receive Data Bit 8 n - it's the actual 9th bit received.
+    \item \bitFormat{TXB8n} - Transmit Data Bit 8 n -  it's the actual 9th bit to tbe trasnmitted.
+    \item \bitFormat{UMSELn[1:0]} - USART Mode Select - Select the mode.
+    \item \bitFormat{UPMn[1:0]} - Parity Mode - Disable or set the parity mode type.
+    \item \bitFormat{USBSn} - Stop Bit select - Selects the number of stop bits to be inserted by transmitter.
 \end{itemize}
+
+\begin{table}[H]    
+\begin{minipage}{0.4\linewidth}
+    \begin{tabular}{c|c}
+        \bitFormat{UMSELn[1:0]} & \textbf{Mode}\\
+        \hline
+        00 & Asynchronous USART\\
+        01 & Synchronous USART\\
+        10 & Reserved\\
+        11 & Master SPI\\
+    \end{tabular}
+\end{minipage}
+\begin{minipage}{0.3\linewidth}
+    \begin{tabular}{c|c}
+        \bitFormat{UPMn[1:0]} & \textbf{Parity Mode}\\
+        \hline
+        00 & Disabled\\
+        01 & Reserved\\
+        10 & Even Parity\\
+        11 & Odd Parity\\
+    \end{tabular}
+\end{minipage}
+\begin{minipage}{0.29\linewidth}
+    \begin{tabular}{c|c}
+        \bitFormat{USBSn[1:0]} & \textbf{Stop Bit(s)}\\
+        \hline
+        0 & 1-bit\\
+        0 & 2-bit\\
+    \end{tabular}
+\end{minipage}
+\end{table}
+
+\begin{table}[H]
+    \begin{center}
+        \begin{tabular}{c|c}
+            \bitFormat{UCSZn[2:0]} & \textbf{Character Size}\\
+            000 & 5-bit\\
+            001 & 6-bit\\
+            010 & 7-bit\\
+            011 & 8-bit\\
+            111 & 9-bit\\
+        \end{tabular}
+    \end{center}
+\end{table}
+
+\subsubsection*{UBRRnL and UBRRnH – USART Baud Rate Registers}
+\vspace*{0.5cm}
+\begin{bytefield}[bitformatting={\large\bfseries},
+    endianness=big,bitwidth=0.125\linewidth]{8}
+    \bitheader[lsb=8]{8-15} \\
+    \bitbox{1}{\small -}
+    \bitbox{1}{\small -}
+    \bitbox{1}{\small -}
+    \bitbox{1}{\small -}
+    \bitbox{4}{\small UBRRn[11:8}\\
+    \bitbox{8}{\small UBRRn[7:0}\\\\    
+    \bitheader[lsb=0]{0-7} \\
+\end{bytefield}
+
+\quad \bitFormat{UBRRn[11:0]} - the actual 12-bit USART Baud Rate Registers.
+
 
 \end{document}

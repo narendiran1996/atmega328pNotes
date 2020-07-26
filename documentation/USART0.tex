@@ -260,7 +260,7 @@
 \end{minipage}
 \begin{minipage}{0.29\linewidth}
     \begin{tabular}{c|c}
-        \bitFormat{USBSn[1:0]} & \textbf{Stop Bit(s)}\\
+        \bitFormat{USBSn} & \textbf{Stop Bit(s)}\\
         \hline
         0 & 1-bit\\
         0 & 2-bit\\
@@ -297,5 +297,76 @@
 
 \quad \bitFormat{UBRRn[11:0]} - the actual 12-bit USART Baud Rate Registers.
 
+\section{Configurint USART}
+\begin{itemize}
+    \item First, the mode is selected by confguring the \bitFormat{UMSEL0[1:0]} bits in \regFormat{UCSR0C} register.
+    \item Next, the Baud rate is choosen and set in \bitFormat{UBRR0[11:0]} bits in \regFormat{UBRR0H} and \regFormat{UBRR0L} registers.
+    \item Next, the frame format is set by confguring,
+    \begin{itemize}
+        \item Data Length - by confguring \bitFormat{UCSZ0[2:0]} bit  in \regFormat{UCSR0B} and \regFormat{UCSR0C} register.
+        \item Parity - by confguring \bitFormat{UPM0[1:0]} bit  in \regFormat{UCSR0C} register.
+        \item Stop bits - by confguring \bitFormat{USBS0} bit  in \regFormat{UCSR0C} register.
+    \end{itemize}
+    \item Interrupt may be anabled by setting bits in \bitFormat{UCSR0A} register and ISR are wirtten.
+    \item Finally, the Transmitter and Receiver are enabled by setting \bitFormat{TXEN0} and \bitFormat{RXEN0} bits in \regFormat{UCSR0B}.
+    \item The data can be sent by checking if the \bitFormat{UDRE0} bit is set in \regFormat{UCSR0A} register and wiring the 8-bit data into \regFormat{UDR0} register.
+    \item The data can be received by checking if the \bitFormat{RXC0} bit is set in \regFormat{UCSR0A} register and reading the 8-bit data from \regFormat{UDR0} register.
+    \item The code for a simple USART is seen below,
+\end{itemize}
+
+\begin{minted}[breaklines, bgcolor=lightgray]{c}
+// Setting up the Mode
+// Select the Asyncronous Master Mode.
+// Setting UMSEL0[1:0] in UCSR0C to 00
+UCSR0C &= ~(1<<UMSEL00);
+UCSR0C &= ~(1<<UMSEL01);
+
+// setting up the Buad rate
+// Due to The Clock rate being 8MHz, for a buad rate of 9600
+// UBRR0 = (fosc / (16*BAUD)) -1
+// So UBRR0 = (8000000 / (16 * 9600)) - 1 = 0x33
+UBRR0H = 0x00;
+UBRR0L = 0x33;
+
+// setting up the Frame Format
+// Let's select 8-bit data bits, no parity, and 1 stop bit
+// 8 - bit data bits
+// By selecting UCSZ0[2:0] in UCSR0C and UCSR0B register to be 011
+UCSR0B &= ~(1<<UCSZ02);
+UCSR0C |= (1<<UCSZ01);
+UCSR0C |= (1<<UCSZ00);
+// No parity
+// By selecting UPM0[1:0] in UCSR0C to 00
+UCSR0C &= ~(1<<UPM01);
+UCSR0C &= ~(1<<UPM00);
+// 1 stop bit
+// By selecting USBS0 in UCSR0C to 0 
+UCSR0C &= ~(1<<USBS0);
+
+// Disabling any interrupts
+UCSR0B &= ~(1<<7);
+UCSR0B &= ~(1<<6);
+UCSR0B &= ~(1<<5);
+
+// Enabling Transmitter 
+UCSR0B |= (1<<TXEN0);
+// Enabling Receiver
+UCSR0B |= (1<<RXEN0);
+\end{minted}
+
+\begin{minted}[breaklines, bgcolor=lightgray]{c}
+void USART0sendChar(uint8_t data_)
+{
+	//cHECKING if transmitet buffer is empty
+	while((UCSR0A & (1<<UDRE0)) == 0x00){};		
+	UDR0 = data_;	
+}
+uint8_t USART0receiveChar()
+{
+	// wait for thedate to be recied
+	while((UCSR0A & (1<<RXC0)) == 0x00){};		
+	return UDR0;
+}
+\end{minted}
 
 \end{document}

@@ -17,14 +17,16 @@ export avrProgrammer=$3
 export devicePort=$4
 
 #Cleaning
-rm -r *.o
-rm -r *.elf
+#rm -r *.o
+#rm -r *.elf
 #rm -r *.hex
 
 # Compiling 
 avr-gcc -Os -Wall -g -mmcu=$avrProcessor -c $avrFileName.c -o $avrFileName.o
 avr-gcc -Os -Wall -g -mmcu=$avrProcessor $avrFileName.o -o $avrFileName.elf
 avr-objcopy -j .text -j .data -O ihex $avrFileName.elf $avrFileName.hex
+
+# Programming
 #avrdude -p $avrProcessor -b 115200 -c $avrProgrammer -P $devicePort -v -U flash:w:$avrFileName.hex:i 
 
 #Cleaning

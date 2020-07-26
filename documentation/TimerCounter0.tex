@@ -456,7 +456,7 @@
     \item Global Interrupt is enabled.
     \item A interrupt Service Routine for Timer0 overflow is Written.
     \item No need to clear the overflow flag as it is done by hardware.
-    \item The timing when both pins \pinFormat{OC0A} and \pinFormat{OC0n} are made to toggle.
+    \item The timing when both pins \pinFormat{OC0A} and \pinFormat{OC0B} are made to toggle.
 \end{itemize}
 
 \begin{tikztimingtable}[
@@ -592,11 +592,11 @@ TIFR0 = TIFR0 | 0x01;
 \begin{itemize}
     \item Depending on \regFormat{OCR0A} register and PRESCALR value, we get different ON\_TIME.
     \item First, \bitFormat{WGM0[2:0]} bits are configured as 010 for CTC Mode in \regFormat{TCCR0A} and \regFormat{TCCR0B} registers.
-    \item Next, \bitFormat{COM0A[1:0]} and/or \bitFormat{COM0A[1:0]} bits are configured to make outputs \pinFormat{OC0A} and/or \pinFormat{OC0B} pins to do nothing, set, clear or toggle in \regFormat{TCCR0A} register.
+    \item Next, \bitFormat{COM0A[1:0]} and/or \bitFormat{COM0B[1:0]} bits are configured to make outputs \pinFormat{OC0A} and/or \pinFormat{OC0B} pins to do nothing, set, clear or toggle in \regFormat{TCCR0A} register.
     \item Next, Interrupt is Enabled by \bitFormat{OCIE01A} (utput compare on match on \regFormat{OCR0A} register enable) in \regFormat{TIMSK0} reigster.
     \item Finally, Timer is started by setting prescalar in \bitFormat{CS0[2:0]} bits as needed prescalar of \regFormat{TCR0B} reigster.
     \item Global Interrupt is enabled.
-    \item A interrupt Service Routine for Timer0 overflow is Written.
+    \item A interrupt Service Routine for Timer0 Compare is Written.
     \item No need to clear the overflow flag as it is done by hardware.
     \item The timing when both pins \pinFormat{OC0n} are made to toggle.
 \end{itemize}
@@ -676,7 +676,7 @@ ISR(TIMER0_COMPA_vect)
     \item Every rising/falling edge the count increases.
     \item So to reach required count, it would take a time of $\frac{OCR0A}{frequency @ \pinFormat{T0} pin}$.
     \item First, \bitFormat{WGM0[2:0]} bits are configured as 010 for CTC Mode in \regFormat{TCCR0A} and \regFormat{TCCR0B} registers.
-    \item Finally, Counter is started by configuring \bitFormat{CS0[2:0]} bits to 110 or 111 for external falling or rising edge on \pinFormat{T0 - PD4}.
+    \item Finally, Counter is started by configuring \bitFormat{CS0[2:0]} bits to 110 or 111 for external falling or rising edge on \pinFormat{T0 - PD4} pin.
     \item The code when \pinFormat{T0} pin is used as counter @ falling edge.
 \end{itemize}
 
@@ -749,12 +749,12 @@ ISR(TIMER0_COMPB_vect)
 {
 }
 \end{minted}
-\subsubsection{Non-Inverting PWM with TOP at MAX(0xFF)}
+\subsubsection{Non-Inverting  PWM with TOP at MAX(0xFF)}
 \quad Frequency is chosen by PRESCALAR and Duty cycle by \regFormat{OCR0A} and/or \regFormat{OCR0B} register.
 \begin{itemize}
     \item First, \bitFormat{WGM0[2:0]} bits are configured as 011 for Fast PWM Mode with TOP at MAX in \regFormat{TCCR0A} and \regFormat{TCCR0B} registers.
     \item Next, \bitFormat{COM0A[1:0]} and/or \bitFormat{COM0B[1:0]} bits of \regFormat{TCCR0A} register are configured to make outputs \pinFormat{OC0A} and/or \pinFormat{OC0B} pins to generate PWM by comparing between \regFormat{OCR0A} and/or \regFormat{OCR0B} respectively. That is for Non-Inverting, \bitFormat{COM0x[1:0]} is written 10.
-    \item Next, the duty cycle value is loaded into \regFormat{OCR0A} and/or \regFormat{OCR0B} register for \pinFormat{OC0A} and/or \pinFormat{OC0B} bits.
+    \item Next, the duty cycle value is loaded into \regFormat{OCR0A} and/or \regFormat{OCR0B} register for \pinFormat{OC0A} and/or \pinFormat{OC0B} pins.
     \item Also, the \bitFormat{OCIE0A} and/or \bitFormat{OCIE0B} bits of \regFormat{TIMSK0} register  are enabled for Output Compare Interupts if needed.
     \item The interrupt Service routine is written if needed for compare match.
     \item Finally, Timer is started by setting \bitFormat{CS0[2:0]} bit as needed prescalar in \regFormat{TCR0B} register.
@@ -910,8 +910,8 @@ sei();
 \subsubsection{Non-Inverting PWM with TOP at  OCR0A}
 \quad Frequency is chosen by \regFormat{OCR0A} and Duty cycle by \regFormat{OCR0B} register.
 \begin{itemize}
-    \item First, \bitFormat{WGM0[2:0]} bits are configured as 111 for Fast PWM Mode with OCR0A at MAX in \regFormat{TCCR0A} and \regFormat{TCCR0B} registers.
-    \item Next,  \bitFormat{COM0B[1:0]} bits of \regFormat{TCCR0A} register are configured to make output \pinFormat{OC0B} pins to generate PWM by comparing between \regFormat{OCR0B} respectively. That is for Non-Inverting, \bitFormat{COM0B[1:0]} is written 10.
+    \item First, \bitFormat{WGM0[2:0]} bits are configured as 111 for Fast PWM Mode with \regFormat{OCR0A} at MAX in \regFormat{TCCR0A} and \regFormat{TCCR0B} registers.
+    \item Next,  \bitFormat{COM0B[1:0]} bits of \regFormat{TCCR0A} register are configured to make output \pinFormat{OC0B} pins to generate PWM by comparing between \regFormat{TCNT0} and \ \regFormat{OCR0B}. That is for Non-Inverting, \bitFormat{COM0B[1:0]} is written 10.
     \item The frequency of duty cycle is loaded into \regFormat{OCR0A} register.
     \item Next, the duty cycle value is loaded into \regFormat{OCR0B} register for \pinFormat{OC0B} bits.
     \item Also, the \bitFormat{OCIE0B} bits of \regFormat{TIMSK0} register  are enabled for Output Compare Interupts if needed.
@@ -969,8 +969,8 @@ sei();
 \subsubsection{Inverting PWM with TOP at  OCR0A}
 \quad Frequency is chosen by \regFormat{OCR0A} and Duty cycle by \regFormat{OCR0B} register.
 \begin{itemize}
-    \item First, \bitFormat{WGM0[2:0]} bits are configured as 111 for Fast PWM Mode with OCR0A at MAX in \regFormat{TCCR0A} and \regFormat{TCCR0B} registers.
-    \item Next, \bitFormat{COM0B[1:0]} bits of \regFormat{TCCR0A} register are configured to make output \pinFormat{OC0B} pins to generate PWM by comparing between \regFormat{OCR0B} respectively. That is for Inverting, \bitFormat{COM0B[1:0]} is written 11.
+    \item First, \bitFormat{WGM0[2:0]} bits are configured as 111 for Fast PWM Mode with \regFormat{OCR0A} at MAX in \regFormat{TCCR0A} and \regFormat{TCCR0B} registers.
+    \item Next, \bitFormat{COM0B[1:0]} bits of \regFormat{TCCR0A} register are configured to make output \pinFormat{OC0B} pins to generate PWM by comparing between \regFormat{TCNT0} and \ \regFormat{OCR0B}. That is for Inverting, \bitFormat{COM0B[1:0]} is written 11.
     \item The frequency of duty cycle is loaded into \regFormat{OCR0A} register.
     \item Next, the duty cycle value is loaded into \regFormat{OCR0B} register for \pinFormat{OC0B} bits.
     \item Also, the \bitFormat{OCIE0B} bits of \regFormat{TIMSK0} register  are enabled for Output Compare Interupts if needed.

@@ -152,28 +152,29 @@ int main(void)
 	PORTC |= (1<<0) | (1<<1) | (1<<2);
 
 
-	// I2C_SlaveInit(SLAVE_ADDRESS);
-	// I2C_SlaveMode(1);
-	// uint8_t recData[11];
-	// I2C_Slave_DataReceiveString(recData, 1);
-	// TWCR &= ~(1<<TWEN);
-	// if(recData[0]=='K')
-	// 	PINC |= (1<<0);
-
-	// I2C_SlaveInit(SLAVE_ADDRESS);
-	// I2C_SlaveMode(1);
-	// I2C_Slave_DataReceiveString(recData, 5);
-	// TWCR &= ~(1<<TWEN);
-	// if(strcmp(recData, "Naren")==0)
-	// 	PINC |= (1<<1);
-
-	char *abcd ="AaBbCa";
 	I2C_SlaveInit(SLAVE_ADDRESS);
-	I2C_SlaveMode(0);
-	for(int j=0;j<4;j++)
-	I2C_Slave_DataTransmitByte(abcd[j]);
+	I2C_SlaveMode(1);
+	uint8_t recData[11];
+	I2C_Slave_DataReceiveString(recData, 1);
 	TWCR &= ~(1<<TWEN);
-	PINC |= (1<<2);
+	if(recData[0]=='K')
+		PINC |= (1<<0);
+
+	I2C_SlaveInit(SLAVE_ADDRESS);
+	I2C_SlaveMode(1);
+	I2C_Slave_DataReceiveString(recData, 5);
+	TWCR &= ~(1<<TWEN);
+	if(strcmp(recData, "Naren")==0)
+		PINC |= (1<<1);
+
+	// char *abcd ="AaBbCa";
+	// I2C_SlaveInit(SLAVE_ADDRESS);
+	// I2C_SlaveMode(0);
+	// // Weird bug happens when keep more than 3
+	// for(int j=0;j<2;j++)
+	// I2C_Slave_DataTransmitByte(abcd[j]);
+	// TWCR &= ~(1<<TWEN);
+	// PINC |= (1<<2);
     while(1)
     {
 

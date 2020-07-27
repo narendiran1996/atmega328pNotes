@@ -517,9 +517,9 @@
 
 \section{Configuring the I2c}
 \subsection{Master Transmitter and Receiver}
-\begin{itemize}
-    \item The code can be seen below:
-\end{itemize}
+
+\quad The code can be seen below:
+
 \begin{minted}[breaklines, bgcolor=lightgray]{c}
 uint8_t status = 0;
 void I2C_Master_Init()
@@ -703,9 +703,9 @@ void I2C_Master_DataReceiveString(uint8_t *recData,uint8_t NUMBYTE)
 
 \newpage
 \subsection{Slave Transmitter and Receiver}
-\begin{itemize}
-    \item The code can be seen below:
-\end{itemize}
+
+\quad The code can be seen below:
+
 \begin{minted}[breaklines, bgcolor=lightgray]{c}
 uint8_t status = 0;
 void I2C_SlaveInit(uint8_t my_address)
@@ -848,4 +848,5 @@ void I2C_Slave_DataReceiveString(uint8_t *recData,uint8_t NUMBYTE)
 	}
 }
 \end{minted}
+
 \end{document}

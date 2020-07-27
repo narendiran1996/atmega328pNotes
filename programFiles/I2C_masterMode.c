@@ -189,21 +189,21 @@ int main(void)
 	PORTC |= (1<<0) | (1<<1) | (1<<2);
 
 
-	// I2C_Master_START();
-	// I2C_Master_Mode(SLAVE_ADDRESS, 0);
-	// I2C_Master_DataTransmitString("K");
-	// I2C_Master_STOP();
-
-	// I2C_Master_START();
-	// I2C_Master_Mode(SLAVE_ADDRESS, 0);
-	// I2C_Master_DataTransmitString("Narendiran");
-	// I2C_Master_STOP();
-	
-	uint8_t recData[15];
-	I2C_Master_START();	
-	I2C_Master_Mode(SLAVE_ADDRESS, 1);
-	I2C_Master_DataReceiveString(recData, 30);
+	I2C_Master_START();
+	I2C_Master_Mode(SLAVE_ADDRESS, 0);
+	I2C_Master_DataTransmitString("K");
 	I2C_Master_STOP();
+
+	I2C_Master_START();
+	I2C_Master_Mode(SLAVE_ADDRESS, 0);
+	I2C_Master_DataTransmitString("Narendiran");
+	I2C_Master_STOP();
+	
+	// uint8_t recData[15];
+	// I2C_Master_START();	
+	// I2C_Master_Mode(SLAVE_ADDRESS, 1);
+	// I2C_Master_DataReceiveString(recData, 3);
+	// I2C_Master_STOP();
 
 	PINC |= (1<<2);
     while(1)

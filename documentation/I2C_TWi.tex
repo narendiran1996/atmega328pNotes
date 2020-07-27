@@ -428,5 +428,424 @@
     \item If status code is \statusCode{0xC8} -(Data byte in \regFormat{TWDR} has been transmitted and \iicFormat{NACK} has been received) - last byte send and dont' send further.
 \end{itemize}
 
+\section{Register Desciption}
+\subsubsection*{TWBR – TWI Bit Rate Register}
+\vspace*{0.5cm}
+\begin{bytefield}[bitformatting={\large\bfseries},
+    endianness=big,bitwidth=0.125\linewidth]{8}
+    \bitheader[lsb=0]{0-7} \\
+    \bitbox{8}{\small TWBR[7:0]}\\
+\end{bytefield}
 
+\quad The bit rate is found by,
+\begin{center}
+    $SCL frequency = \frac{CPU Clock Frequency}{16 + 2 * TWBR * Prescalar Value}$
+\end{center}
+
+\subsubsection*{TWCR – TWI Control Register}
+\vspace*{0.5cm}
+\begin{bytefield}[bitformatting={\large\bfseries},
+    endianness=big,bitwidth=0.125\linewidth]{8}
+    \bitheader[lsb=0]{0-7} \\
+    \bitbox{1}{\small TWINT}
+    \bitbox{1}{\small TWEA}
+    \bitbox{1}{\small TWSTA}
+    \bitbox{1}{\small TWSTO}
+    \bitbox{1}{\small TWWC}
+    \bitbox{1}{\small TWEN}
+    \bitbox{1}{\small -}
+    \bitbox{1}{\small TWIE}\\
+\end{bytefield}
+\begin{itemize}
+    \item \bitFormat{TWINT} - TWI Interrupt Flag - Set by hardware when TWI has finished its current job and expects applicaion software reponse. This Flag should be cleared by software by writing login HIGH to start the operation of TWI.
+    \item \bitFormat{TWEA} - TWI Enable Acknowledge Bit - Controls the genration of acknowledge pulse.
+    \item \bitFormat{TWSTA} - TWI \iicFormat{START} condition - to generate \iicFormat{START} or \iicFormat{REPEATED START}.
+    \item \bitFormat{TWSTO} - TWI \iicFormat{STOP} condition - to Generate \iicFormat{STOP} condition.
+    \item \bitFormat{TWEN} - TWI Enable Bit - To enabled and active TWI interface - takes control over \pinFormat{SDA} and \pinFormat{SCL} pins, enables slew-rate limiter and spike filter.
+    \item \bitFormat{TWIE} - TWI Interrupt ENable - to enable interrupt when TWI flag is high.
+\end{itemize}
+
+\subsubsection*{TWSR – TWI Status Register}
+\vspace*{0.5cm}
+\begin{bytefield}[bitformatting={\large\bfseries},
+    endianness=big,bitwidth=0.125\linewidth]{8}
+    \bitheader[lsb=0]{0-7} \\
+    \bitbox{5}{\small TWS[7:3]}
+    \bitbox{1}{\small -}
+    \bitbox{1}{\small TWPS1}
+    \bitbox{1}{\small TWPS2}\\
+\end{bytefield}
+
+\begin{itemize}
+    \item \bitFormat{TWS[7:3]} - TWI Status - reflects the status of TWI logic and 2-wire status bus.
+\end{itemize}
+
+\begin{table}[H]
+    \begin{center}
+        \begin{tabular}{c|c}
+            \bitFormat{TWPS[1:0]} \textbf{- TWI Bit rate Prescalar} & \textbf{Prescaler Value}\\
+            \hline
+            00 & 1\\
+            01 & 4\\
+            10 & 16\\
+            11 & 64\\
+        \end{tabular}
+    \end{center}
+\end{table}
+
+\subsubsection*{TWDR – TWI Data Register}
+\vspace*{0.5cm}
+\begin{bytefield}[bitformatting={\large\bfseries},
+    endianness=big,bitwidth=0.125\linewidth]{8}
+    \bitheader[lsb=0]{0-7} \\
+    \bitbox{8}{\small TWD[7:0]}\\
+\end{bytefield}
+
+\subsubsection*{TWAR – TWI (Slave) Address Register}
+\vspace*{0.5cm}
+\begin{bytefield}[bitformatting={\large\bfseries},
+    endianness=big,bitwidth=0.125\linewidth]{8}
+    \bitheader[lsb=0]{0-7} \\
+    \bitbox{7}{\small TWA[6:0]}
+    \bitbox{1}{\small TWGCE}\\
+\end{bytefield}
+
+\begin{itemize}
+    \item \bitFormat{TWA[6:0]} - TWI Slave adress Register - contain seven bit slave address.
+    \item \bitFormat{TWGCE} - TWI General Call Recogniction Bit - enables the recognition of general call.
+\end{itemize}
+
+\section{Configuring the I2c}
+\subsection{Master Transmitter and Receiver}
+\begin{itemize}
+    \item The code can be seen below:
+\end{itemize}
+\begin{minted}[breaklines, bgcolor=lightgray]{c}
+uint8_t status = 0;
+void I2C_Master_Init()
+{
+	// Intialize the I2C clock frequency to 100kHz
+	// let the prescalr be 1
+	// f_i2c =  F_CPU / (16 + (2*xTWBR*Prescaler)) = 32
+	// setting the TWBR register.
+	TWBR = 32;
+
+	// writing 1 to prscalre
+	// setting the TWPS bits in TWSR to 00
+	TWSR &= ~(1<<TWPS0);
+	TWSR &= ~(1<<TWPS1);
+}
+uint8_t I2C_Master_Status()
+{
+	// Status value are available from TWSR[7:3]
+	return TWSR & 0XF8;
+}
+uint8_t I2C_Master_START()
+{
+	// Enabling the TWI interface
+	TWCR |= (1<<TWEN);
+	// sending START condition
+	TWCR |= (1<<TWSTA);
+	// Do the transaction
+	TWCR |= (1<<TWINT);
+	// Checking if START condition is sent correctly
+	while((TWCR & (1<<TWINT )) == 0x00);
+	status = I2C_Master_Status();
+	// checking status if START condition is sent correctily
+	if(status == 0x08)
+	{
+		// no error occured
+		return 0;
+	}
+	else
+	{
+		// error occured
+		return 0;
+	}
+}
+uint8_t I2C_Master_STOP()
+{
+	// Removing Start condition on bit
+	TWCR &= ~(1<<TWSTA);
+	// sending STOP condition
+	TWCR |= (1<<TWSTO);
+	
+	// Do the transaction
+	TWCR |= (1<<TWINT);
+
+	// disaabling stop and interface
+	
+	
+	TWCR &= ~(1<<TWSTO);
+	TWCR &= ~(1<<TWEN);
+
+	return 0;
+}
+uint8_t I2C_Master_Mode(uint8_t slave_address, uint8_t transmiter0_receiver1)
+{
+	// Entering MASTER mode
+	// Writing SLA+W into TWDR for transmiiter and SLA+R for receiver
+	// slave address must be MSB first
+	// slave address is left shifted by 1 in order to accompany the R/W bit
+	TWDR = (slave_address<<1) | transmiter0_receiver1;
+	// Do the transaction
+	TWCR |= (1<<TWINT);
+	while((TWCR & (1<<TWINT )) == 0x00);
+	status = I2C_Master_Status();
+	// For transmitter the staus would have to be 0x18 and for receiver 0x40
+	uint8_t status_val_checker = (transmiter0_receiver1==0) ? 0x18 : 0x40;
+	if(status == status_val_checker)
+	{
+		// no error occured
+		return 0;
+	}
+	else
+	{
+		// error occured
+		return 0;
+	}
+}
+uint8_t I2C_Master_DataTransmitByte(uint8_t data_)
+{
+	// Data packet is transmitted
+	// Writing data intor TWDR
+	TWDR = data_;
+	// Do the transaction
+	TWCR |= (1<<TWINT);
+	while((TWCR & (1<<TWINT )) == 0x00);
+	status = I2C_Master_Status();
+	if(status == 0x28)
+	{
+		// ACK received and still data can be sent
+		return 0;
+	}
+	else if(status == 0x30)
+	{
+		// NACK received and this is the last data so stop
+		return 1;
+	}
+	else
+	{
+		// error occured
+		return 2;
+	}
+}
+void I2C_Master_DataTransmitString(uint8_t *cdata)
+{
+	while(*cdata != '\0')
+	{
+		status = I2C_Master_DataTransmitByte(*cdata++) ;
+		if(status == 0)
+		{
+			// ACK received and still data can be sent
+			// continue
+		}
+		else if(status == 1)
+		{
+			// NACK received and this is the last data so stop
+			return;
+		}
+		else
+		{
+			// error occured
+			return;
+		}
+	}
+}
+
+uint8_t I2C_Master_DataReceiveByte()
+{
+	uint8_t value_ = 0;
+
+	// Data packet is recieved
+	TWCR |= (1<<TWINT);
+	// Do the transaction
+	while((TWCR & (1<<TWINT )) == 0x00)
+	{
+		value_ = TWDR;
+	}
+	
+	 	
+	status = I2C_Master_Status();
+	if(status == 0x58)
+	{
+		// no error occured
+		return value_;
+	}
+	else
+	{
+		// error occured
+		return 1;
+	}
+}
+void I2C_Master_DataReceiveString(uint8_t *recData,uint8_t NUMBYTE)
+{
+	uint8_t i=0;
+	recData[NUMBYTE] = '\0';
+	while(i < NUMBYTE)
+	{
+		// Enabling the Acknowledment bit for replying positive ACK
+		TWCR |= (1<<TWEA);
+		if(i==(NUMBYTE-1))
+		{
+			// disbale the Acknowledment bit for replying Negatice ACK for last byte
+			TWCR &= ~(1<<TWEA);
+		}
+		status = I2C_Master_DataReceiveByte();
+		if(status==0xFF)
+			return;
+		else		
+			recData[i] = status;
+		i++;
+	}
+}
+\end{minted}
+
+\newpage
+\subsection{Slave Transmitter and Receiver}
+\begin{itemize}
+    \item The code can be seen below:
+\end{itemize}
+\begin{minted}[breaklines, bgcolor=lightgray]{c}
+uint8_t status = 0;
+void I2C_SlaveInit(uint8_t my_address)
+{
+	// slave address  and last LSB 0 is for general call
+	TWAR = (my_address<<1) & 0xFE;
+	// Enabling the TWI interface.
+	TWCR |= (1<<TWEN);
+	// Disabling Start and Stop conditon bits
+	TWCR &= ~(1<<TWSTA);
+	TWCR &= ~(1<<TWSTO);
+
+}
+uint8_t I2C_Status()
+{
+	// Status value are available from TWSR[7:3]
+	return TWSR & 0XF8;
+}
+
+uint8_t I2C_SlaveMode( uint8_t transmiter0_receiver1)
+{
+	// Acknowldege the address
+	TWCR |= (1<<TWEA);
+	// Watiting for the Master to call this slave
+	while((TWCR & (1<<TWINT )) == 0x00);
+	status = I2C_Status();
+	// For transmitter the staus would have to be 0xA8 and for receiver 0x60
+	uint8_t status_val_checker = (transmiter0_receiver1==0) ? 0xA8 : 0x60;
+	if(status == status_val_checker)
+	{
+		// Master called this slave
+		return 0;
+	}
+	else
+	{
+		// error occured
+		return 1;
+	}
+}
+uint8_t I2C_Slave_DataTransmitByte(uint8_t data_)
+{
+	// Data packet is transmitted
+	// Writing data intor TWDR
+	TWDR = data_;
+	// Do the transaction
+	TWCR |= (1<<TWINT);
+	while((TWCR & (1<<TWINT )) == 0x00);
+
+	status = I2C_Status();
+	if(status == 0xB8)
+	{
+		// ACK received and still data can be sent
+		return 0;
+	}
+	else if(status == 0xC8)
+	{
+		// NACK received and this is the last data so stop
+		return 1;
+	}
+	else
+	{
+		// error occured
+		return 2;
+	}
+}
+void I2C_Slave_DataTransmitString(char *cdata)
+{
+	uint8_t i = 0;
+	while(cdata[i] != '\0')
+	{
+		status = I2C_Slave_DataTransmitByte(cdata[i]) ;
+		i++;
+		if(status == 0)
+		{
+			// ACK received and still data can be sent
+			// continue
+		}
+		else if(status == 1)
+		{
+			// NACK received and this is the last data so stop
+			return;
+		}
+		else
+		{
+			// error occured
+			return;
+		}
+	}
+}
+
+uint8_t I2C_Slave_DataReceiveByte()
+{
+	uint8_t value_ = 0;
+
+	// Data packet is recieved
+	TWCR |= (1<<TWINT);
+	// Do the transaction
+	while((TWCR & (1<<TWINT )) == 0x00)
+	{
+		value_ = TWDR;
+	}
+	
+	status = I2C_Status();
+	if(status == 0x80)
+	{
+		// Data is sent and ACK has been returned
+		return value_;
+	}
+	else if(status == 0x88)
+	{
+		// Data is sent and NACK has been returned for last byte
+		return value_;
+	}
+	else
+	{
+		// error occured
+		return 0xFF;
+	}
+}
+void I2C_Slave_DataReceiveString(uint8_t *recData,uint8_t NUMBYTE)
+{
+	uint8_t i=0;
+	recData[NUMBYTE] = '\0';
+	while(NUMBYTE > 0)
+	{
+		NUMBYTE = NUMBYTE - 1;
+		// Enabling the Acknowledment bit for replying positive ACK
+		TWCR |= (1<<TWEA);
+		if(NUMBYTE==0)
+		{
+			// disbale the Acknowledment bit for replying Negatice ACK for last byte
+			TWCR &= ~(1<<TWEA);
+		}
+		status = I2C_Slave_DataReceiveByte();
+		if(status==0xFF)
+			return;
+		else		
+			recData[i] = status;
+		i++;
+	}
+}
+\end{minted}
 \end{document}

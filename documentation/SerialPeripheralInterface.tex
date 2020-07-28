@@ -1,46 +1,5 @@
 \documentclass{article}
-
-\usepackage[a4paper, bottom=0.5in, top=0.5in, left=0.5in, right=0.5in]{geometry}
-\usepackage{wrapfig}
-\usepackage{natbib}
-\usepackage{url}
-\usepackage{xcolor}
-\usepackage{caption}
-\usepackage{hyperref}
-\hypersetup{
-    colorlinks=true,    
-    urlcolor=cyan,
-}
-\usepackage{bytefield}
-
-\usepackage{amsfonts}
-\usepackage{float}
-\usepackage{enumitem}
-
-\usepackage{tikz-timing}[2014/10/29]
-\usetikztiminglibrary[rising arrows]{clockarrows}
-
-\usepackage{minted}
-
-\usepackage{xparse} % NewDocumentCommand, IfValueTF, IFBooleanTF
-\usepackage{tikz-timing}[2014/10/29]
-\NewDocumentCommand{\busref}{som}{\texttt{%
-		#3%
-		\IfValueTF{#2}{[#2]}{}%
-		\IfBooleanTF{#1}{\#}{}%
-}}
-
-
-\newcommand{\bitFormat}[1]{\emph{\textbf{\textcolor{cyan}{#1}}}}
-
-\newcommand{\regFormat}[1]{\textbf{\textcolor{magenta}{#1}}}
-
-\newcommand{\pinFormat}[1]{\emph{\textcolor{red}{#1}}}
-
-
-\usepackage{graphicx}
-\graphicspath{ {./Resources/pics/} }
-
+\usepackage{NeededPackages}
 
 
 \title{ATmega328P SPI}

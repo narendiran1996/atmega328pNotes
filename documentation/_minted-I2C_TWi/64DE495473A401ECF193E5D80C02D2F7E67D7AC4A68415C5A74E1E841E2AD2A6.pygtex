@@ -1,0 +1,142 @@
+\begin{Verbatim}[commandchars=\\\{\}]
+\PYG{k+kt}{uint8\PYGZus{}t} \PYG{n}{status} \PYG{o}{=} \PYG{l+m+mi}{0}\PYG{p}{;}
+\PYG{k+kt}{void} \PYG{n+nf}{I2C\PYGZus{}SlaveInit}\PYG{p}{(}\PYG{k+kt}{uint8\PYGZus{}t} \PYG{n}{my\PYGZus{}address}\PYG{p}{)}
+\PYG{p}{\PYGZob{}}
+	\PYG{c+c1}{// slave address  and last LSB 0 is for general call}
+	\PYG{n}{TWAR} \PYG{o}{=} \PYG{p}{(}\PYG{n}{my\PYGZus{}address}\PYG{o}{\PYGZlt{}\PYGZlt{}}\PYG{l+m+mi}{1}\PYG{p}{)} \PYG{o}{\PYGZam{}} \PYG{l+m+mh}{0xFE}\PYG{p}{;}
+	\PYG{c+c1}{// Enabling the TWI interface.}
+	\PYG{n}{TWCR} \PYG{o}{|=} \PYG{p}{(}\PYG{l+m+mi}{1}\PYG{o}{\PYGZlt{}\PYGZlt{}}\PYG{n}{TWEN}\PYG{p}{);}
+	\PYG{c+c1}{// Disabling Start and Stop conditon bits}
+	\PYG{n}{TWCR} \PYG{o}{\PYGZam{}=} \PYG{o}{\PYGZti{}}\PYG{p}{(}\PYG{l+m+mi}{1}\PYG{o}{\PYGZlt{}\PYGZlt{}}\PYG{n}{TWSTA}\PYG{p}{);}
+	\PYG{n}{TWCR} \PYG{o}{\PYGZam{}=} \PYG{o}{\PYGZti{}}\PYG{p}{(}\PYG{l+m+mi}{1}\PYG{o}{\PYGZlt{}\PYGZlt{}}\PYG{n}{TWSTO}\PYG{p}{);}
+
+\PYG{p}{\PYGZcb{}}
+\PYG{k+kt}{uint8\PYGZus{}t} \PYG{n+nf}{I2C\PYGZus{}Status}\PYG{p}{()}
+\PYG{p}{\PYGZob{}}
+	\PYG{c+c1}{// Status value are available from TWSR[7:3]}
+	\PYG{k}{return} \PYG{n}{TWSR} \PYG{o}{\PYGZam{}} \PYG{l+m+mi}{0}\PYG{n}{XF8}\PYG{p}{;}
+\PYG{p}{\PYGZcb{}}
+
+\PYG{k+kt}{uint8\PYGZus{}t} \PYG{n+nf}{I2C\PYGZus{}SlaveMode}\PYG{p}{(} \PYG{k+kt}{uint8\PYGZus{}t} \PYG{n}{transmiter0\PYGZus{}receiver1}\PYG{p}{)}
+\PYG{p}{\PYGZob{}}
+	\PYG{c+c1}{// Acknowldege the address}
+	\PYG{n}{TWCR} \PYG{o}{|=} \PYG{p}{(}\PYG{l+m+mi}{1}\PYG{o}{\PYGZlt{}\PYGZlt{}}\PYG{n}{TWEA}\PYG{p}{);}
+	\PYG{c+c1}{// Watiting for the Master to call this slave}
+	\PYG{k}{while}\PYG{p}{((}\PYG{n}{TWCR} \PYG{o}{\PYGZam{}} \PYG{p}{(}\PYG{l+m+mi}{1}\PYG{o}{\PYGZlt{}\PYGZlt{}}\PYG{n}{TWINT} \PYG{p}{))} \PYG{o}{==} \PYG{l+m+mh}{0x00}\PYG{p}{);}
+	\PYG{n}{status} \PYG{o}{=} \PYG{n}{I2C\PYGZus{}Status}\PYG{p}{();}
+	\PYG{c+c1}{// For transmitter the staus would have to be 0xA8 and for receiver 0x60}
+	\PYG{k+kt}{uint8\PYGZus{}t} \PYG{n}{status\PYGZus{}val\PYGZus{}checker} \PYG{o}{=} \PYG{p}{(}\PYG{n}{transmiter0\PYGZus{}receiver1}\PYG{o}{==}\PYG{l+m+mi}{0}\PYG{p}{)} \PYG{o}{?} \PYG{l+m+mh}{0xA8} \PYG{o}{:} \PYG{l+m+mh}{0x60}\PYG{p}{;}
+	\PYG{k}{if}\PYG{p}{(}\PYG{n}{status} \PYG{o}{==} \PYG{n}{status\PYGZus{}val\PYGZus{}checker}\PYG{p}{)}
+	\PYG{p}{\PYGZob{}}
+		\PYG{c+c1}{// Master called this slave}
+		\PYG{k}{return} \PYG{l+m+mi}{0}\PYG{p}{;}
+	\PYG{p}{\PYGZcb{}}
+	\PYG{k}{else}
+	\PYG{p}{\PYGZob{}}
+		\PYG{c+c1}{// error occured}
+		\PYG{k}{return} \PYG{l+m+mi}{1}\PYG{p}{;}
+	\PYG{p}{\PYGZcb{}}
+\PYG{p}{\PYGZcb{}}
+\PYG{k+kt}{uint8\PYGZus{}t} \PYG{n+nf}{I2C\PYGZus{}Slave\PYGZus{}DataTransmitByte}\PYG{p}{(}\PYG{k+kt}{uint8\PYGZus{}t} \PYG{n}{data\PYGZus{}}\PYG{p}{)}
+\PYG{p}{\PYGZob{}}
+	\PYG{c+c1}{// Data packet is transmitted}
+	\PYG{c+c1}{// Writing data intor TWDR}
+	\PYG{n}{TWDR} \PYG{o}{=} \PYG{n}{data\PYGZus{}}\PYG{p}{;}
+	\PYG{c+c1}{// Do the transaction}
+	\PYG{n}{TWCR} \PYG{o}{|=} \PYG{p}{(}\PYG{l+m+mi}{1}\PYG{o}{\PYGZlt{}\PYGZlt{}}\PYG{n}{TWINT}\PYG{p}{);}
+	\PYG{k}{while}\PYG{p}{((}\PYG{n}{TWCR} \PYG{o}{\PYGZam{}} \PYG{p}{(}\PYG{l+m+mi}{1}\PYG{o}{\PYGZlt{}\PYGZlt{}}\PYG{n}{TWINT} \PYG{p}{))} \PYG{o}{==} \PYG{l+m+mh}{0x00}\PYG{p}{);}
+
+	\PYG{n}{status} \PYG{o}{=} \PYG{n}{I2C\PYGZus{}Status}\PYG{p}{();}
+	\PYG{k}{if}\PYG{p}{(}\PYG{n}{status} \PYG{o}{==} \PYG{l+m+mh}{0xB8}\PYG{p}{)}
+	\PYG{p}{\PYGZob{}}
+		\PYG{c+c1}{// ACK received and still data can be sent}
+		\PYG{k}{return} \PYG{l+m+mi}{0}\PYG{p}{;}
+	\PYG{p}{\PYGZcb{}}
+	\PYG{k}{else} \PYG{k}{if}\PYG{p}{(}\PYG{n}{status} \PYG{o}{==} \PYG{l+m+mh}{0xC8}\PYG{p}{)}
+	\PYG{p}{\PYGZob{}}
+		\PYG{c+c1}{// NACK received and this is the last data so stop}
+		\PYG{k}{return} \PYG{l+m+mi}{1}\PYG{p}{;}
+	\PYG{p}{\PYGZcb{}}
+	\PYG{k}{else}
+	\PYG{p}{\PYGZob{}}
+		\PYG{c+c1}{// error occured}
+		\PYG{k}{return} \PYG{l+m+mi}{2}\PYG{p}{;}
+	\PYG{p}{\PYGZcb{}}
+\PYG{p}{\PYGZcb{}}
+\PYG{k+kt}{void} \PYG{n+nf}{I2C\PYGZus{}Slave\PYGZus{}DataTransmitString}\PYG{p}{(}\PYG{k+kt}{char} \PYG{o}{*}\PYG{n}{cdata}\PYG{p}{)}
+\PYG{p}{\PYGZob{}}
+	\PYG{k+kt}{uint8\PYGZus{}t} \PYG{n}{i} \PYG{o}{=} \PYG{l+m+mi}{0}\PYG{p}{;}
+	\PYG{k}{while}\PYG{p}{(}\PYG{n}{cdata}\PYG{p}{[}\PYG{n}{i}\PYG{p}{]} \PYG{o}{!=} \PYG{l+s+sc}{\PYGZsq{}\PYGZbs{}0\PYGZsq{}}\PYG{p}{)}
+	\PYG{p}{\PYGZob{}}
+		\PYG{n}{status} \PYG{o}{=} \PYG{n}{I2C\PYGZus{}Slave\PYGZus{}DataTransmitByte}\PYG{p}{(}\PYG{n}{cdata}\PYG{p}{[}\PYG{n}{i}\PYG{p}{])} \PYG{p}{;}
+		\PYG{n}{i}\PYG{o}{++}\PYG{p}{;}
+		\PYG{k}{if}\PYG{p}{(}\PYG{n}{status} \PYG{o}{==} \PYG{l+m+mi}{0}\PYG{p}{)}
+		\PYG{p}{\PYGZob{}}
+			\PYG{c+c1}{// ACK received and still data can be sent}
+			\PYG{c+c1}{// continue}
+		\PYG{p}{\PYGZcb{}}
+		\PYG{k}{else} \PYG{k}{if}\PYG{p}{(}\PYG{n}{status} \PYG{o}{==} \PYG{l+m+mi}{1}\PYG{p}{)}
+		\PYG{p}{\PYGZob{}}
+			\PYG{c+c1}{// NACK received and this is the last data so stop}
+			\PYG{k}{return}\PYG{p}{;}
+		\PYG{p}{\PYGZcb{}}
+		\PYG{k}{else}
+		\PYG{p}{\PYGZob{}}
+			\PYG{c+c1}{// error occured}
+			\PYG{k}{return}\PYG{p}{;}
+		\PYG{p}{\PYGZcb{}}
+	\PYG{p}{\PYGZcb{}}
+\PYG{p}{\PYGZcb{}}
+
+\PYG{k+kt}{uint8\PYGZus{}t} \PYG{n+nf}{I2C\PYGZus{}Slave\PYGZus{}DataReceiveByte}\PYG{p}{()}
+\PYG{p}{\PYGZob{}}
+	\PYG{k+kt}{uint8\PYGZus{}t} \PYG{n}{value\PYGZus{}} \PYG{o}{=} \PYG{l+m+mi}{0}\PYG{p}{;}
+
+	\PYG{c+c1}{// Data packet is recieved}
+	\PYG{n}{TWCR} \PYG{o}{|=} \PYG{p}{(}\PYG{l+m+mi}{1}\PYG{o}{\PYGZlt{}\PYGZlt{}}\PYG{n}{TWINT}\PYG{p}{);}
+	\PYG{c+c1}{// Do the transaction}
+	\PYG{k}{while}\PYG{p}{((}\PYG{n}{TWCR} \PYG{o}{\PYGZam{}} \PYG{p}{(}\PYG{l+m+mi}{1}\PYG{o}{\PYGZlt{}\PYGZlt{}}\PYG{n}{TWINT} \PYG{p}{))} \PYG{o}{==} \PYG{l+m+mh}{0x00}\PYG{p}{)}
+	\PYG{p}{\PYGZob{}}
+		\PYG{n}{value\PYGZus{}} \PYG{o}{=} \PYG{n}{TWDR}\PYG{p}{;}
+	\PYG{p}{\PYGZcb{}}
+	
+	\PYG{n}{status} \PYG{o}{=} \PYG{n}{I2C\PYGZus{}Status}\PYG{p}{();}
+	\PYG{k}{if}\PYG{p}{(}\PYG{n}{status} \PYG{o}{==} \PYG{l+m+mh}{0x80}\PYG{p}{)}
+	\PYG{p}{\PYGZob{}}
+		\PYG{c+c1}{// Data is sent and ACK has been returned}
+		\PYG{k}{return} \PYG{n}{value\PYGZus{}}\PYG{p}{;}
+	\PYG{p}{\PYGZcb{}}
+	\PYG{k}{else} \PYG{k}{if}\PYG{p}{(}\PYG{n}{status} \PYG{o}{==} \PYG{l+m+mh}{0x88}\PYG{p}{)}
+	\PYG{p}{\PYGZob{}}
+		\PYG{c+c1}{// Data is sent and NACK has been returned for last byte}
+		\PYG{k}{return} \PYG{n}{value\PYGZus{}}\PYG{p}{;}
+	\PYG{p}{\PYGZcb{}}
+	\PYG{k}{else}
+	\PYG{p}{\PYGZob{}}
+		\PYG{c+c1}{// error occured}
+		\PYG{k}{return} \PYG{l+m+mh}{0xFF}\PYG{p}{;}
+	\PYG{p}{\PYGZcb{}}
+\PYG{p}{\PYGZcb{}}
+\PYG{k+kt}{void} \PYG{n+nf}{I2C\PYGZus{}Slave\PYGZus{}DataReceiveString}\PYG{p}{(}\PYG{k+kt}{uint8\PYGZus{}t} \PYG{o}{*}\PYG{n}{recData}\PYG{p}{,}\PYG{k+kt}{uint8\PYGZus{}t} \PYG{n}{NUMBYTE}\PYG{p}{)}
+\PYG{p}{\PYGZob{}}
+	\PYG{k+kt}{uint8\PYGZus{}t} \PYG{n}{i}\PYG{o}{=}\PYG{l+m+mi}{0}\PYG{p}{;}
+	\PYG{n}{recData}\PYG{p}{[}\PYG{n}{NUMBYTE}\PYG{p}{]} \PYG{o}{=} \PYG{l+s+sc}{\PYGZsq{}\PYGZbs{}0\PYGZsq{}}\PYG{p}{;}
+	\PYG{k}{while}\PYG{p}{(}\PYG{n}{NUMBYTE} \PYG{o}{\PYGZgt{}} \PYG{l+m+mi}{0}\PYG{p}{)}
+	\PYG{p}{\PYGZob{}}
+		\PYG{n}{NUMBYTE} \PYG{o}{=} \PYG{n}{NUMBYTE} \PYG{o}{\PYGZhy{}} \PYG{l+m+mi}{1}\PYG{p}{;}
+		\PYG{c+c1}{// Enabling the Acknowledment bit for replying positive ACK}
+		\PYG{n}{TWCR} \PYG{o}{|=} \PYG{p}{(}\PYG{l+m+mi}{1}\PYG{o}{\PYGZlt{}\PYGZlt{}}\PYG{n}{TWEA}\PYG{p}{);}
+		\PYG{k}{if}\PYG{p}{(}\PYG{n}{NUMBYTE}\PYG{o}{==}\PYG{l+m+mi}{0}\PYG{p}{)}
+		\PYG{p}{\PYGZob{}}
+			\PYG{c+c1}{// disbale the Acknowledment bit for replying Negatice ACK for last byte}
+			\PYG{n}{TWCR} \PYG{o}{\PYGZam{}=} \PYG{o}{\PYGZti{}}\PYG{p}{(}\PYG{l+m+mi}{1}\PYG{o}{\PYGZlt{}\PYGZlt{}}\PYG{n}{TWEA}\PYG{p}{);}
+		\PYG{p}{\PYGZcb{}}
+		\PYG{n}{status} \PYG{o}{=} \PYG{n}{I2C\PYGZus{}Slave\PYGZus{}DataReceiveByte}\PYG{p}{();}
+		\PYG{k}{if}\PYG{p}{(}\PYG{n}{status}\PYG{o}{==}\PYG{l+m+mh}{0xFF}\PYG{p}{)}
+			\PYG{k}{return}\PYG{p}{;}
+		\PYG{k}{else}		
+			\PYG{n}{recData}\PYG{p}{[}\PYG{n}{i}\PYG{p}{]} \PYG{o}{=} \PYG{n}{status}\PYG{p}{;}
+		\PYG{n}{i}\PYG{o}{++}\PYG{p}{;}
+	\PYG{p}{\PYGZcb{}}
+\PYG{p}{\PYGZcb{}}
+\end{Verbatim}

@@ -1,0 +1,16 @@
+\begin{Verbatim}[commandchars=\\\{\}]
+\PYG{c+c1}{// MOde of operation to Normal Mode \PYGZhy{}\PYGZhy{} WGM1[3:0] === 0000}
+\PYG{c+c1}{// WGM1[3](bit4) from TCCR1B, WGM1[2](bit3) from TCCR1B, WGM1[1](bit1)  from TCC1RA, WGM1[0](bit0)  from TCCR1A	}
+\PYG{n}{TCCR1A} \PYG{o}{=} \PYG{n}{TCCR1A} \PYG{o}{\PYGZam{}} \PYG{o}{\PYGZti{}}\PYG{p}{(}\PYG{l+m+mi}{1}\PYG{o}{\PYGZlt{}\PYGZlt{}}\PYG{n}{WGM10}\PYG{p}{);}
+\PYG{n}{TCCR1A} \PYG{o}{=} \PYG{n}{TCCR1A} \PYG{o}{\PYGZam{}} \PYG{o}{\PYGZti{}}\PYG{p}{(}\PYG{l+m+mi}{1}\PYG{o}{\PYGZlt{}\PYGZlt{}}\PYG{n}{WGM11}\PYG{p}{);}
+\PYG{n}{TCCR1B} \PYG{o}{=} \PYG{n}{TCCR1B} \PYG{o}{\PYGZam{}} \PYG{o}{\PYGZti{}}\PYG{p}{(}\PYG{l+m+mi}{1}\PYG{o}{\PYGZlt{}\PYGZlt{}}\PYG{n}{WGM12}\PYG{p}{);}
+\PYG{n}{TCCR1B} \PYG{o}{=} \PYG{n}{TCCR1B} \PYG{o}{\PYGZam{}} \PYG{o}{\PYGZti{}}\PYG{p}{(}\PYG{l+m+mi}{1}\PYG{o}{\PYGZlt{}\PYGZlt{}}\PYG{n}{WGM13}\PYG{p}{);}
+
+\PYG{c+cm}{/* to count external event \PYGZhy{}we must connect source to T1 (PD5) */}
+\PYG{c+c1}{// THE CLK IS CLOCKED FROM external source}
+\PYG{c+c1}{// Falling edge of T1(PD5) \PYGZhy{}\PYGZhy{} CS1[2:0] === 110}
+\PYG{c+c1}{// CS1[2](bit2) from TCCR1B,CS1[1](bit1) from TCCR1B,CS1[0](bit0) from TCCR1B}
+\PYG{n}{TCCR1B} \PYG{o}{=} \PYG{n}{TCCR1B} \PYG{o}{\PYGZam{}} \PYG{o}{\PYGZti{}}\PYG{p}{(}\PYG{l+m+mi}{1}\PYG{o}{\PYGZlt{}\PYGZlt{}}\PYG{n}{CS10}\PYG{p}{);}
+\PYG{n}{TCCR1B} \PYG{o}{=} \PYG{n}{TCCR1B} \PYG{o}{|} \PYG{p}{(}\PYG{l+m+mi}{1}\PYG{o}{\PYGZlt{}\PYGZlt{}}\PYG{n}{CS11}\PYG{p}{);}
+\PYG{n}{TCCR1B} \PYG{o}{=} \PYG{n}{TCCR1B} \PYG{o}{|} \PYG{p}{(}\PYG{l+m+mi}{1}\PYG{o}{\PYGZlt{}\PYGZlt{}}\PYG{n}{CS12}\PYG{p}{);}
+\end{Verbatim}

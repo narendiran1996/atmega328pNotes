@@ -1,0 +1,110 @@
+\begin{Verbatim}[commandchars=\\\{\}]
+\PYG{k+kt}{void} \PYG{n+nf}{Timer1\PYGZus{}FastPWMGeneration}\PYG{p}{(}\PYG{k+kt}{uint32\PYGZus{}t} \PYG{n}{on\PYGZus{}time\PYGZus{}us}\PYG{p}{,} \PYG{k+kt}{uint32\PYGZus{}t} \PYG{n}{off\PYGZus{}time\PYGZus{}us}\PYG{p}{)}
+\PYG{p}{\PYGZob{}}
+	\PYG{k+kt}{uint32\PYGZus{}t} \PYG{n}{total\PYGZus{}time} \PYG{o}{=} \PYG{n}{on\PYGZus{}time\PYGZus{}us} \PYG{o}{+} \PYG{n}{off\PYGZus{}time\PYGZus{}us}\PYG{p}{;}
+	
+	\PYG{c+cm}{/* TCNT1 starts from 0X0000 goes upto TOP and restarts from 0X00*/}
+	\PYG{c+cm}{/* Mode of operation:}
+\PYG{c+cm}{		WGM1[3:0] \PYGZhy{}\PYGZhy{}\PYGZgt{} 0101 \PYGZhy{}\PYGZhy{}	TOP\PYGZhy{}\PYGZhy{}\PYGZgt{} 0X00FF}
+\PYG{c+cm}{		WGM1[3:0] \PYGZhy{}\PYGZhy{}\PYGZgt{} 0110 \PYGZhy{}\PYGZhy{}	TOP\PYGZhy{}\PYGZhy{}\PYGZgt{} 0x01FF}
+\PYG{c+cm}{		WGM1[3:0] \PYGZhy{}\PYGZhy{}\PYGZgt{} 0111 \PYGZhy{}\PYGZhy{}	TOP\PYGZhy{}\PYGZhy{}\PYGZgt{} 0x03FF}
+\PYG{c+cm}{		WGM1[3:0] \PYGZhy{}\PYGZhy{}\PYGZgt{} 1110 \PYGZhy{}\PYGZhy{}	TOP\PYGZhy{}\PYGZhy{}\PYGZgt{} ICR1}
+\PYG{c+cm}{		WGM1[3:0] \PYGZhy{}\PYGZhy{}\PYGZgt{} 1111 \PYGZhy{}\PYGZhy{}	TOP\PYGZhy{}\PYGZhy{}\PYGZgt{} OCR1A}
+\PYG{c+cm}{	*/}
+	
+	\PYG{c+c1}{// we take OCR1A for custom frequency and OCR1B for PWM on time(duty cycle)}
+	
+	\PYG{c+c1}{// choose WGM1[3:0] \PYGZhy{}\PYGZhy{}\PYGZgt{} 1111 for OCR1A as TOP for custom frequency}
+	\PYG{n}{TCCR1A} \PYG{o}{=} \PYG{n}{TCCR1A} \PYG{o}{|} \PYG{p}{(}\PYG{l+m+mi}{1}\PYG{o}{\PYGZlt{}\PYGZlt{}}\PYG{n}{WGM10}\PYG{p}{);}
+	\PYG{n}{TCCR1A} \PYG{o}{=} \PYG{n}{TCCR1A} \PYG{o}{|} \PYG{p}{(}\PYG{l+m+mi}{1}\PYG{o}{\PYGZlt{}\PYGZlt{}}\PYG{n}{WGM11}\PYG{p}{);}
+	\PYG{n}{TCCR1B} \PYG{o}{=} \PYG{n}{TCCR1B} \PYG{o}{|} \PYG{p}{(}\PYG{l+m+mi}{1}\PYG{o}{\PYGZlt{}\PYGZlt{}}\PYG{n}{WGM12}\PYG{p}{);}
+	\PYG{n}{TCCR1B} \PYG{o}{=} \PYG{n}{TCCR1B} \PYG{o}{|} \PYG{p}{(}\PYG{l+m+mi}{1}\PYG{o}{\PYGZlt{}\PYGZlt{}}\PYG{n}{WGM13}\PYG{p}{);}
+	
+
+	\PYG{c+c1}{// COM1B[1](bit5) from TCCR1A, COM1B[0](bit4) from TCCR1A}
+	\PYG{n}{TCCR1A} \PYG{o}{=} \PYG{n}{TCCR1A} \PYG{o}{|} \PYG{p}{(}\PYG{l+m+mi}{1}\PYG{o}{\PYGZlt{}\PYGZlt{}}\PYG{n}{COM1B0}\PYG{p}{);}
+	\PYG{n}{TCCR1A} \PYG{o}{=} \PYG{n}{TCCR1A} \PYG{o}{|} \PYG{p}{(}\PYG{l+m+mi}{1}\PYG{o}{\PYGZlt{}\PYGZlt{}}\PYG{n}{COM1B1}\PYG{p}{);}
+	
+	\PYG{k}{if}\PYG{p}{(}\PYG{n}{total\PYGZus{}time} \PYG{o}{\PYGZlt{}}\PYG{l+m+mi}{4}\PYG{p}{)}
+	\PYG{p}{\PYGZob{}}
+		\PYG{c+c1}{// if total\PYGZus{}time \PYGZlt{}= 3us \PYGZhy{}\PYGZhy{} so we stop clock}
+		
+		\PYG{n}{OCR1A} \PYG{o}{=} \PYG{l+m+mi}{0}\PYG{p}{;}
+		\PYG{n}{OCR1B} \PYG{o}{=} \PYG{l+m+mi}{0}\PYG{p}{;}
+		\PYG{c+c1}{// start timer by setting the clock prescalar}
+		\PYG{c+c1}{//  use the same clock from I/O clock}
+		\PYG{c+c1}{//  CS1[2:0] === 001}
+		\PYG{c+c1}{// CS1[2](bit2) from TCCR1B,CS1[1](bit1) from TCCR1B,CS1[0](bit0) from TCCR1B}
+		\PYG{n}{TCCR1B} \PYG{o}{=} \PYG{n}{TCCR1B} \PYG{o}{\PYGZam{}} \PYG{o}{\PYGZti{}}\PYG{p}{(}\PYG{l+m+mi}{1}\PYG{o}{\PYGZlt{}\PYGZlt{}}\PYG{l+m+mi}{0}\PYG{p}{);}
+		\PYG{n}{TCCR1B} \PYG{o}{=} \PYG{n}{TCCR1B} \PYG{o}{\PYGZam{}} \PYG{o}{\PYGZti{}}\PYG{p}{(}\PYG{l+m+mi}{1}\PYG{o}{\PYGZlt{}\PYGZlt{}}\PYG{l+m+mi}{1}\PYG{p}{);}
+		\PYG{n}{TCCR1B} \PYG{o}{=} \PYG{n}{TCCR1B} \PYG{o}{\PYGZam{}} \PYG{o}{\PYGZti{}}\PYG{p}{(}\PYG{l+m+mi}{1}\PYG{o}{\PYGZlt{}\PYGZlt{}}\PYG{l+m+mi}{2}\PYG{p}{);}
+	\PYG{p}{\PYGZcb{}}
+	\PYG{k}{else} \PYG{k}{if}\PYG{p}{((}\PYG{l+m+mi}{3} \PYG{o}{\PYGZlt{}} \PYG{n}{total\PYGZus{}time}\PYG{p}{)}  \PYG{o}{\PYGZam{}\PYGZam{}} \PYG{p}{(}\PYG{n}{total\PYGZus{}time} \PYG{o}{\PYGZlt{}=} \PYG{l+m+mi}{4000}\PYG{p}{))}
+	\PYG{p}{\PYGZob{}}
+		\PYG{n}{OCR1A} \PYG{o}{=} \PYG{p}{((}\PYG{n}{total\PYGZus{}time} \PYG{o}{*} \PYG{l+m+mi}{16}\PYG{p}{)} \PYG{o}{\PYGZgt{}\PYGZgt{}} \PYG{l+m+mi}{0}\PYG{p}{)} \PYG{o}{\PYGZhy{}} \PYG{l+m+mi}{1}\PYG{p}{;}
+		\PYG{n}{OCR1B} \PYG{o}{=} \PYG{p}{((}\PYG{n}{on\PYGZus{}time\PYGZus{}us} \PYG{o}{*} \PYG{l+m+mi}{16}\PYG{p}{)} \PYG{o}{\PYGZgt{}\PYGZgt{}} \PYG{l+m+mi}{0}\PYG{p}{)} \PYG{o}{\PYGZhy{}} \PYG{l+m+mi}{1}\PYG{p}{;}
+		\PYG{c+c1}{// start timer by setting the clock prescalar}
+		\PYG{c+c1}{//  use the same clock from I/O clock}
+		\PYG{c+c1}{//  CS1[2:0] === 001}
+		\PYG{c+c1}{// CS1[2](bit2) from TCCR1B,CS1[1](bit1) from TCCR1B,CS1[0](bit0) from TCCR1B}
+		\PYG{n}{TCCR1B} \PYG{o}{=} \PYG{n}{TCCR1B} \PYG{o}{|} \PYG{p}{(}\PYG{l+m+mi}{1}\PYG{o}{\PYGZlt{}\PYGZlt{}}\PYG{l+m+mi}{0}\PYG{p}{);}
+		\PYG{n}{TCCR1B} \PYG{o}{=} \PYG{n}{TCCR1B} \PYG{o}{\PYGZam{}} \PYG{o}{\PYGZti{}}\PYG{p}{(}\PYG{l+m+mi}{1}\PYG{o}{\PYGZlt{}\PYGZlt{}}\PYG{l+m+mi}{1}\PYG{p}{);}
+		\PYG{n}{TCCR1B} \PYG{o}{=} \PYG{n}{TCCR1B} \PYG{o}{\PYGZam{}} \PYG{o}{\PYGZti{}}\PYG{p}{(}\PYG{l+m+mi}{1}\PYG{o}{\PYGZlt{}\PYGZlt{}}\PYG{l+m+mi}{2}\PYG{p}{);}
+	\PYG{p}{\PYGZcb{}}
+	\PYG{k}{else} \PYG{k}{if}\PYG{p}{((}\PYG{l+m+mi}{4000} \PYG{o}{\PYGZlt{}} \PYG{n}{total\PYGZus{}time}\PYG{p}{)}  \PYG{o}{\PYGZam{}\PYGZam{}} \PYG{p}{(}\PYG{n}{total\PYGZus{}time} \PYG{o}{\PYGZlt{}=} \PYG{l+m+mi}{32000}\PYG{p}{))}
+	\PYG{p}{\PYGZob{}}
+		\PYG{n}{OCR1A} \PYG{o}{=} \PYG{p}{((}\PYG{n}{total\PYGZus{}time} \PYG{o}{*} \PYG{l+m+mi}{16}\PYG{p}{)} \PYG{o}{\PYGZgt{}\PYGZgt{}} \PYG{l+m+mi}{3}\PYG{p}{)} \PYG{o}{\PYGZhy{}} \PYG{l+m+mi}{1}\PYG{p}{;}
+		\PYG{n}{OCR1B} \PYG{o}{=} \PYG{p}{((}\PYG{n}{on\PYGZus{}time\PYGZus{}us} \PYG{o}{*} \PYG{l+m+mi}{16}\PYG{p}{)} \PYG{o}{\PYGZgt{}\PYGZgt{}} \PYG{l+m+mi}{3}\PYG{p}{)} \PYG{o}{\PYGZhy{}} \PYG{l+m+mi}{1}\PYG{p}{;}
+		\PYG{c+c1}{// start timer by setting the clock prescalar}
+		\PYG{c+c1}{//  dived by 8 from I/O clock}
+		\PYG{c+c1}{//  CS1[2:0] === 010}
+		\PYG{c+c1}{// CS1[2](bit2) from TCCR1B,CS1[1](bit1) from TCCR1B,CS1[0](bit0) from TCCR1B}
+		\PYG{n}{TCCR1B} \PYG{o}{=} \PYG{n}{TCCR1B} \PYG{o}{\PYGZam{}} \PYG{o}{\PYGZti{}}\PYG{p}{(}\PYG{l+m+mi}{1}\PYG{o}{\PYGZlt{}\PYGZlt{}}\PYG{l+m+mi}{0}\PYG{p}{);}
+		\PYG{n}{TCCR1B} \PYG{o}{=} \PYG{n}{TCCR1B} \PYG{o}{|} \PYG{p}{(}\PYG{l+m+mi}{1}\PYG{o}{\PYGZlt{}\PYGZlt{}}\PYG{l+m+mi}{1}\PYG{p}{);}
+		\PYG{n}{TCCR1B} \PYG{o}{=} \PYG{n}{TCCR1B} \PYG{o}{\PYGZam{}} \PYG{o}{\PYGZti{}}\PYG{p}{(}\PYG{l+m+mi}{1}\PYG{o}{\PYGZlt{}\PYGZlt{}}\PYG{l+m+mi}{2}\PYG{p}{);}
+	\PYG{p}{\PYGZcb{}}
+	\PYG{k}{else} \PYG{k}{if}\PYG{p}{((}\PYG{l+m+mi}{32000} \PYG{o}{\PYGZlt{}} \PYG{n}{total\PYGZus{}time}\PYG{p}{)}  \PYG{o}{\PYGZam{}\PYGZam{}} \PYG{p}{(}\PYG{n}{total\PYGZus{}time} \PYG{o}{\PYGZlt{}=} \PYG{l+m+mi}{260000}\PYG{p}{))}
+	\PYG{p}{\PYGZob{}}
+		\PYG{n}{OCR1A} \PYG{o}{=} \PYG{p}{((}\PYG{n}{total\PYGZus{}time} \PYG{o}{*} \PYG{l+m+mi}{16}\PYG{p}{)} \PYG{o}{\PYGZgt{}\PYGZgt{}} \PYG{l+m+mi}{6}\PYG{p}{)} \PYG{o}{\PYGZhy{}} \PYG{l+m+mi}{1}\PYG{p}{;}
+		\PYG{n}{OCR1B} \PYG{o}{=} \PYG{p}{((}\PYG{n}{on\PYGZus{}time\PYGZus{}us} \PYG{o}{*} \PYG{l+m+mi}{16}\PYG{p}{)} \PYG{o}{\PYGZgt{}\PYGZgt{}} \PYG{l+m+mi}{6}\PYG{p}{)} \PYG{o}{\PYGZhy{}} \PYG{l+m+mi}{1}\PYG{p}{;}
+		\PYG{c+c1}{// start timer by setting the clock prescalar}
+		\PYG{c+c1}{//  dived by 64 from I/O clock}
+		\PYG{c+c1}{//  CS1[2:0] === 011}
+		\PYG{c+c1}{// CS1[2](bit2) from TCCR1B,CS1[1](bit1) from TCCR1B,CS1[0](bit0) from TCCR1B}
+		\PYG{n}{TCCR1B} \PYG{o}{=} \PYG{n}{TCCR1B} \PYG{o}{|} \PYG{p}{(}\PYG{l+m+mi}{1}\PYG{o}{\PYGZlt{}\PYGZlt{}}\PYG{l+m+mi}{0}\PYG{p}{);}
+		\PYG{n}{TCCR1B} \PYG{o}{=} \PYG{n}{TCCR1B} \PYG{o}{|} \PYG{p}{(}\PYG{l+m+mi}{1}\PYG{o}{\PYGZlt{}\PYGZlt{}}\PYG{l+m+mi}{1}\PYG{p}{);}
+		\PYG{n}{TCCR1B} \PYG{o}{=} \PYG{n}{TCCR1B} \PYG{o}{\PYGZam{}} \PYG{o}{\PYGZti{}}\PYG{p}{(}\PYG{l+m+mi}{1}\PYG{o}{\PYGZlt{}\PYGZlt{}}\PYG{l+m+mi}{2}\PYG{p}{);}
+		
+	\PYG{p}{\PYGZcb{}}
+	\PYG{k}{else} \PYG{k}{if}\PYG{p}{((}\PYG{l+m+mi}{260000} \PYG{o}{\PYGZlt{}} \PYG{n}{total\PYGZus{}time}\PYG{p}{)}  \PYG{o}{\PYGZam{}\PYGZam{}} \PYG{p}{(}\PYG{n}{total\PYGZus{}time} \PYG{o}{\PYGZlt{}=} \PYG{l+m+mi}{1000000}\PYG{p}{))}
+	\PYG{p}{\PYGZob{}}
+		\PYG{n}{OCR1A} \PYG{o}{=} \PYG{p}{((}\PYG{n}{total\PYGZus{}time} \PYG{o}{*} \PYG{l+m+mi}{16}\PYG{p}{)} \PYG{o}{\PYGZgt{}\PYGZgt{}} \PYG{l+m+mi}{8}\PYG{p}{)} \PYG{o}{\PYGZhy{}} \PYG{l+m+mi}{1}\PYG{p}{;}
+		\PYG{n}{OCR1B} \PYG{o}{=} \PYG{p}{((}\PYG{n}{on\PYGZus{}time\PYGZus{}us} \PYG{o}{*} \PYG{l+m+mi}{16}\PYG{p}{)} \PYG{o}{\PYGZgt{}\PYGZgt{}} \PYG{l+m+mi}{8}\PYG{p}{)} \PYG{o}{\PYGZhy{}} \PYG{l+m+mi}{1}\PYG{p}{;}
+		\PYG{c+c1}{// start timer by setting the clock prescalar}
+		\PYG{c+c1}{//  divide by256 from I/O clock}
+		\PYG{c+c1}{//  CS1[2:0] === 100}
+		\PYG{c+c1}{// CS1[2](bit2) from TCCR1B,CS1[1](bit1) from TCCR1B,CS1[0](bit0) from TCCR1B}
+		\PYG{n}{TCCR1B} \PYG{o}{=} \PYG{n}{TCCR1B} \PYG{o}{\PYGZam{}} \PYG{o}{\PYGZti{}}\PYG{p}{(}\PYG{l+m+mi}{1}\PYG{o}{\PYGZlt{}\PYGZlt{}}\PYG{l+m+mi}{0}\PYG{p}{);}
+		\PYG{n}{TCCR1B} \PYG{o}{=} \PYG{n}{TCCR1B} \PYG{o}{\PYGZam{}} \PYG{o}{\PYGZti{}}\PYG{p}{(}\PYG{l+m+mi}{1}\PYG{o}{\PYGZlt{}\PYGZlt{}}\PYG{l+m+mi}{1}\PYG{p}{);}
+		\PYG{n}{TCCR1B} \PYG{o}{=} \PYG{n}{TCCR1B} \PYG{o}{|} \PYG{p}{(}\PYG{l+m+mi}{1}\PYG{o}{\PYGZlt{}\PYGZlt{}}\PYG{l+m+mi}{2}\PYG{p}{);}
+		
+	\PYG{p}{\PYGZcb{}}
+	\PYG{k}{else} \PYG{k}{if}\PYG{p}{(}\PYG{n}{total\PYGZus{}time} \PYG{o}{\PYGZgt{}} \PYG{l+m+mi}{1000000}\PYG{p}{)}
+	\PYG{p}{\PYGZob{}}
+		\PYG{c+c1}{// dont\PYGZsq{} cross more than 1s}
+	\PYG{p}{\PYGZcb{}}
+\PYG{p}{\PYGZcb{}}
+\PYG{k+kt}{void} \PYG{n+nf}{PWMGeneration}\PYG{p}{(}\PYG{k+kt}{double} \PYG{n}{duty\PYGZus{}cycle\PYGZus{}percent}\PYG{p}{,}\PYG{k+kt}{uint32\PYGZus{}t} \PYG{n}{freqeuncy}\PYG{p}{)}
+\PYG{p}{\PYGZob{}}
+	\PYG{k+kt}{double} \PYG{n}{total\PYGZus{}time\PYGZus{}us} \PYG{o}{=} \PYG{p}{(}\PYG{l+m+mf}{1000000.0}\PYG{o}{/}\PYG{n}{freqeuncy}\PYG{p}{);}
+	\PYG{k+kt}{double} \PYG{n}{on\PYGZus{}time\PYGZus{}us} \PYG{o}{=} \PYG{p}{(}\PYG{n}{duty\PYGZus{}cycle\PYGZus{}percent}\PYG{o}{/}\PYG{l+m+mf}{100.0}\PYG{p}{)} \PYG{o}{*} \PYG{n}{total\PYGZus{}time\PYGZus{}us}\PYG{p}{;}
+	\PYG{k}{if} \PYG{p}{(}\PYG{n}{on\PYGZus{}time\PYGZus{}us}\PYG{o}{\PYGZlt{}}\PYG{l+m+mf}{1.0}\PYG{p}{)}
+	\PYG{p}{\PYGZob{}}
+		\PYG{n}{on\PYGZus{}time\PYGZus{}us} \PYG{o}{=} \PYG{l+m+mi}{1}\PYG{p}{;}
+	\PYG{p}{\PYGZcb{}}
+	
+	\PYG{c+c1}{// max time = 1S \PYGZhy{}\PYGZhy{} min freqency = 1 Hz}
+	\PYG{c+c1}{//  min time = 4us \PYGZhy{}\PYGZhy{} max frequency = 250000 = 250khz}
+	\PYG{n}{Timer1\PYGZus{}FastPWMGeneration}\PYG{p}{(}\PYG{n}{on\PYGZus{}time\PYGZus{}us}\PYG{p}{,} \PYG{n}{total\PYGZus{}time\PYGZus{}us} \PYG{o}{\PYGZhy{}} \PYG{n}{on\PYGZus{}time\PYGZus{}us}\PYG{p}{);}
+\PYG{p}{\PYGZcb{}}
+\end{Verbatim}

@@ -1,0 +1,56 @@
+\begin{Verbatim}[commandchars=\\\{\}]
+\PYG{c+cm}{/* TCNT1 starts from 0X0000 goes upto TOP and from TOP to BOTTOM*/}
+\PYG{c+cm}{/* Mode of operation:}
+\PYG{c+cm}{    WGM1[3:0] \PYGZhy{}\PYGZhy{}\PYGZgt{} 0001 \PYGZhy{}\PYGZhy{}	TOP\PYGZhy{}\PYGZhy{}\PYGZgt{} 0X00FF}
+\PYG{c+cm}{    WGM1[3:0] \PYGZhy{}\PYGZhy{}\PYGZgt{} 0010 \PYGZhy{}\PYGZhy{}	TOP\PYGZhy{}\PYGZhy{}\PYGZgt{} 0x01FF}
+\PYG{c+cm}{    WGM1[3:0] \PYGZhy{}\PYGZhy{}\PYGZgt{} 0011 \PYGZhy{}\PYGZhy{}	TOP\PYGZhy{}\PYGZhy{}\PYGZgt{} 0x03FF}
+\PYG{c+cm}{    WGM1[3:0] \PYGZhy{}\PYGZhy{}\PYGZgt{} 1010 \PYGZhy{}\PYGZhy{}	TOP\PYGZhy{}\PYGZhy{}\PYGZgt{} ICR1}
+\PYG{c+cm}{    WGM1[3:0] \PYGZhy{}\PYGZhy{}\PYGZgt{} 1011 \PYGZhy{}\PYGZhy{}	TOP\PYGZhy{}\PYGZhy{}\PYGZgt{} OCR1A}
+\PYG{c+cm}{*/}	
+\PYG{c+c1}{// we take 0x03FF for fixed frequency and OCR1B for PWM on time(duty cycle)	}
+\PYG{c+c1}{// choose WGM1[3:0] \PYGZhy{}\PYGZhy{}\PYGZgt{} 0011 for 0x03FF as TOP for custom frequency}
+\PYG{n}{TCCR1A} \PYG{o}{=} \PYG{n}{TCCR1A} \PYG{o}{|} \PYG{p}{(}\PYG{l+m+mi}{1}\PYG{o}{\PYGZlt{}\PYGZlt{}}\PYG{n}{WGM10}\PYG{p}{);}
+\PYG{n}{TCCR1A} \PYG{o}{=} \PYG{n}{TCCR1A} \PYG{o}{|} \PYG{p}{(}\PYG{l+m+mi}{1}\PYG{o}{\PYGZlt{}\PYGZlt{}}\PYG{n}{WGM11}\PYG{p}{);}
+\PYG{n}{TCCR1B} \PYG{o}{=} \PYG{n}{TCCR1B} \PYG{o}{\PYGZam{}} \PYG{o}{\PYGZti{}}\PYG{p}{(}\PYG{l+m+mi}{1}\PYG{o}{\PYGZlt{}\PYGZlt{}}\PYG{n}{WGM12}\PYG{p}{);}
+\PYG{n}{TCCR1B} \PYG{o}{=} \PYG{n}{TCCR1B} \PYG{o}{\PYGZam{}} \PYG{o}{\PYGZti{}}\PYG{p}{(}\PYG{l+m+mi}{1}\PYG{o}{\PYGZlt{}\PYGZlt{}}\PYG{n}{WGM13}\PYG{p}{);}
+
+\PYG{c+cm}{/* in timer0\PYGZus{}phase\PYGZus{}pwm\PYGZus{}top\PYGZus{}max, only two possiblites are there for COM0B[1:0] and COM0A[1:0] i.e) 10(Inverting) and 11(Non\PYGZhy{} inverting) */}
+
+\PYG{c+c1}{// here we set COM0A[1:0] as 11 for inverting}
+\PYG{c+c1}{// here we set COM0B[1:0] as 11 for inverting}
+
+\PYG{c+c1}{// which is reflected in PD6}
+\PYG{c+c1}{// COM1A[1](bit7) from TCCR1A, COM1A[0](bit6) from TCCR1A}
+\PYG{n}{TCCR1A} \PYG{o}{=} \PYG{n}{TCCR1A} \PYG{o}{|} \PYG{p}{(}\PYG{l+m+mi}{1}\PYG{o}{\PYGZlt{}\PYGZlt{}}\PYG{n}{COM1A1}\PYG{p}{);}
+\PYG{n}{TCCR1A} \PYG{o}{=} \PYG{n}{TCCR1A} \PYG{o}{|} \PYG{p}{(}\PYG{l+m+mi}{1}\PYG{o}{\PYGZlt{}\PYGZlt{}}\PYG{n}{COM1A0}\PYG{p}{);}
+
+\PYG{c+c1}{// which is reflected in PD65}
+\PYG{c+c1}{// COM1B[1](bit5) from TCCR1A, COM1B[0](bit4) from TCCR1A	}
+\PYG{n}{TCCR1A} \PYG{o}{=} \PYG{n}{TCCR1A} \PYG{o}{|} \PYG{p}{(}\PYG{l+m+mi}{1}\PYG{o}{\PYGZlt{}\PYGZlt{}}\PYG{n}{COM1B1}\PYG{p}{);}
+\PYG{n}{TCCR1A} \PYG{o}{=} \PYG{n}{TCCR1A} \PYG{o}{|} \PYG{p}{(}\PYG{l+m+mi}{1}\PYG{o}{\PYGZlt{}\PYGZlt{}}\PYG{n}{COM1B0}\PYG{p}{);}
+
+\PYG{c+c1}{// Enable Interrupt when TOV1 overflows TOP \PYGZhy{} here 0x03FF}
+\PYG{c+c1}{//  TOIE1 bit is enabled}
+\PYG{n}{TIMSK1} \PYG{o}{=} \PYG{n}{TIMSK1} \PYG{o}{|} \PYG{p}{(}\PYG{l+m+mi}{1}\PYG{o}{\PYGZlt{}\PYGZlt{}}\PYG{n}{TOIE1}\PYG{p}{);}
+
+\PYG{c+cm}{/* we use OCF1A flag \PYGZhy{} which is set at every time TCN0 reaches OCR1A */}
+\PYG{n}{TIMSK1} \PYG{o}{=} \PYG{n}{TIMSK1} \PYG{o}{|} \PYG{p}{(}\PYG{l+m+mi}{1}\PYG{o}{\PYGZlt{}\PYGZlt{}}\PYG{n}{OCIE1A}\PYG{p}{);}
+\PYG{c+cm}{/* we use OCF1B flag \PYGZhy{} which is set at every time TCN0 reaches OCR1B */}
+\PYG{n}{TIMSK1} \PYG{o}{=} \PYG{n}{TIMSK1} \PYG{o}{|} \PYG{p}{(}\PYG{l+m+mi}{1}\PYG{o}{\PYGZlt{}\PYGZlt{}}\PYG{n}{OCIE1B}\PYG{p}{);}
+
+\PYG{c+c1}{// Next we set values for OCR1A and OCR2B}
+\PYG{c+c1}{// Since, TCNT1 goes till max(0x3FF), we can choose OCR1A and OCR1B to any value below max(0x03FF)}
+\PYG{n}{OCR1A} \PYG{o}{=} \PYG{l+m+mi}{102}\PYG{p}{;} \PYG{c+c1}{// for 10\PYGZpc{} duty clcle}
+\PYG{n}{OCR1B} \PYG{o}{=} \PYG{l+m+mi}{767}\PYG{p}{;} \PYG{c+c1}{// for 75\PYGZpc{} duty clcle}
+
+\PYG{c+c1}{// start timer by setting the clock prescalar}
+\PYG{c+c1}{// SAME AS from I/O clock}
+\PYG{c+c1}{// same\PYGZhy{}\PYGZhy{} CS1[2:0] === 001}
+\PYG{c+c1}{// CS1[2](bit2) from TCCR1B,CS1[1](bit1) from TCCR1B,CS1[0](bit0) from TCCR1B}
+\PYG{n}{TCCR1B} \PYG{o}{=} \PYG{n}{TCCR1B} \PYG{o}{|} \PYG{p}{(}\PYG{l+m+mi}{1}\PYG{o}{\PYGZlt{}\PYGZlt{}}\PYG{n}{CS10}\PYG{p}{);}
+\PYG{n}{TCCR1B} \PYG{o}{=} \PYG{n}{TCCR1B} \PYG{o}{\PYGZam{}} \PYG{o}{\PYGZti{}}\PYG{p}{(}\PYG{l+m+mi}{1}\PYG{o}{\PYGZlt{}\PYGZlt{}}\PYG{n}{CS11}\PYG{p}{);}
+\PYG{n}{TCCR1B} \PYG{o}{=} \PYG{n}{TCCR1B} \PYG{o}{\PYGZam{}} \PYG{o}{\PYGZti{}}\PYG{p}{(}\PYG{l+m+mi}{1}\PYG{o}{\PYGZlt{}\PYGZlt{}}\PYG{n}{CS12}\PYG{p}{);}
+
+\PYG{c+c1}{//enabled global interrupt}
+\PYG{n}{sei}\PYG{p}{();}
+\end{Verbatim}

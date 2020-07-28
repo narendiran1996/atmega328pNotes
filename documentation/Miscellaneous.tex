@@ -1,0 +1,238 @@
+\documentclass{article}
+
+\usepackage[a4paper, bottom=0.5in, top=0.5in, left=0.5in, right=0.5in]{geometry}
+\usepackage{wrapfig}
+\usepackage{natbib}
+\usepackage{url}
+\usepackage{xcolor}
+\usepackage{caption}
+\usepackage{hyperref}
+\hypersetup{
+    colorlinks=true,    
+    urlcolor=cyan,
+}
+
+\usepackage{multirow}
+\usepackage{bytefield}
+
+\usepackage{amsfonts}
+\usepackage{float}
+\usepackage{enumitem}
+
+\usepackage{tikz-timing}[2014/10/29]
+\usetikztiminglibrary[rising arrows]{clockarrows}
+
+\usepackage{minted}
+
+\usepackage{xparse} % NewDocumentCommand, IfValueTF, IFBooleanTF
+\usepackage{tikz-timing}[2014/10/29]
+\NewDocumentCommand{\busref}{som}{\texttt{%
+		#3%
+		\IfValueTF{#2}{[#2]}{}%
+		\IfBooleanTF{#1}{\#}{}%
+}}
+
+
+\newcommand{\bitFormat}[1]{\emph{\textbf{\textcolor{cyan}{#1}}}}
+
+\newcommand{\regFormat}[1]{\textbf{\textcolor{magenta}{#1}}}
+
+\newcommand{\pinFormat}[1]{\emph{\textcolor{red}{#1}}}
+
+
+\usepackage{graphicx}
+\graphicspath{ {./Resources/pics/} }
+
+
+
+\title{ATmega328P - Miscellaneous}
+\author{Narendiran S}
+\date{\today}
+
+\begin{document}
+\maketitle
+
+
+\textbf{ \LARGE "1" - Unprogrammed | "0" - Programmed}
+
+\section{Fuse Bits}
+
+
+\begin{itemize}
+    \item Atmeta328P Has three fuse Byte.
+\end{itemize}
+
+\subsection{Extended Fuse Byte}
+\vspace*{0.5cm}
+\begin{bytefield}[bitformatting={\large\bfseries},
+    endianness=big,bitwidth=0.125\linewidth]{8}
+    \bitheader[lsb=0]{0-7} \\
+    \bitbox{1}{\small -}
+    \bitbox{1}{\small -}
+    \bitbox{1}{\small -}
+    \bitbox{1}{\small -}
+    \bitbox{1}{\small -}
+    \bitbox{1}{\small BODLEVEL2}
+    \bitbox{1}{\small BODLEVEL1}
+    \bitbox{1}{\small BODLEVEL0}\\
+\end{bytefield}
+\begin{itemize}
+    \item $V_{BOT}$ - Brown-out Threshold Voltage
+\end{itemize}
+
+\begin{table}[H]
+    \begin{center}
+        \begin{tabular}{|c|c|c|c|}
+            \hline
+            \bitFormat{BODLEVEL[2:0]} & \textbf{Min $V_{BOT}$} & \textbf{Typ $V_{BOT}$} & \textbf{Max $V_{BOT}$}\\
+            \hline
+            111 & \multicolumn{3}{|c|}{BOD disabled}\\
+            \hline
+            101 & 2.5 & 2.7 & 2.9\\
+            \hline
+            100 & 4.0 & 4.3 & 4.6\\
+            \hline
+        \end{tabular}
+    \end{center}
+\end{table}
+
+\subsection{High Fuse Byte}
+\vspace*{0.5cm}
+\begin{bytefield}[bitformatting={\large\bfseries},
+    endianness=big,bitwidth=0.125\linewidth]{8}
+    \bitheader[lsb=0]{0-7} \\
+    \bitbox{1}{\small RSTDISBL}
+    \bitbox{1}{\small DWEN}
+    \bitbox{1}{\small SPIEN}
+    \bitbox{1}{\small WDTON}
+    \bitbox{1}{\small EESAVE}
+    \bitbox{1}{\small BOOTSZ1}
+    \bitbox{1}{\small BOOTSZ0}
+    \bitbox{1}{\small BOOTRST}\\
+\end{bytefield}
+
+\begin{table}[H]
+    \begin{center}
+        \begin{tabular}{|c|p{8cm}|c|}
+            \hline
+            \textbf{High Fuse Byte} & \textbf{Description} & \textbf{Default Value}\\
+            \hline
+            RSTDISBL & External reset disable - disable external reset pin and use as input or output pin & 1\\
+            \hline
+            DWEN & debugWIRE enable - enabled debugWIRE interface & 1\\
+            \hline
+            SPIEN & Enable serial program and data downloading & 0 - enable SPI programming\\
+            \hline
+            WDTON & Watchdog timer always On & 1\\
+            \hline
+            EESAVE & EEPROM memory is preserved through chip erase & 1\\
+            \hline
+            BOOTSZ1 & Select boot size & 0\\
+            \hline
+            BOOTSZ0 & Select boot size & 0\\
+            \hline
+            BOOTRST & Select reset vector - select reset vector location & 1\\            
+            \hline
+        \end{tabular}
+    \end{center}
+\end{table}
+
+
+\begin{table}[H]
+    \begin{center}
+        \begin{tabular}{|c|c|c|c|c|}
+            \hline
+            \textbf{BOOTSZ[1:0]} & \textbf{Boot size} & \textbf{Pages} & \textbf{Application Flash Section} & \textbf{Boot Loader Falash Section}\\
+            \hline
+            11 & 256 words & 4 & 0x0000 - 0x3EFF  & 0x3F00 - 0x3FFF\\
+            10 & 512 words & 8 & 0x0000 - 0x3DFF  & 0x3E00 - 0x3FFF\\
+            01 & 1024 words & 16 & 0x0000 - 0x3BFF  & 0x3C00 - 0x3FFF\\
+            00 & 2048 words & 32 & 0x0000 - 0x37FF  & 0x3800 - 0x3FFF\\
+            \hline
+        \end{tabular}
+    \end{center}
+\end{table}
+
+\subsection{Low Fuse Byte}
+\vspace*{0.5cm}
+\begin{bytefield}[bitformatting={\large\bfseries},
+    endianness=big,bitwidth=0.125\linewidth]{8}
+    \bitheader[lsb=0]{0-7} \\
+    \bitbox{1}{\small CKDIV8}
+    \bitbox{1}{\small CKOUT}
+    \bitbox{1}{\small SUT1}
+    \bitbox{1}{\small SUT0}
+    \bitbox{1}{\small CKSEL3}
+    \bitbox{1}{\small CKSEL2}
+    \bitbox{1}{\small CKSEL1}
+    \bitbox{1}{\small CKSEL0}\\
+\end{bytefield}
+
+\begin{table}[H]
+    \begin{center}
+        \begin{tabular}{|c|c|c|}
+            \hline
+            \textbf{High Fuse Byte} & \textbf{Description} & \textbf{Default Value}\\
+            \hline
+            CKDIV8 & Divide clock by 8 & 0 - Divide clock by 8 and use as CPU clock\\
+            \hline
+            CKOUT & Clock output & 1\\
+            \hline
+            SUT1 & Select start-up time & 1\\
+            \hline
+            SUT0 & Select start-up time & 0\\
+            \hline
+            CKSEL3 & Select clock source & 0\\
+            \hline
+            CKSEL2 & Select clock source & 0\\
+            \hline
+            CKSEL1 & Select clock source & 1\\
+            \hline
+            CKSEL0 & Select clock source& 1\\            
+            \hline
+        \end{tabular}
+    \end{center}
+\end{table}
+
+\begin{table}[H]
+    \begin{center}
+        \begin{tabular}{c|c}
+            \textbf{\bitFormat{CKSEL[3:0]}} & \textbf{Device Clocking Option}\\
+            \hline
+            1111 - 1000 & Low power crystall oscillator\\
+            0111 - 0110 & Full swing crystal oscillator\\
+            0101 - 0100 & Low frequency crystal oscillator\\
+            0011 & Internal 128kHz RC oscillator\\
+            0010 & Calibrated internal RC oscillator\\
+            0000 & External clock            
+        \end{tabular}
+    \end{center}
+\end{table}
+
+\section{Signature Bytes}
+\begin{itemize}
+    \item All Atmel microcontrollers have a three-byte Signature code which identifies the devices.
+\end{itemize}
+
+\begin{table}[H]
+    \begin{center}
+        \begin{tabular}{|c|c|c|c|}
+            \hline
+            \multirow{2}{*}{\textbf{Part}} & \multicolumn{3}{c|}{\textbf{Sinature Bytes Address}}\\
+   
+            \cline{2-4}  &  \textbf{0x000} & \textbf{0x001} & \textbf{0x002}\\
+            \hline
+            ATmega328P & 0x1E & 0x95 & 0x0F\\
+            \hline
+        \end{tabular}
+    \end{center}
+\end{table}
+
+
+\section{Calibration Byte}
+\begin{itemize}
+    \item The Atmel ATmega328P has a byte calibration value for the internal RC oscillator.
+    \item This byte resides in the high byte of address 0x000 in the signature address space.
+    \item During reset, this byte is automatically written into the \regFormat{OSCCAL} register to ensure correct frequency of the calibrated RC oscillator.
+\end{itemize}
+\end{document}

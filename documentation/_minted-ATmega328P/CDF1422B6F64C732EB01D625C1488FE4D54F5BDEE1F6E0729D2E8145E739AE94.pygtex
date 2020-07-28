@@ -1,0 +1,48 @@
+\begin{Verbatim}[commandchars=\\\{\}]
+\PYG{c+c1}{// MOde of operation to Normal Mode \PYGZhy{}\PYGZhy{} WGM1[3:0] === 0100(TOP = OCR1A) or 1100(TOP = ICR1)}
+\PYG{c+c1}{// WGM1[3](bit4) from TCCR1B, WGM1[2](bit3) from TCCR1B, WGM1[1](bit1)  from TCC1RA, WGM1[0](bit0)  from TCCR1A	}
+\PYG{c+c1}{// we take TOP to be OCR1A for custom frequency}
+\PYG{n}{TCCR1A} \PYG{o}{=} \PYG{n}{TCCR1A} \PYG{o}{\PYGZam{}} \PYG{o}{\PYGZti{}}\PYG{p}{(}\PYG{l+m+mi}{1}\PYG{o}{\PYGZlt{}\PYGZlt{}}\PYG{n}{WGM10}\PYG{p}{);}
+\PYG{n}{TCCR1A} \PYG{o}{=} \PYG{n}{TCCR1A} \PYG{o}{\PYGZam{}} \PYG{o}{\PYGZti{}}\PYG{p}{(}\PYG{l+m+mi}{1}\PYG{o}{\PYGZlt{}\PYGZlt{}}\PYG{n}{WGM11}\PYG{p}{);}
+\PYG{n}{TCCR1B} \PYG{o}{=} \PYG{n}{TCCR1B} \PYG{o}{|} \PYG{p}{(}\PYG{l+m+mi}{1}\PYG{o}{\PYGZlt{}\PYGZlt{}}\PYG{n}{WGM12}\PYG{p}{);}
+\PYG{n}{TCCR1B} \PYG{o}{=} \PYG{n}{TCCR1B} \PYG{o}{\PYGZam{}} \PYG{o}{\PYGZti{}}\PYG{p}{(}\PYG{l+m+mi}{1}\PYG{o}{\PYGZlt{}\PYGZlt{}}\PYG{n}{WGM13}\PYG{p}{);}
+
+\PYG{c+cm}{/* What to do when timer reaches the OCR1A value */}
+\PYG{c+c1}{// toggle OC1A on each time when reaches the OCR1A}
+\PYG{c+c1}{// which is reflected in PB1}
+\PYG{c+c1}{// Output OC1A to toglle when reaches OCR1A \PYGZhy{}\PYGZhy{} COM1A[1:0] === 01}
+\PYG{c+c1}{// COM1A[1](bit7) from TCCR1A, COM1A[0](bit6) from TCCR1A	}
+\PYG{n}{TCCR1A} \PYG{o}{=} \PYG{n}{TCCR1A} \PYG{o}{|} \PYG{p}{(}\PYG{l+m+mi}{1}\PYG{o}{\PYGZlt{}\PYGZlt{}}\PYG{n}{COM1A0}\PYG{p}{);}
+\PYG{n}{TCCR1A} \PYG{o}{=} \PYG{n}{TCCR1A} \PYG{o}{\PYGZam{}} \PYG{o}{\PYGZti{}}\PYG{p}{(}\PYG{l+m+mi}{1}\PYG{o}{\PYGZlt{}\PYGZlt{}}\PYG{n}{COM1A1}\PYG{p}{);}	
+
+\PYG{c+c1}{// toggle OC1B on each time when reaches the OCR1A}
+\PYG{c+c1}{// which is reflected in PB2}
+\PYG{c+c1}{// Output OC1B to toglle when reaches OCR1A \PYGZhy{}\PYGZhy{} COM1B[1:0] === 01}
+\PYG{c+c1}{// COM1B[1](bi57) from TCCR1A, COM1B[0](bit64) from TCCR1A	}
+\PYG{n}{TCCR1A} \PYG{o}{=} \PYG{n}{TCCR1A} \PYG{o}{|} \PYG{p}{(}\PYG{l+m+mi}{1}\PYG{o}{\PYGZlt{}\PYGZlt{}}\PYG{n}{COM1B0}\PYG{p}{);}
+\PYG{n}{TCCR1A} \PYG{o}{=} \PYG{n}{TCCR1A} \PYG{o}{\PYGZam{}} \PYG{o}{\PYGZti{}}\PYG{p}{(}\PYG{l+m+mi}{1}\PYG{o}{\PYGZlt{}\PYGZlt{}}\PYG{n}{COM1B1}\PYG{p}{);}	
+
+\PYG{c+c1}{// Enable Interrupt when counter matches OCR1A Rgister}
+\PYG{c+c1}{//  OCIE1A  bit is enabled}
+\PYG{n}{TIMSK1} \PYG{o}{=} \PYG{n}{TIMSK1} \PYG{o}{|} \PYG{p}{(}\PYG{l+m+mi}{1}\PYG{o}{\PYGZlt{}\PYGZlt{}}\PYG{n}{OCIE1A}\PYG{p}{);}
+
+\PYG{c+c1}{// setting the value till the counter should reach in OCR1A}
+\PYG{c+c1}{// for toggling of OC1A pin}
+\PYG{n}{OCR1A} \PYG{o}{=} \PYG{l+m+mh}{0x4861}\PYG{p}{;}
+
+\PYG{c+c1}{// start timer by setting the clock prescalar}
+\PYG{c+c1}{// SAME AS from I/O clock}
+\PYG{c+c1}{// same\PYGZhy{}\PYGZhy{} CS1[2:0] === 001}
+\PYG{c+c1}{// CS1[2](bit2) from TCCR1B,CS1[1](bit1) from TCCR1B,CS1[0](bit0) from TCCR1B}
+\PYG{n}{TCCR1B} \PYG{o}{=} \PYG{n}{TCCR1B} \PYG{o}{|} \PYG{p}{(}\PYG{l+m+mi}{1}\PYG{o}{\PYGZlt{}\PYGZlt{}}\PYG{n}{CS10}\PYG{p}{);}
+\PYG{n}{TCCR1B} \PYG{o}{=} \PYG{n}{TCCR1B} \PYG{o}{\PYGZam{}} \PYG{o}{\PYGZti{}}\PYG{p}{(}\PYG{l+m+mi}{1}\PYG{o}{\PYGZlt{}\PYGZlt{}}\PYG{n}{CS11}\PYG{p}{);}
+\PYG{n}{TCCR1B} \PYG{o}{=} \PYG{n}{TCCR1B} \PYG{o}{\PYGZam{}} \PYG{o}{\PYGZti{}}\PYG{p}{(}\PYG{l+m+mi}{1}\PYG{o}{\PYGZlt{}\PYGZlt{}}\PYG{n}{CS12}\PYG{p}{);}
+
+\PYG{c+c1}{// enabling global interrupt}
+
+\PYG{n}{sei}\PYG{p}{();}
+\PYG{c+c1}{// SO ON TIME = (1 + OCR1A) / (F\PYGZus{}CPU / PRESCALAR)}
+\PYG{c+c1}{// ON TIME = 0x4861 / (16000000/1) = 1.15ms}
+\PYG{c+c1}{// since symmetric as toggling OFF TIME = 1.15ms}
+\PYG{c+c1}{// hence, we get a square wave of fequency 1 / 2.31ms = 431Hz	}
+\end{Verbatim}

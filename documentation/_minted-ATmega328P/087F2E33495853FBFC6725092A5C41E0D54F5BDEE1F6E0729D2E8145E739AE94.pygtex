@@ -1,0 +1,14 @@
+\begin{Verbatim}[commandchars=\\\{\}]
+\PYG{c+c1}{// making PD4 as input for PCI20}
+\PYG{n}{DDRD} \PYG{o}{\PYGZam{}=} \PYG{o}{\PYGZti{}}\PYG{p}{(}\PYG{l+m+mi}{1}\PYG{o}{\PYGZlt{}\PYGZlt{}}\PYG{l+m+mi}{4}\PYG{p}{);}
+\PYG{c+c1}{// enabling the internal pull\PYGZhy{}up register for PD4 for PCI20}
+\PYG{n}{PORTD} \PYG{o}{|=} \PYG{p}{(}\PYG{l+m+mi}{1}\PYG{o}{\PYGZlt{}\PYGZlt{}}\PYG{l+m+mi}{4}\PYG{p}{);}
+
+\PYG{c+c1}{// Selecting the PCINT20 for PCI2 intterupt}
+\PYG{n}{PCMSK2} \PYG{o}{|=} \PYG{p}{(}\PYG{l+m+mi}{1}\PYG{o}{\PYGZlt{}\PYGZlt{}}\PYG{n}{PCINT20}\PYG{p}{);}
+\PYG{c+c1}{// Enabling the PCI2 interupt}
+\PYG{n}{PCICR} \PYG{o}{|=} \PYG{p}{(}\PYG{l+m+mi}{1}\PYG{o}{\PYGZlt{}\PYGZlt{}}\PYG{n}{PCIE2}\PYG{p}{);}
+
+\PYG{c+c1}{// Enabling global Interrupts}
+\PYG{n}{sei}\PYG{p}{();}	
+\end{Verbatim}

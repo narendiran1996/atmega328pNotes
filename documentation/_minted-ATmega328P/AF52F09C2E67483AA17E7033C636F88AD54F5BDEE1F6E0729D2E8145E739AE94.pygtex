@@ -1,0 +1,49 @@
+\begin{Verbatim}[commandchars=\\\{\}]
+\PYG{c+c1}{// MOde of operation to fast\PYGZus{}pwm\PYGZus{}top\PYGZus{}max Mode \PYGZhy{}\PYGZhy{} WGM0[2:0] === 011}
+\PYG{c+c1}{// WGM0[2](bit3) from TCCR0B, WGM0[1](bit1)  from TCCR0A, WGM0[0](bit0)  from TCCR0A}
+\PYG{n}{TCCR0A} \PYG{o}{=} \PYG{n}{TCCR0A} \PYG{o}{|} \PYG{p}{(}\PYG{l+m+mi}{1}\PYG{o}{\PYGZlt{}\PYGZlt{}}\PYG{l+m+mi}{0}\PYG{p}{);}
+\PYG{n}{TCCR0A} \PYG{o}{=} \PYG{n}{TCCR0A} \PYG{o}{|} \PYG{p}{(}\PYG{l+m+mi}{1}\PYG{o}{\PYGZlt{}\PYGZlt{}}\PYG{l+m+mi}{1}\PYG{p}{);}
+\PYG{n}{TCCR0B} \PYG{o}{=} \PYG{n}{TCCR0B} \PYG{o}{\PYGZam{}} \PYG{o}{\PYGZti{}}\PYG{p}{(}\PYG{l+m+mi}{1}\PYG{o}{\PYGZlt{}\PYGZlt{}}\PYG{l+m+mi}{3}\PYG{p}{);}	
+
+\PYG{c+c1}{// here we set COM0A[1:0] as 11 for inverting}
+\PYG{c+c1}{// here we set COM0B[1:0] as 11 for inverting}
+
+\PYG{c+c1}{// which is reflected in PD6}
+\PYG{c+c1}{// COM0A[1](bit7) from TCCR0A, COM0A[0](bit6) from TCCR0A}
+\PYG{n}{TCCR0A} \PYG{o}{=} \PYG{n}{TCCR0A} \PYG{o}{|} \PYG{p}{(}\PYG{l+m+mi}{1}\PYG{o}{\PYGZlt{}\PYGZlt{}}\PYG{l+m+mi}{7}\PYG{p}{);}
+\PYG{n}{TCCR0A} \PYG{o}{=} \PYG{n}{TCCR0A} \PYG{o}{|} \PYG{p}{(}\PYG{l+m+mi}{1}\PYG{o}{\PYGZlt{}\PYGZlt{}}\PYG{l+m+mi}{6}\PYG{p}{);}
+
+\PYG{c+c1}{// which is reflected in PD65}
+\PYG{c+c1}{// COM0B[1](bit5) from TCCR0A, COM0B[0](bit4) from TCCR0A}
+\PYG{n}{TCCR0A} \PYG{o}{=} \PYG{n}{TCCR0A} \PYG{o}{|} \PYG{p}{(}\PYG{l+m+mi}{1}\PYG{o}{\PYGZlt{}\PYGZlt{}}\PYG{l+m+mi}{5}\PYG{p}{);}
+\PYG{n}{TCCR0A} \PYG{o}{=} \PYG{n}{TCCR0A} \PYG{o}{|} \PYG{p}{(}\PYG{l+m+mi}{1}\PYG{o}{\PYGZlt{}\PYGZlt{}}\PYG{l+m+mi}{4}\PYG{p}{);}
+
+\PYG{c+c1}{// Enable Interrupt when TCN0 overflows TOP \PYGZhy{} here 0xFF}
+\PYG{c+c1}{//  TOV0 bit is enabled}
+\PYG{n}{TIMSK0} \PYG{o}{=} \PYG{n}{TIMSK0} \PYG{o}{|} \PYG{p}{(}\PYG{l+m+mi}{1}\PYG{o}{\PYGZlt{}\PYGZlt{}}\PYG{l+m+mi}{0}\PYG{p}{);}
+
+\PYG{c+cm}{/* we use OCF0A flag \PYGZhy{} which is set at every time TCN0 reaches OCR0A}
+\PYG{c+cm}{    here we clear led(PC1),  so that we obtain the PWM when TCN0 reaches OCR0A*/}
+\PYG{n}{TIMSK0} \PYG{o}{=} \PYG{n}{TIMSK0} \PYG{o}{|} \PYG{p}{(}\PYG{l+m+mi}{1}\PYG{o}{\PYGZlt{}\PYGZlt{}}\PYG{l+m+mi}{1}\PYG{p}{);}
+\PYG{c+cm}{/* we use OCF0B flag \PYGZhy{} which is set at every time TCN0 reaches OCR0B}
+\PYG{c+cm}{    here we clear led(PC2),  so that we obtain the PWM when TCN0 reaches OCR0B*/}
+\PYG{n}{TIMSK0} \PYG{o}{=} \PYG{n}{TIMSK0} \PYG{o}{|} \PYG{p}{(}\PYG{l+m+mi}{1}\PYG{o}{\PYGZlt{}\PYGZlt{}}\PYG{l+m+mi}{2}\PYG{p}{);}
+
+
+\PYG{c+c1}{// Next we set values for OCR0A and OCR0B}
+\PYG{c+c1}{// Since, TCNT0 goes till max(0xFF), we can choose OCR0A and OCR0B to any value below max(0xFFF)}
+\PYG{n}{OCR0A} \PYG{o}{=} \PYG{l+m+mh}{0x19}\PYG{p}{;} \PYG{c+c1}{// for 10\PYGZpc{} duty clcle}
+\PYG{n}{OCR0B} \PYG{o}{=} \PYG{l+m+mh}{0xC0}\PYG{p}{;} \PYG{c+c1}{// for 75\PYGZpc{} duty clcle}
+
+
+\PYG{c+c1}{// start the timer by selecting the prescalr}
+\PYG{c+c1}{//  use the same clock from I/O clock}
+\PYG{c+c1}{//  CS0[2:0] === 001}
+\PYG{c+c1}{// CS0[2](bit2) from TCCR0B,CS0[1](bit1) from TCCR0B,CS0[0](bit0) from TCCR0B}
+\PYG{n}{TCCR0B} \PYG{o}{=} \PYG{n}{TCCR0B} \PYG{o}{|} \PYG{p}{(}\PYG{l+m+mi}{1}\PYG{o}{\PYGZlt{}\PYGZlt{}}\PYG{l+m+mi}{0}\PYG{p}{);}
+\PYG{n}{TCCR0B} \PYG{o}{=} \PYG{n}{TCCR0B} \PYG{o}{\PYGZam{}} \PYG{o}{\PYGZti{}}\PYG{p}{(}\PYG{l+m+mi}{1}\PYG{o}{\PYGZlt{}\PYGZlt{}}\PYG{l+m+mi}{1}\PYG{p}{);}
+\PYG{n}{TCCR0B} \PYG{o}{=} \PYG{n}{TCCR0B} \PYG{o}{\PYGZam{}} \PYG{o}{\PYGZti{}}\PYG{p}{(}\PYG{l+m+mi}{1}\PYG{o}{\PYGZlt{}\PYGZlt{}}\PYG{l+m+mi}{2}\PYG{p}{);}
+
+\PYG{c+c1}{//enabled global interrupt}
+\PYG{n}{sei}\PYG{p}{();}
+\end{Verbatim}

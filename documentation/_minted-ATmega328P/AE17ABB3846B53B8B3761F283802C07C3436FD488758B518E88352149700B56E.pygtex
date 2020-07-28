@@ -1,0 +1,3 @@
+\begin{Verbatim}[commandchars=\\\{\}]
+avr\PYGZhy{}objcopy \PYGZhy{}j .text \PYGZhy{}j .data \PYGZhy{}O ihex hello.elf hello.hex
+\end{Verbatim}

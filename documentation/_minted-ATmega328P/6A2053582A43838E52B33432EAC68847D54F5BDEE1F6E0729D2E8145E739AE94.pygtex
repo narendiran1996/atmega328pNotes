@@ -1,0 +1,52 @@
+\begin{Verbatim}[commandchars=\\\{\}]
+\PYG{n}{DDRC} \PYG{o}{\PYGZam{}=} \PYG{o}{\PYGZti{}}\PYG{p}{(}\PYG{l+m+mi}{1}\PYG{o}{\PYGZlt{}\PYGZlt{}}\PYG{n}{channel\PYGZus{}no}\PYG{p}{);}
+
+\PYG{c+c1}{// Selecting Voltage Referece}
+\PYG{c+c1}{// Lets use AREF pin}
+\PYG{c+c1}{// REFS[1:0] \PYGZhy{}\PYGZhy{} 00}
+\PYG{n}{ADMUX} \PYG{o}{\PYGZam{}=} \PYG{o}{\PYGZti{}}\PYG{p}{(}\PYG{l+m+mi}{1}\PYG{o}{\PYGZlt{}\PYGZlt{}}\PYG{n}{REFS0}\PYG{p}{);}
+\PYG{n}{ADMUX} \PYG{o}{\PYGZam{}=} \PYG{o}{\PYGZti{}}\PYG{p}{(}\PYG{l+m+mi}{1}\PYG{o}{\PYGZlt{}\PYGZlt{}}\PYG{n}{REFS1}\PYG{p}{);}
+
+\PYG{c+c1}{// Selecting the Presentation of ADC output}
+\PYG{c+c1}{// Right adjust \PYGZhy{} ADLAR == 0}
+\PYG{n}{ADMUX} \PYG{o}{\PYGZam{}=} \PYG{o}{\PYGZti{}}\PYG{p}{(}\PYG{l+m+mi}{1}\PYG{o}{\PYGZlt{}\PYGZlt{}}\PYG{n}{ADLAR}\PYG{p}{);}
+
+\PYG{c+c1}{// SELECTINT the channel for ADC}
+\PYG{c+c1}{// LET\PYGZsq{}S select channel\PYGZus{}no}
+\PYG{c+c1}{// MUX[3:0]\PYGZam{}0xF0 | channel\PYGZus{}no}
+\PYG{n}{ADMUX} \PYG{o}{=} \PYG{p}{(}\PYG{n}{ADMUX} \PYG{o}{\PYGZam{}} \PYG{l+m+mi}{0}\PYG{n}{XF0}\PYG{p}{)} \PYG{o}{|} \PYG{n}{channel\PYGZus{}no}\PYG{p}{;}
+
+\PYG{c+c1}{// Select the Auto Trigger source}
+\PYG{c+c1}{// for free running, use 000 for ADTS[2:0] in ADCSRB}
+\PYG{n}{ADCSRB} \PYG{o}{\PYGZam{}=} \PYG{o}{\PYGZti{}}\PYG{p}{(}\PYG{l+m+mi}{1}\PYG{o}{\PYGZlt{}\PYGZlt{}}\PYG{n}{ADTS2}\PYG{p}{);}
+\PYG{n}{ADCSRB} \PYG{o}{\PYGZam{}=} \PYG{o}{\PYGZti{}}\PYG{p}{(}\PYG{l+m+mi}{1}\PYG{o}{\PYGZlt{}\PYGZlt{}}\PYG{n}{ADTS1}\PYG{p}{);}
+\PYG{n}{ADCSRB} \PYG{o}{\PYGZam{}=} \PYG{o}{\PYGZti{}}\PYG{p}{(}\PYG{l+m+mi}{1}\PYG{o}{\PYGZlt{}\PYGZlt{}}\PYG{n}{ADTS0}\PYG{p}{);}
+
+\PYG{c+c1}{// for free runing conversion \PYGZhy{} enable ADC auto trigger}
+\PYG{c+c1}{// ADATE == 1}
+\PYG{n}{ADCSRA} \PYG{o}{|=} \PYG{p}{(}\PYG{l+m+mi}{1}\PYG{o}{\PYGZlt{}\PYGZlt{}}\PYG{n}{ADATE}\PYG{p}{);}
+
+\PYG{c+c1}{// enable the interrrupt by enabling ADIE bit}
+\PYG{c+c1}{// ADIE == 1}
+\PYG{n}{ADCSRA} \PYG{o}{|=} \PYG{p}{(}\PYG{l+m+mi}{1}\PYG{o}{\PYGZlt{}\PYGZlt{}}\PYG{n}{ADIE}\PYG{p}{);}
+
+\PYG{c+c1}{//  Prescaler be 64 so that we get 8Mhz/64 = 125kHz}
+\PYG{c+c1}{// ADPS[2:0] \PYGZhy{}\PYGZhy{} 110}
+\PYG{n}{ADCSRA} \PYG{o}{|=} \PYG{p}{(}\PYG{l+m+mi}{1}\PYG{o}{\PYGZlt{}\PYGZlt{}}\PYG{n}{ADPS2}\PYG{p}{)} \PYG{o}{|} \PYG{p}{(}\PYG{l+m+mi}{1}\PYG{o}{\PYGZlt{}\PYGZlt{}}\PYG{n}{ADPS1}\PYG{p}{);}
+\PYG{n}{ADCSRA} \PYG{o}{\PYGZam{}=} \PYG{o}{\PYGZti{}}\PYG{p}{(}\PYG{l+m+mi}{1}\PYG{o}{\PYGZlt{}\PYGZlt{}}\PYG{n}{ADPS0}\PYG{p}{);}
+
+\PYG{c+c1}{// ENABLING adc}
+\PYG{n}{ADCSRA} \PYG{o}{|=} \PYG{p}{(}\PYG{l+m+mi}{1}\PYG{o}{\PYGZlt{}\PYGZlt{}}\PYG{n}{ADEN}\PYG{p}{);}
+
+\PYG{c+c1}{// STARTING CONVERSIOn}
+\PYG{n}{ADCSRA} \PYG{o}{|=} \PYG{p}{(}\PYG{l+m+mi}{1}\PYG{o}{\PYGZlt{}\PYGZlt{}}\PYG{n}{ADSC}\PYG{p}{);}
+
+\PYG{n}{sei}\PYG{p}{();}
+
+
+\PYG{n}{ISR}\PYG{p}{(}\PYG{n}{ADC\PYGZus{}vect}\PYG{p}{)}
+\PYG{p}{\PYGZob{}}
+	\PYG{n}{free\PYGZus{}running\PYGZus{}value} \PYG{o}{=} \PYG{n}{ADC}\PYG{p}{;}
+	\PYG{c+c1}{// ADCSRA |= (1\PYGZlt{}\PYGZlt{}ADIF);}
+\PYG{p}{\PYGZcb{}}
+\end{Verbatim}

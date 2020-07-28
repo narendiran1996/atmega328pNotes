@@ -1,0 +1,3 @@
+\begin{Verbatim}[commandchars=\\\{\}]
+    avrdude \PYGZhy{}p atmega8 \PYGZhy{}b \PYG{l+m}{19200} \PYGZhy{}c stk500 \PYGZhy{}p /dev/ttyUSB0 \PYGZhy{}v \PYGZhy{}U hfuse:w:0x65:m
+\end{Verbatim}

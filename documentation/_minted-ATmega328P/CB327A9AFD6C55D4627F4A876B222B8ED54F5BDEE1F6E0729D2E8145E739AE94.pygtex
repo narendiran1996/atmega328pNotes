@@ -1,0 +1,34 @@
+\begin{Verbatim}[commandchars=\\\{\}]
+\PYG{c+c1}{// making SCK, MOSI, SS\PYGZsq{} as outptut}
+\PYG{n}{DDRB} \PYG{o}{|=} \PYG{p}{(}\PYG{l+m+mi}{1}\PYG{o}{\PYGZlt{}\PYGZlt{}}\PYG{n}{DDB2}\PYG{p}{)} \PYG{o}{|} \PYG{p}{(}\PYG{l+m+mi}{1}\PYG{o}{\PYGZlt{}\PYGZlt{}}\PYG{n}{DDB3}\PYG{p}{)} \PYG{o}{|} \PYG{p}{(}\PYG{l+m+mi}{1}\PYG{o}{\PYGZlt{}\PYGZlt{}}\PYG{n}{DDB5}\PYG{p}{);}
+\PYG{c+c1}{// making MISO as input}
+\PYG{n}{DDRB} \PYG{o}{\PYGZam{}=} \PYG{o}{\PYGZti{}}\PYG{p}{(}\PYG{l+m+mi}{1}\PYG{o}{\PYGZlt{}\PYGZlt{}}\PYG{n}{DDB4}\PYG{p}{);}
+
+\PYG{c+c1}{// making SCK, MOSI,  as low}
+\PYG{n}{PORTB} \PYG{o}{\PYGZam{}=}  \PYG{o}{\PYGZti{}}\PYG{p}{(}\PYG{l+m+mi}{1}\PYG{o}{\PYGZlt{}\PYGZlt{}}\PYG{n}{PORTB3}\PYG{p}{)} \PYG{o}{\PYGZam{}} \PYG{o}{\PYGZti{}}\PYG{p}{(}\PYG{l+m+mi}{1}\PYG{o}{\PYGZlt{}\PYGZlt{}}\PYG{n}{PORTB5}\PYG{p}{);}
+\PYG{c+c1}{// making SS\PYGZsq{} as high}
+\PYG{n}{PORTB} \PYG{o}{|=} \PYG{p}{(}\PYG{l+m+mi}{1}\PYG{o}{\PYGZlt{}\PYGZlt{}}\PYG{n}{PORTB2}\PYG{p}{);}
+
+\PYG{c+c1}{// Select MSB first or LSB first by DORD}
+\PYG{n}{SPCR} \PYG{o}{\PYGZam{}=} \PYG{o}{\PYGZti{}}\PYG{p}{(}\PYG{l+m+mi}{1}\PYG{o}{\PYGZlt{}\PYGZlt{}}\PYG{n}{DORD}\PYG{p}{);}
+	
+\PYG{c+c1}{// Select this as Master}
+\PYG{n}{SPCR} \PYG{o}{|=} \PYG{p}{(}\PYG{l+m+mi}{1}\PYG{o}{\PYGZlt{}\PYGZlt{}}\PYG{n}{MSTR}\PYG{p}{);}
+
+\PYG{c+c1}{// Let the clock polarity be SCK is low when idle}
+\PYG{n}{SPCR} \PYG{o}{\PYGZam{}=} \PYG{o}{\PYGZti{}}\PYG{p}{(}\PYG{l+m+mi}{1}\PYG{o}{\PYGZlt{}\PYGZlt{}}\PYG{n}{CPOL}\PYG{p}{);}
+
+\PYG{c+c1}{// Sampled at Rising or Falling Edge}
+\PYG{c+c1}{// we choose rising edge}
+\PYG{n}{SPCR} \PYG{o}{\PYGZam{}=} \PYG{o}{\PYGZti{}}\PYG{p}{(}\PYG{l+m+mi}{1}\PYG{o}{\PYGZlt{}\PYGZlt{}}\PYG{n}{CPHA}\PYG{p}{);}
+
+\PYG{c+c1}{// Selecting a SCK frequnecy}
+\PYG{c+c1}{// we select Fosc/4 by 000}
+\PYG{n}{SPSR} \PYG{o}{\PYGZam{}=} \PYG{o}{\PYGZti{}}\PYG{p}{(}\PYG{l+m+mi}{1}\PYG{o}{\PYGZlt{}\PYGZlt{}}\PYG{n}{SPI2X}\PYG{p}{);}
+\PYG{n}{SPCR} \PYG{o}{\PYGZam{}=} \PYG{o}{\PYGZti{}}\PYG{p}{(}\PYG{l+m+mi}{1}\PYG{o}{\PYGZlt{}\PYGZlt{}}\PYG{n}{SPR1}\PYG{p}{);}
+\PYG{n}{SPCR} \PYG{o}{\PYGZam{}=} \PYG{o}{\PYGZti{}}\PYG{p}{(}\PYG{l+m+mi}{1}\PYG{o}{\PYGZlt{}\PYGZlt{}}\PYG{n}{SPR0}\PYG{p}{);}
+\PYG{c+c1}{// dISBALE SPIE bit for interrupt on Serial Transfer Completion}
+\PYG{n}{SPCR} \PYG{o}{\PYGZam{}=} \PYG{o}{\PYGZti{}}\PYG{p}{(}\PYG{l+m+mi}{1}\PYG{o}{\PYGZlt{}\PYGZlt{}}\PYG{n}{SPIE}\PYG{p}{);}
+\PYG{c+c1}{// Enabling SPI}
+\PYG{n}{SPCR} \PYG{o}{|=} \PYG{p}{(}\PYG{l+m+mi}{1}\PYG{o}{\PYGZlt{}\PYGZlt{}}\PYG{n}{SPE}\PYG{p}{);}
+\end{Verbatim}

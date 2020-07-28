@@ -1,0 +1,38 @@
+\begin{Verbatim}[commandchars=\\\{\}]
+\PYG{c+c1}{// MOde of operation to Normal Mode \PYGZhy{}\PYGZhy{} WGM1[3:0] === 0000}
+\PYG{c+c1}{// WGM1[3](bit4) from TCCR1B, WGM1[2](bit3) from TCCR1B, WGM1[1](bit1)  from TCC1RA, WGM1[0](bit0)  from TCCR1A	}
+\PYG{n}{TCCR1A} \PYG{o}{=} \PYG{n}{TCCR1A} \PYG{o}{\PYGZam{}} \PYG{o}{\PYGZti{}}\PYG{p}{(}\PYG{l+m+mi}{1}\PYG{o}{\PYGZlt{}\PYGZlt{}}\PYG{n}{WGM10}\PYG{p}{);}
+\PYG{n}{TCCR1A} \PYG{o}{=} \PYG{n}{TCCR1A} \PYG{o}{\PYGZam{}} \PYG{o}{\PYGZti{}}\PYG{p}{(}\PYG{l+m+mi}{1}\PYG{o}{\PYGZlt{}\PYGZlt{}}\PYG{n}{WGM11}\PYG{p}{);}
+\PYG{n}{TCCR1B} \PYG{o}{=} \PYG{n}{TCCR1B} \PYG{o}{\PYGZam{}} \PYG{o}{\PYGZti{}}\PYG{p}{(}\PYG{l+m+mi}{1}\PYG{o}{\PYGZlt{}\PYGZlt{}}\PYG{n}{WGM12}\PYG{p}{);}
+\PYG{n}{TCCR1B} \PYG{o}{=} \PYG{n}{TCCR1B} \PYG{o}{\PYGZam{}} \PYG{o}{\PYGZti{}}\PYG{p}{(}\PYG{l+m+mi}{1}\PYG{o}{\PYGZlt{}\PYGZlt{}}\PYG{n}{WGM13}\PYG{p}{);}
+
+\PYG{c+c1}{// Select the edge for Input Capture}
+\PYG{c+c1}{// ICES1(bit6) from TCCR1B}
+\PYG{c+c1}{// Capture on Rising edge, ICES1 === 1}
+\PYG{n}{TCCR1B} \PYG{o}{|=} \PYG{p}{(}\PYG{l+m+mi}{1}\PYG{o}{\PYGZlt{}\PYGZlt{}}\PYG{n}{ICES1}\PYG{p}{);}
+
+\PYG{c+c1}{//Enable Interrupt of Input Capture Interrupt Enable so that interrupt can be generated}
+\PYG{n}{TIMSK1} \PYG{o}{=} \PYG{n}{TIMSK1} \PYG{o}{|} \PYG{p}{(}\PYG{l+m+mi}{1}\PYG{o}{\PYGZlt{}\PYGZlt{}}\PYG{n}{ICIE1}\PYG{p}{);}
+
+\PYG{c+c1}{// start timer by setting the clock prescalar}
+\PYG{c+c1}{// SAME AS from I/O clock}
+\PYG{c+c1}{// same\PYGZhy{}\PYGZhy{} CS1[2:0] === 001}
+\PYG{c+c1}{// CS1[2](bit2) from TCCR1B,CS1[1](bit1) from TCCR1B,CS1[0](bit0) from TCCR1B}
+\PYG{n}{TCCR1B} \PYG{o}{=} \PYG{n}{TCCR1B} \PYG{o}{|} \PYG{p}{(}\PYG{l+m+mi}{1}\PYG{o}{\PYGZlt{}\PYGZlt{}}\PYG{n}{CS10}\PYG{p}{);}
+\PYG{n}{TCCR1B} \PYG{o}{=} \PYG{n}{TCCR1B} \PYG{o}{\PYGZam{}} \PYG{o}{\PYGZti{}}\PYG{p}{(}\PYG{l+m+mi}{1}\PYG{o}{\PYGZlt{}\PYGZlt{}}\PYG{n}{CS11}\PYG{p}{);}
+\PYG{n}{TCCR1B} \PYG{o}{=} \PYG{n}{TCCR1B} \PYG{o}{\PYGZam{}} \PYG{o}{\PYGZti{}}\PYG{p}{(}\PYG{l+m+mi}{1}\PYG{o}{\PYGZlt{}\PYGZlt{}}\PYG{n}{CS12}\PYG{p}{);}
+
+\PYG{c+c1}{// enabling global interrupt}
+
+\PYG{n}{sei}\PYG{p}{();}
+
+\PYG{n}{ISR}\PYG{p}{(}\PYG{n}{TIMER1\PYGZus{}CAPT\PYGZus{}vect}\PYG{p}{)}
+\PYG{p}{\PYGZob{}}
+	\PYG{k}{if}\PYG{p}{((}\PYG{n}{TIFR1} \PYG{o}{\PYGZam{}} \PYG{p}{(}\PYG{l+m+mi}{1}\PYG{o}{\PYGZlt{}\PYGZlt{}}\PYG{n}{ICF1}\PYG{p}{))} \PYG{o}{!=} \PYG{l+m+mi}{0}\PYG{p}{)}
+	\PYG{p}{\PYGZob{}}
+		\PYG{n}{capVal} \PYG{o}{=} \PYG{n}{ICR1L}\PYG{p}{;}
+		\PYG{n}{capVal} \PYG{o}{=} \PYG{p}{(}\PYG{n}{ICR1H}\PYG{o}{\PYGZlt{}\PYGZlt{}}\PYG{l+m+mi}{8}\PYG{p}{)} \PYG{o}{|} \PYG{p}{(}\PYG{n}{capVal} \PYG{o}{\PYGZam{}} \PYG{l+m+mh}{0xFF}\PYG{p}{);}
+		\PYG{c+c1}{// see datamemory}
+	\PYG{p}{\PYGZcb{}}
+\PYG{p}{\PYGZcb{}}
+\end{Verbatim}

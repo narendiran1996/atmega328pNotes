@@ -1,9 +1,9 @@
-% \documentclass{article}
+\documentclass{article}
 
-% \usepackage{NeededPackages}
-% \begin{document}
+\usepackage{NeededPackages}
+\begin{document}
 
-\section{GCC\texorpdfstring{\cite{toolChain}}{}}
+\section{GCC}
 \begin{itemize}
     \item GNU Compiler Collectin - compiler system.
     \item Supports various language, processor and host operating system.
@@ -12,7 +12,7 @@
     \item AVR GCC three language - C, C++, Ada.
 \end{itemize}
 
-\section{GNU Binutils\texorpdfstring{\cite{toolChain}}{}} 
+\section{GNU Binutils} 
 Source : \href{https://www.nongnu.org/avr-libc/user-manual/overview.html}{Tool Chain overview}
 \begin{itemize}
     \item Binary Utilites - contains the GNU assembler(gas), GNU linker(ld), etc.
@@ -27,12 +27,12 @@ Source : \href{https://www.nongnu.org/avr-libc/user-manual/overview.html}{Tool C
     \item avr-addr2line - Convert addresses to file and line.
 \end{itemize}
 
-\section{avr-lib\texorpdfstring{\cite{toolChain}}{}}
+\section{avr-lib}
 \quad Open source standard C Libary - standard C Libary and Libary function specifit to AVR.
 
 
 
-\section{Compiler Options\texorpdfstring{\cite{compilerOptimize}}{}} \label{optimization}
+\section{Compiler Options} \label{optimization}
 \emph{-On} -- for optimization level; n indicates the optimization level; 0 being the default no optimization; 
 \begin{itemize}
     \item \emph{-O0} -- reduces compilation time and this is default
@@ -93,7 +93,7 @@ Source : \href{https://www.nongnu.org/avr-libc/user-manual/overview.html}{Tool C
 
 \end{itemize}
 
-\section{AVRDUDE\texorpdfstring{\cite{avrdude}}{}}
+\section{AVRDUDE}
 \subsection{Introduction}
 \begin{itemize}
     \item AVRDUDE - AVR Downloader UploDEr is a program for downloading and uploading the on-chip memories of Atmel's AVR microcontroller.
@@ -175,9 +175,6 @@ Source : \href{https://www.nongnu.org/avr-libc/user-manual/overview.html}{Tool C
     avrdude -p atmega8 -b 19200 -c stk500 -p /dev/ttyUSB0 -v -U hfuse:w:0x65:m
 \end{minted}
 
-Also see this\cite{alsosee}.
 
-% \bibliographystyle{plain}
-% \bibliography{ReferenceM}
 
-% \end{document}
+\end{document}

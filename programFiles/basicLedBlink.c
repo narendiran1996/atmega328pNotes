@@ -5,13 +5,14 @@
 int main(void)
 {
 	DDRC |= (1<<0);
+	DDRB |= (1<<0);
 	PORTC &= ~(1<<0);
 
     while(1)
     {
 		PORTC |= (1<<0);
-		_delay_ms(300);
+		_delay_ms(100);
 		PORTC &= ~(1<<0);
-		_delay_ms(300);
+		_delay_ms(100);
     }
 }

@@ -1,23 +1,9 @@
-\documentclass{article}
+% \documentclass{article}
 
-\usepackage[a4paper, left=0.5in, right=0.5in, bottom=0.5in, top=0.5in]{geometry}
-\usepackage{hyperref} 
-\hypersetup{
-    colorlinks=true,      
-    urlcolor=blue
-}
+% \usepackage{NeededPackages}
+% \begin{document}
 
-\usepackage{enumitem}
-\usepackage{xcolor}
-\usepackage{natbib}
-
-\usepackage{minted}
-
-\usepackage{ragged2e}
-\begin{document}
-\justify
-
-\subsection*{GCC\cite{toolChain}}
+\section{GCC\texorpdfstring{\cite{toolChain}}{}}
 \begin{itemize}
     \item GNU Compiler Collectin - compiler system.
     \item Supports various language, processor and host operating system.
@@ -26,7 +12,7 @@
     \item AVR GCC three language - C, C++, Ada.
 \end{itemize}
 
-\subsection*{GNU Binutils\cite{toolChain}} 
+\section{GNU Binutils\texorpdfstring{\cite{toolChain}}{}} 
 Source : \href{https://www.nongnu.org/avr-libc/user-manual/overview.html}{Tool Chain overview}
 \begin{itemize}
     \item Binary Utilites - contains the GNU assembler(gas), GNU linker(ld), etc.
@@ -41,12 +27,12 @@ Source : \href{https://www.nongnu.org/avr-libc/user-manual/overview.html}{Tool C
     \item avr-addr2line - Convert addresses to file and line.
 \end{itemize}
 
-\subsection*{avr-lib\cite{toolChain}}
+\section{avr-lib\texorpdfstring{\cite{toolChain}}{}}
 \quad Open source standard C Libary - standard C Libary and Libary function specifit to AVR.
 
 
 
-\subsection*{Compiler Options\cite{compilerOptimize}} \label{optimization}
+\section{Compiler Options\texorpdfstring{\cite{compilerOptimize}}{}} \label{optimization}
 \emph{-On} -- for optimization level; n indicates the optimization level; 0 being the default no optimization; 
 \begin{itemize}
     \item \emph{-O0} -- reduces compilation time and this is default
@@ -59,7 +45,7 @@ Source : \href{https://www.nongnu.org/avr-libc/user-manual/overview.html}{Tool C
 \end{itemize}
 
 
-\subsection*{Compilation} 
+\section{Compilation} 
 \begin{itemize}
     \item Will create the .obj object binary files.
     \item Use \emph{avr-gcc} along with following options
@@ -76,7 +62,7 @@ Source : \href{https://www.nongnu.org/avr-libc/user-manual/overview.html}{Tool C
 \end{itemize}
 
 
-\subsection*{Linking}
+\section{Linking}
 \begin{itemize}
     \item Link the bianary object file to binary elf file.
     \item Use \emph{avr-gcc} along with following options
@@ -93,7 +79,7 @@ Source : \href{https://www.nongnu.org/avr-libc/user-manual/overview.html}{Tool C
     \mint[bgcolor=lightgray]{shell}{avr-gcc -Os -Wall -g -mmcu=atmega8 hello.o -o hello.elf}
 \end{itemize}
 
-\subsection*{Generating the hex file}
+\section{Generating the hex file}
 \begin{itemize}
     \item The Intel hex file is what we program into procesosr.
     \item Use \emph{avr-objcopy} along with following options
@@ -107,8 +93,8 @@ Source : \href{https://www.nongnu.org/avr-libc/user-manual/overview.html}{Tool C
 
 \end{itemize}
 
-\section*{AVRDUDE\cite{avrdude}}
-\subsection*{Introduction}
+\section{AVRDUDE\texorpdfstring{\cite{avrdude}}{}}
+\subsection{Introduction}
 \begin{itemize}
     \item AVRDUDE - AVR Downloader UploDEr is a program for downloading and uploading the on-chip memories of Atmel's AVR microcontroller.
     \item Can program Flash, EEPROM, fuse ,lock bits and  signature bytes.
@@ -119,7 +105,7 @@ Source : \href{https://www.nongnu.org/avr-libc/user-manual/overview.html}{Tool C
 \end{itemize}
 
 
-\subsection*{Command Line Options}
+\subsection{Command Line Options}
 \begin{itemize}
     \item \emph{-p partno} -- the mandatory option which specifies the MCU.
     \item \emph{-b baudrate} -- Specify the Baudrate.
@@ -166,32 +152,32 @@ Source : \href{https://www.nongnu.org/avr-libc/user-manual/overview.html}{Tool C
 \end{itemize}
 
 
-\subsection*{Example}
+\subsection{Example}
 
-\subsubsection*{Downloading hex file into device Flash}
+\subsubsection{Downloading hex file into device Flash}
 \begin{minted}[bgcolor=lightgray]{bash}
     avrdude -p atmega8 -b 19200 -c stk500 -p /dev/ttyUSB0 -v -U flash:w:hello.hex:i
 \end{minted}
 
-\subsubsection*{Uploading Flash from device into file}
+\subsubsection{Uploading Flash from device into file}
 \begin{minted}[bgcolor=lightgray]{bash}
     avrdude -p atmega8 -b 19200 -c stk500 -p /dev/ttyUSB0 -v -U flash:r:"./readFashMemory.bin":r
 \end{minted}
 
-\subsubsection*{Reading Device signature}
+\subsubsection{Reading Device signature}
 \begin{minted}[bgcolor=lightgray]{bash}
     avrdude -p atmega8 -b 19200 -c stk500 -p /dev/ttyUSB0 -v -U signature:r:"deviceSinature.text":h
 \end{minted}
 
 
-\subsubsection*{Writing the High fuse}
+\subsection{Writing the High fuse}
 \begin{minted}[bgcolor=lightgray]{bash}
     avrdude -p atmega8 -b 19200 -c stk500 -p /dev/ttyUSB0 -v -U hfuse:w:0x65:m
 \end{minted}
 
 Also see this\cite{alsosee}.
 
-\bibliographystyle{plain}
-\bibliography{ReferenceM}
+% \bibliographystyle{plain}
+% \bibliography{ReferenceM}
 
-\end{document}
+% \end{document}

@@ -1,43 +1,70 @@
-\documentclass{book}
+\documentclass[oneside]{book}
 
-
-\usepackage[a4paper, bottom=0.5in, top=0.5in, left=0.5in, right=0.5in]{geometry}
-\usepackage{wrapfig}
-\usepackage{natbib}
-\usepackage{url}
-\usepackage{xcolor}
-\usepackage{caption}
-\usepackage{hyperref}
-\hypersetup{
-    colorlinks=true,    
-    urlcolor=cyan,
-}
-\usepackage{bytefield}
-
-\usepackage{amsfonts}
-\usepackage{float}
-\usepackage{enumitem}
-
-
-
-\newcommand{\bitFormat}[1]{\emph{\textbf{\textcolor{cyan}{#1}}}}
-
-\newcommand{\regFormat}[1]{\textbf{\textcolor{magenta}{#1}}}
-
-\newcommand{\pinFormat}[1]{\emph{\textcolor{red}{#1}}}
-
-
-\usepackage{graphicx}
-\graphicspath{ {./Resources/pics/} }
-
+\usepackage{NeededPackages}
 
 \usepackage{import}
+
+\usepackage{titlesec}
+\titleformat{\chapter}[hang] 
+{\centering \normalfont\Huge\bfseries}{}{1em}{} 
+
+
+
 
 \title{\Huge \textbf{ATmega328P}}
 \author{\textbf{Narendiran S}}
 \date{\today}
+
 \begin{document}
+
 \maketitle
-\import{documentation/}{Atmega328pBasic.tex}
+
+\tableofcontents
+
+% \mainmatter
+\chapter{Atmega328P Basics}
+\import{./}{Atmega328pBasic.tex}
+% \include{Atmega328pBasic.tex}
+
+\chapter{Compiling and Running}
+\import{./}{compileAndProgram.tex}
+
+\chapter{Input/Output Ports}
+\import{./}{IOports.tex}
+
+\chapter{Interrupts}
+\import{./}{Interupts.tex}
+
+
+\chapter{Timer/Counter 0}
+\import{./}{TimerCounter0.tex}
+
+\chapter{Timer/Counter 1}
+\import{./}{TimerCounter1.tex}
+
+\chapter{Timer/Counter 2}
+\import{./}{TimerCounter2.tex}
+
+\chapter{Serial Peripheral Interface}
+\import{./}{SerialPeripheralInterface.tex}
+
+\chapter{Universal Synchronous and Asynchronous serial Receiver and Transmitter 0}
+\import{./}{USART0.tex}
+
+\chapter{Two Wire Interface}
+\import{./}{I2C_TWi.tex}
+
+\chapter{Analog Comparator}
+\import{./}{AnalogComparator.tex}
+
+\chapter{Analog to Digital Converter}
+\import{./}{AanalogToDigitalConverter.tex}
+
+\chapter{Miscellaneous}
+\import{./}{Miscellaneous.tex}
+
+\bibliographystyle{plain}
+\bibliography{ReferenceM}
+
 
 \end{document}

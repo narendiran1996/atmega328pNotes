@@ -1,4 +1,4 @@
-#define F_CPU 8000000L
+#define F_CPU 16000000L
 
 #include <avr/io.h>
 #include <util/delay.h>
@@ -14,9 +14,9 @@ void USART0init()
     // setting up the Buad rate
     // Due to The Clock rate being 8MHz, for a buad rate of 9600
     // UBRR0 = (fosc / (16*BAUD)) -1
-    // So UBRR0 = (8000000 / (16 * 9600)) - 1 = 0x33
+    // So UBRR0 = (16000000 / (16 * 9600)) - 1 = 0x67
     UBRR0H = 0x00;
-	UBRR0L = 0x33;
+	UBRR0L = 0x67;
 
     // setting up the Frame Format
     // Let's select 8-bit data bits, no parity, and 1 stop bit
@@ -63,10 +63,9 @@ uint8_t USART0receiveChar()
 	while((UCSR0A & (1<<RXC0)) == 0x00){};		
 	return UDR0;
 }
-uint8_t *USART0receiverStringUntil(uint8_t deliminator)
+void USART0receiverStringUntil(uint8_t *rec_buff,uint8_t deliminator)
 {
 	uint16_t i=0;
-	uint8_t rec_buff[1024];
 	uint8_t curr_char = USART0receiveChar();
 	while(curr_char != deliminator)
 	{
@@ -75,15 +74,15 @@ uint8_t *USART0receiverStringUntil(uint8_t deliminator)
 		i++;
 	}
 	rec_buff[i] = '\0';
-	return rec_buff;
 }
 int main(void)
 {
+	uint8_t rec_buff[1024];
 	USART0init();
-    USART0sendString("This is working\n\r");
+    USART0sendString((uint8_t *)"This is working\n\r");
     while(1)
     {
-        uint8_t *a = usart0_receive_string_till('\n');
+        USART0receiverStringUntil(rec_buff, '\n');
         _delay_ms(100);
     }
 }

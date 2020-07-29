@@ -10,51 +10,44 @@ void Timer1_NonInverting_TOP_at_MAX()
 		WGM1[3:0] --> 0011 --	TOP--> 0x03FF
 		WGM1[3:0] --> 1010 --	TOP--> ICR1
 		WGM1[3:0] --> 1011 --	TOP--> OCR1A
-	*/	
+	*/		
 	// we take 0x03FF for fixed frequency and OCR1B for PWM on time(duty cycle)	
 	// choose WGM1[3:0] --> 0011 for 0x03FF as TOP for custom frequency
 	TCCR1A = TCCR1A | (1<<WGM10);
 	TCCR1A = TCCR1A | (1<<WGM11);
 	TCCR1B = TCCR1B & ~(1<<WGM12);
 	TCCR1B = TCCR1B & ~(1<<WGM13);
-
-	/* in timer0_phase_pwm_top_max, only two possiblites are there for COM0B[1:0] and COM0A[1:0] i.e) 10(Inverting) and 11(Non- inverting) */
-
+	/* in timer0_phase_pwm_top_max, only two possiblites are there for 
+	COM0B[1:0] and COM0A[1:0] i.e) 10(Inverting) and 11(Non- inverting) */
 	// here we set COM0A[1:0] as 10 for non-inverting
-	// here we set COM0B[1:0] as 10 for non-inverting
-	
+	// here we set COM0B[1:0] as 10 for non-inverting	
 	// which is reflected in PD6
 	// COM1A[1](bit7) from TCCR1A, COM1A[0](bit6) from TCCR1A
 	TCCR1A = TCCR1A | (1<<COM1A1);
-	TCCR1A = TCCR1A & ~(1<<COM1A0);
-	
+	TCCR1A = TCCR1A & ~(1<<COM1A0);	
 	// which is reflected in PD65
 	// COM1B[1](bit5) from TCCR1A, COM1B[0](bit4) from TCCR1A	
 	TCCR1A = TCCR1A | (1<<COM1B1);
 	TCCR1A = TCCR1A & ~(1<<COM1B0);
-
     // Enable Interrupt when TOV1 overflows TOP - here 0x03FF
 	//  TOIE1 bit is enabled
-	TIMSK1 = TIMSK1 | (1<<TOIE1);
-	
+	TIMSK1 = TIMSK1 | (1<<TOIE1);	
 	/* we use OCF1A flag - which is set at every time TCN0 reaches OCR1A */
 	TIMSK1 = TIMSK1 | (1<<OCIE1A);
 	/* we use OCF1B flag - which is set at every time TCN0 reaches OCR1B */
 	TIMSK1 = TIMSK1 | (1<<OCIE1B);
-
 	// Next we set values for OCR1A and OCR2B
-	// Since, TCNT1 goes till max(0x3FF), we can choose OCR1A and OCR1B to any value below max(0x03FF)
+	/* Since, TCNT1 goes till max(0x3FF), we can choose OCR1A and OCR1B 
+	to any value below max(0x03FF)*/
 	OCR1A = 102; // for 10% duty clcle
 	OCR1B = 767; // for 75% duty clcle
-
 	// start timer by setting the clock prescalar
 	// SAME AS from I/O clock
 	// same-- CS1[2:0] === 001
 	// CS1[2](bit2) from TCCR1B,CS1[1](bit1) from TCCR1B,CS1[0](bit0) from TCCR1B
 	TCCR1B = TCCR1B | (1<<CS10);
 	TCCR1B = TCCR1B & ~(1<<CS11);
-	TCCR1B = TCCR1B & ~(1<<CS12);
-	
+	TCCR1B = TCCR1B & ~(1<<CS12);	
 	//enabled global interrupt
 	sei();
 }
@@ -66,57 +59,48 @@ void Timer1_Inverting_TOP_at_MAX()
 		WGM1[3:0] --> 0010 --	TOP--> 0x01FF
 		WGM1[3:0] --> 0011 --	TOP--> 0x03FF
 		WGM1[3:0] --> 1010 --	TOP--> ICR1
-		WGM1[3:0] --> 1011 --	TOP--> OCR1A
-	*/	
+		WGM1[3:0] --> 1011 --	TOP--> OCR1A	*/	
 	// we take 0x03FF for fixed frequency and OCR1B for PWM on time(duty cycle)	
 	// choose WGM1[3:0] --> 0011 for 0x03FFF as TOP for custom frequency
 	TCCR1A = TCCR1A | (1<<WGM10);
 	TCCR1A = TCCR1A | (1<<WGM11);
 	TCCR1B = TCCR1B & ~(1<<WGM12);
 	TCCR1B = TCCR1B & ~(1<<WGM13);
-
-	/* in timer0_phase_pwm_top_max, only two possiblites are there for COM0B[1:0] and COM0A[1:0] i.e) 10(Inverting) and 11(Non- inverting) */
-
+	/* in timer0_phase_pwm_top_max, only two possiblites are 
+	there for COM0B[1:0] and COM0A[1:0] i.e) 10(Inverting) and 11(Non- inverting) */
 	// here we set COM0A[1:0] as 11 for inverting
-	// here we set COM0B[1:0] as 11 for inverting
-	
+	// here we set COM0B[1:0] as 11 for inverting	
 	// which is reflected in PD6
 	// COM1A[1](bit7) from TCCR1A, COM1A[0](bit6) from TCCR1A
 	TCCR1A = TCCR1A | (1<<COM1A1);
-	TCCR1A = TCCR1A | (1<<COM1A0);
-	
+	TCCR1A = TCCR1A | (1<<COM1A0);	
 	// which is reflected in PD65
 	// COM1B[1](bit5) from TCCR1A, COM1B[0](bit4) from TCCR1A	
 	TCCR1A = TCCR1A | (1<<COM1B1);
 	TCCR1A = TCCR1A | (1<<COM1B0);
-
     // Enable Interrupt when TOV1 overflows TOP - here 0x03FF
 	//  TOIE1 bit is enabled
-	TIMSK1 = TIMSK1 | (1<<TOIE1);
-	
+	TIMSK1 = TIMSK1 | (1<<TOIE1);	
 	/* we use OCF1A flag - which is set at every time TCN0 reaches OCR1A */
 	TIMSK1 = TIMSK1 | (1<<OCIE1A);
 	/* we use OCF1B flag - which is set at every time TCN0 reaches OCR1B */
 	TIMSK1 = TIMSK1 | (1<<OCIE1B);
-
 	// Next we set values for OCR1A and OCR1B
-	// Since, TCNT1 goes till max(0x3FF), we can choose OCR1A and OCR1B to any value below max(0x03FF)
+	/* Since, TCNT1 goes till max(0x3FF), we can choose OCR1A 
+	and OCR1B to any value below max(0x03FF) */
 	OCR1A = 102; // for 10% duty clcle
 	OCR1B = 767; // for 75% duty clcle
-
 	// start timer by setting the clock prescalar
 	// SAME AS from I/O clock
 	// same-- CS1[2:0] === 001
 	// CS1[2](bit2) from TCCR1B,CS1[1](bit1) from TCCR1B,CS1[0](bit0) from TCCR1B
 	TCCR1B = TCCR1B | (1<<CS10);
 	TCCR1B = TCCR1B & ~(1<<CS11);
-	TCCR1B = TCCR1B & ~(1<<CS12);
-	
+	TCCR1B = TCCR1B & ~(1<<CS12);	
 	//enabled global interrupt
 	sei();
 }
-void Timer1_NonInverting_TOP_at_OCR1A()
-{
+void Timer1_NonInverting_TOP_at_OCR1A(){
 	/* TCNT1 starts from 0X0000 goes upto TOP and from TOP to BOTTOM*/
 	/* Mode of operation:
 		WGM1[3:0] --> 0001 --
@@ -128,26 +112,22 @@ void Timer1_NonInverting_TOP_at_OCR1A()
 		WGM1[3:0] --> 1010 --
 		TOP--> ICR1
 		WGM1[3:0] --> 1011 --
-		TOP--> OCR1A
-	*/
+		TOP--> OCR1A	*/
 	// we take 0x03FF for fixed frequency and OCR1B for PWM on time(duty cycle)
 	// choose WGM1[3:0] --> 1011 for OCR1A as TOP for custom frequency
 	TCCR1A = TCCR1A | (1<<WGM10);
 	TCCR1A = TCCR1A | (1<<WGM11);
 	TCCR1B = TCCR1B & ~(1<<WGM12);
 	TCCR1B = TCCR1B | (1<<WGM13);		
-	
 	// here we set COM1A[1:0] as 10 for non-inverting
 	// which is reflected in PD5
 	// COM1B[1](bit5) from TCCR1A, COM0B[0](bit4) from TCCR1A
 	TCCR1A = TCCR1A | (1<<5);
-	TCCR1A = TCCR1A & ~(1<<4);
-		
+	TCCR1A = TCCR1A & ~(1<<4);		
 	// Next we set values for OCR1A and OCR1B
 	// Since, TCNT1 goes till OCR1A, we can choose OCR1B to any value below OCR1A
 	OCR1A = 0x7869; // for freqeuncy
 	OCR1B = 0x1A20; // for pwm duty cylc
-
 	// start timer by setting the clock prescalar
 	// SAME AS from I/O clock
 	// same-- CS1[2:0] === 001
@@ -171,26 +151,22 @@ void Timer1_Inverting_TOP_at_OCR1A()
 		WGM1[3:0] --> 1010 --
 		TOP--> ICR1
 		WGM1[3:0] --> 1011 --
-		TOP--> OCR1A
-	*/
+		TOP--> OCR1A	*/
 	// we take 0x03FF for fixed frequency and OCR1B for PWM on time(duty cycle)
 	// choose WGM1[3:0] --> 1011 for OCR1A as TOP for custom frequency
 	TCCR1A = TCCR1A | (1<<WGM10);
 	TCCR1A = TCCR1A | (1<<WGM11);
 	TCCR1B = TCCR1B & ~(1<<WGM12);
 	TCCR1B = TCCR1B | (1<<WGM13);		
-	
 	// here we set COM1A[1:0] as 11 for inverting
 	// which is reflected in PD5
 	// COM1B[1](bit5) from TCCR1A, COM0B[0](bit4) from TCCR1A
 	TCCR1A = TCCR1A | (1<<5);
-	TCCR1A = TCCR1A | (1<<4);
-		
+	TCCR1A = TCCR1A | (1<<4);		
 	// Next we set values for OCR1A and OCR1B
 	// Since, TCNT1 goes till OCR1A, we can choose OCR1B to any value below OCR1A
 	OCR1A = 0x7869; // for freqeuncy
 	OCR1B = 0x1A20; // for pwm duty cylc
-
 	// start timer by setting the clock prescalar
 	// SAME AS from I/O clock
 	// same-- CS1[2:0] === 001
@@ -205,8 +181,7 @@ void Timer1_PhaseCorrectedPWMGeneration(uint32_t On_time_us, uint32_t Off_time_u
 {
 	// Since, it is dual slope, the time would be doubled for one cylce, so we divide by 2
 	uint32_t total_time = (On_time_us>>1) + (Off_time_us>>1);
-	uint32_t on_time_us = On_time_us >> 1;
-		
+	uint32_t on_time_us = On_time_us >> 1;		
 	/* TCNT1 starts from 0X0000 goes upto TOP and from TOP to BOTTOM*/
 	/* Mode of operation:
 		WGM1[3:0] --> 0001 --
@@ -218,19 +193,16 @@ void Timer1_PhaseCorrectedPWMGeneration(uint32_t On_time_us, uint32_t Off_time_u
 		WGM1[3:0] --> 1010 --
 		TOP--> ICR1
 		WGM1[3:0] --> 1011 --
-		TOP--> OCR1A
-	*/
+		TOP--> OCR1A	*/
 	// we take 0x03FF for fixed frequency and OCR1B for PWM on time(duty cycle)
 	// choose WGM1[3:0] --> 1011 for OCR1A as TOP for custom frequency
 	TCCR1A = TCCR1A | (1<<WGM10);
 	TCCR1A = TCCR1A | (1<<WGM11);
 	TCCR1B = TCCR1B & ~(1<<WGM12);
 	TCCR1B = TCCR1B | (1<<WGM13);
-
 	// COM1B[1](bit5) from TCCR1A, COM1B[0](bit4) from TCCR1A
 	TCCR1A = TCCR1A | (1<<COM1B0);
-	TCCR1A = TCCR1A | (1<<COM1B1);
-	
+	TCCR1A = TCCR1A | (1<<COM1B1);	
 	if(total_time <4)
 	{
 		// if total_time <= 3us -- so we stop clock
@@ -304,8 +276,7 @@ void PWMGeneration(double duty_cycle_percent,uint32_t freqeuncy)
 	if (on_time_us<1.0)
 	{
 		on_time_us = 1;
-	}
-	
+	}	
 	// max time = 8ms -- min freqency = 125 Hz
 	//  min time = 8us -- max frequency = 250000 = 125khz
 	Timer1_PhaseCorrectedPWMGeneration(on_time_us, total_time_us - on_time_us);
@@ -316,9 +287,9 @@ int main(void)
 
 	// Timer1_NonInverting_TOP_at_MAX();
 	// Timer1_Inverting_TOP_at_MAX();
-    // Timer1_NonInverting_TOP_at_OCR1A();
+    Timer1_NonInverting_TOP_at_OCR1A();
     // Timer1_Inverting_TOP_at_OCR1A();
-    PWMGeneration(12, 1000);
+    // PWMGeneration(12, 1000);
     while(1)
     {
     }

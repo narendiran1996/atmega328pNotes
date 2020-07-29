@@ -1,4 +1,4 @@
-#define F_CPU 8000000L
+#define F_CPU 16000000L
 
 #include <avr/io.h>
 #include <util/delay.h>
@@ -7,9 +7,9 @@ void I2C_Master_Init()
 {
 	// Intialize the I2C clock frequency to 100kHz
 	// let the prescalr be 1
-	// f_i2c =  F_CPU / (16 + (2*xTWBR*Prescaler)) = 32
+	// f_i2c =  F_CPU / (16 + (2*TWBR*Prescaler)) = 72
 	// setting the TWBR register.
-	TWBR = 32;
+	TWBR = 72;
 
 	// writing 1 to prscalre
 	// setting the TWPS bits in TWSR to 00
@@ -191,12 +191,12 @@ int main(void)
 
 	I2C_Master_START();
 	I2C_Master_Mode(SLAVE_ADDRESS, 0);
-	I2C_Master_DataTransmitString("K");
+	I2C_Master_DataTransmitString((uint8_t *)"K");
 	I2C_Master_STOP();
 
 	I2C_Master_START();
 	I2C_Master_Mode(SLAVE_ADDRESS, 0);
-	I2C_Master_DataTransmitString("Narendiran");
+	I2C_Master_DataTransmitString((uint8_t *)"Narendiran");
 	I2C_Master_STOP();
 	
 	// uint8_t recData[15];

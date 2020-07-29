@@ -1,4 +1,4 @@
-#define F_CPU 8000000L
+#define F_CPU 16000000L
 
 #include <avr/io.h>
 #include <util/delay.h>
@@ -164,7 +164,7 @@ int main(void)
 	I2C_SlaveMode(1);
 	I2C_Slave_DataReceiveString(recData, 5);
 	TWCR &= ~(1<<TWEN);
-	if(strcmp(recData, "Naren")==0)
+	if(strcmp((char *)recData, (char *)"Naren")==0)
 		PINC |= (1<<1);
 
 	// char *abcd ="AaBbCa";

@@ -9,15 +9,12 @@ void pinChangeInterrupt_PCINT20()
 	DDRD &= ~(1<<4);
 	// enabling the internal pull-up register for PD4 for PCI20
 	PORTD |= (1<<4);
-
  	// Selecting the PCINT20 for PCI2 intterupt
 	PCMSK2 |= (1<<PCINT20);
 	// Enabling the PCI2 interupt
-	PCICR |= (1<<PCIE2);
-	
+	PCICR |= (1<<PCIE2);	
 	// Enabling global Interrupts
-	sei();	
-	
+	sei();		
 }
 int main(void)
 {
@@ -26,17 +23,16 @@ int main(void)
 	pinChangeInterrupt_PCINT20();
 	while(1)
 	{
-
 	}
 	return 0;
 }
 
 ISR(PCINT2_vect)
 {
-	if((PCIFR & (1<<PCIF2)) != 0)	// PCI2 interrupt as occured
+	// PCI2 interrupt as occured
+	if((PCIFR & (1<<PCIF2)) != 0)
 	{		
 		//toggle Led at pinc 0
 		PINC |= (1<<0);
-
 	}
 }

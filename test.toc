@@ -1,0 +1,141 @@
+\contentsline {chapter}{\numberline {1}Basic Programs}{3}{chapter.1}%
+\contentsline {section}{\numberline {1.1}BasicLedBlink}{3}{section.1.1}%
+\contentsline {subsection}{\numberline {1.1.1}Circuit}{3}{subsection.1.1.1}%
+\contentsline {subsection}{\numberline {1.1.2}Code}{3}{subsection.1.1.2}%
+\contentsline {subsection}{\numberline {1.1.3}Output}{3}{subsection.1.1.3}%
+\contentsline {section}{\numberline {1.2}InterruptsExternal}{4}{section.1.2}%
+\contentsline {subsection}{\numberline {1.2.1}Circuit}{4}{subsection.1.2.1}%
+\contentsline {subsection}{\numberline {1.2.2}Code}{4}{subsection.1.2.2}%
+\contentsline {subsection}{\numberline {1.2.3}Output}{5}{subsection.1.2.3}%
+\contentsline {section}{\numberline {1.3}InterruptsPinChange}{5}{section.1.3}%
+\contentsline {subsection}{\numberline {1.3.1}Circuit}{5}{subsection.1.3.1}%
+\contentsline {subsection}{\numberline {1.3.2}Code}{5}{subsection.1.3.2}%
+\contentsline {subsection}{\numberline {1.3.3}Output}{6}{subsection.1.3.3}%
+\contentsline {section}{\numberline {1.4}TimerCounter0\_NormalMode}{6}{section.1.4}%
+\contentsline {subsection}{\numberline {1.4.1}Circuit}{6}{subsection.1.4.1}%
+\contentsline {subsection}{\numberline {1.4.2}Code}{6}{subsection.1.4.2}%
+\contentsline {subsection}{\numberline {1.4.3}Output}{8}{subsection.1.4.3}%
+\contentsline {subsubsection}{Timer0\_asTimer}{8}{subsection.1.4.3}%
+\contentsline {subsubsection}{Timer0\_asCounter}{8}{subsection.1.4.3}%
+\contentsline {subsubsection}{Timer0\_asDelay}{8}{subsection.1.4.3}%
+\contentsline {section}{\numberline {1.5}TimerCounter0\_CTC}{9}{section.1.5}%
+\contentsline {subsection}{\numberline {1.5.1}Circuit}{9}{subsection.1.5.1}%
+\contentsline {subsection}{\numberline {1.5.2}Code}{9}{subsection.1.5.2}%
+\contentsline {subsection}{\numberline {1.5.3}Output}{11}{subsection.1.5.3}%
+\contentsline {subsubsection}{Timer0\_asTimer}{11}{subsection.1.5.3}%
+\contentsline {subsubsection}{Timer0\_asCounter}{11}{subsection.1.5.3}%
+\contentsline {subsubsection}{Timer0\_asDelayIn\_ms}{11}{subsection.1.5.3}%
+\contentsline {section}{\numberline {1.6}TimerCounter0\_FastPWM}{11}{section.1.6}%
+\contentsline {subsection}{\numberline {1.6.1}Circuit}{11}{subsection.1.6.1}%
+\contentsline {subsection}{\numberline {1.6.2}Code}{11}{subsection.1.6.2}%
+\contentsline {subsection}{\numberline {1.6.3}Output}{16}{subsection.1.6.3}%
+\contentsline {subsubsection}{Timer0\_NonInverting\_TOP\_at\_MAX}{16}{subsection.1.6.3}%
+\contentsline {subsubsection}{Timer0\_Inverting\_TOP\_at\_MAX}{16}{subsection.1.6.3}%
+\contentsline {subsubsection}{Timer0\_NonInverting\_TOP\_at\_OCR0A}{16}{subsection.1.6.3}%
+\contentsline {subsubsection}{Timer0\_Inverting\_TOP\_at\_OCR0A}{16}{subsection.1.6.3}%
+\contentsline {subsubsection}{Timer0\_OC0A\_Square}{16}{subsection.1.6.3}%
+\contentsline {subsubsection}{PWMGeneration}{17}{subsection.1.6.3}%
+\contentsline {section}{\numberline {1.7}TimerCounter0\_PhaseCorrectedPWM}{17}{section.1.7}%
+\contentsline {subsection}{\numberline {1.7.1}Circuit}{17}{subsection.1.7.1}%
+\contentsline {subsection}{\numberline {1.7.2}Code}{17}{subsection.1.7.2}%
+\contentsline {subsection}{\numberline {1.7.3}Output}{22}{subsection.1.7.3}%
+\contentsline {subsubsection}{Timer0\_NonInverting\_TOP\_at\_MAX}{22}{subsection.1.7.3}%
+\contentsline {subsubsection}{Timer0\_Inverting\_TOP\_at\_MAX}{22}{subsection.1.7.3}%
+\contentsline {subsubsection}{Timer0\_NonInverting\_TOP\_at\_OCR0A}{22}{subsection.1.7.3}%
+\contentsline {subsubsection}{Timer0\_Inverting\_TOP\_at\_OCR0A}{22}{subsection.1.7.3}%
+\contentsline {subsubsection}{Timer0\_OC0A\_Square}{22}{subsection.1.7.3}%
+\contentsline {subsubsection}{PWMGeneration}{22}{subsection.1.7.3}%
+\contentsline {section}{\numberline {1.8}TimerCounter1\_NormalMode}{23}{section.1.8}%
+\contentsline {subsection}{\numberline {1.8.1}Circuit}{23}{subsection.1.8.1}%
+\contentsline {subsection}{\numberline {1.8.2}Code}{23}{subsection.1.8.2}%
+\contentsline {subsection}{\numberline {1.8.3}Output}{25}{subsection.1.8.3}%
+\contentsline {subsubsection}{Timer1\_asTimer}{25}{subsection.1.8.3}%
+\contentsline {subsubsection}{Timer1\_asCounter}{26}{subsection.1.8.3}%
+\contentsline {subsubsection}{Timer1\_asDelay}{26}{subsection.1.8.3}%
+\contentsline {subsubsection}{Timer1\_asInputCapture}{26}{subsection.1.8.3}%
+\contentsline {section}{\numberline {1.9}TimerCounter1\_CTC}{26}{section.1.9}%
+\contentsline {subsection}{\numberline {1.9.1}Circuit}{26}{subsection.1.9.1}%
+\contentsline {subsection}{\numberline {1.9.2}Code}{26}{subsection.1.9.2}%
+\contentsline {subsection}{\numberline {1.9.3}Output}{29}{subsection.1.9.3}%
+\contentsline {subsubsection}{Timer1\_asTimer}{29}{subsection.1.9.3}%
+\contentsline {subsubsection}{Timer1\_asCounter}{29}{subsection.1.9.3}%
+\contentsline {subsubsection}{Timer1\_asDelayIn\_us}{30}{subsection.1.9.3}%
+\contentsline {section}{\numberline {1.10}TimerCounter1\_FastPWM}{30}{section.1.10}%
+\contentsline {subsection}{\numberline {1.10.1}Circuit}{30}{subsection.1.10.1}%
+\contentsline {subsection}{\numberline {1.10.2}Code}{30}{subsection.1.10.2}%
+\contentsline {subsection}{\numberline {1.10.3}Output}{35}{subsection.1.10.3}%
+\contentsline {subsubsection}{Timer1\_NonInverting\_TOP\_at\_MAX}{35}{subsection.1.10.3}%
+\contentsline {subsubsection}{Timer1\_Inverting\_TOP\_at\_MAX}{35}{subsection.1.10.3}%
+\contentsline {subsubsection}{Timer1\_NonInverting\_TOP\_at\_OCR1A}{35}{subsection.1.10.3}%
+\contentsline {subsubsection}{Timer1\_Inverting\_TOP\_at\_OCR1A}{35}{subsection.1.10.3}%
+\contentsline {subsubsection}{Timer1\_OC1A\_Square}{36}{subsection.1.10.3}%
+\contentsline {subsubsection}{PWMGeneration}{36}{subsection.1.10.3}%
+\contentsline {section}{\numberline {1.11}TimerCounter1\_PhaseCorrectedPWM}{36}{section.1.11}%
+\contentsline {subsection}{\numberline {1.11.1}Circuit}{36}{subsection.1.11.1}%
+\contentsline {subsection}{\numberline {1.11.2}Code}{36}{subsection.1.11.2}%
+\contentsline {subsection}{\numberline {1.11.3}Output}{41}{subsection.1.11.3}%
+\contentsline {subsubsection}{Timer1\_NonInverting\_TOP\_at\_MAX}{41}{subsection.1.11.3}%
+\contentsline {subsubsection}{Timer0\_Inverting\_TOP\_at\_MAX}{41}{subsection.1.11.3}%
+\contentsline {subsubsection}{Timer1\_NonInverting\_TOP\_at\_OCR1A}{41}{subsection.1.11.3}%
+\contentsline {subsubsection}{Timer1\_Inverting\_TOP\_at\_OCR1A}{41}{subsection.1.11.3}%
+\contentsline {subsubsection}{Timer1\_OC1A\_Square}{41}{subsection.1.11.3}%
+\contentsline {subsubsection}{PWMGeneration}{41}{subsection.1.11.3}%
+\contentsline {section}{\numberline {1.12}TimerCounter2\_NormalMode}{42}{section.1.12}%
+\contentsline {subsection}{\numberline {1.12.1}Circuit}{42}{subsection.1.12.1}%
+\contentsline {subsection}{\numberline {1.12.2}Code}{42}{subsection.1.12.2}%
+\contentsline {subsection}{\numberline {1.12.3}Output}{43}{subsection.1.12.3}%
+\contentsline {subsubsection}{Timer2\_asTimer}{43}{subsection.1.12.3}%
+\contentsline {subsubsection}{Timer2\_asDelay}{43}{subsection.1.12.3}%
+\contentsline {section}{\numberline {1.13}TimerCounter2\_CTC}{44}{section.1.13}%
+\contentsline {subsection}{\numberline {1.13.1}Circuit}{44}{subsection.1.13.1}%
+\contentsline {subsection}{\numberline {1.13.2}Code}{44}{subsection.1.13.2}%
+\contentsline {subsection}{\numberline {1.13.3}Output}{45}{subsection.1.13.3}%
+\contentsline {subsubsection}{Timer2\_asTimer}{45}{subsection.1.13.3}%
+\contentsline {subsubsection}{Timer2\_asDelayIn\_ms}{46}{subsection.1.13.3}%
+\contentsline {section}{\numberline {1.14}TimerCounter2\_FastPWM}{46}{section.1.14}%
+\contentsline {subsection}{\numberline {1.14.1}Circuit}{46}{subsection.1.14.1}%
+\contentsline {subsection}{\numberline {1.14.2}Code}{46}{subsection.1.14.2}%
+\contentsline {subsection}{\numberline {1.14.3}Output}{50}{subsection.1.14.3}%
+\contentsline {subsubsection}{Timer2\_NonInverting\_TOP\_at\_MAX}{50}{subsection.1.14.3}%
+\contentsline {subsubsection}{Timer2\_Inverting\_TOP\_at\_MAX}{50}{subsection.1.14.3}%
+\contentsline {subsubsection}{Timer2\_NonInverting\_TOP\_at\_OCR2A}{51}{subsection.1.14.3}%
+\contentsline {subsubsection}{Timer2\_Inverting\_TOP\_at\_OCR2A}{51}{subsection.1.14.3}%
+\contentsline {subsubsection}{Timer2\_OC2A\_Square}{51}{subsection.1.14.3}%
+\contentsline {subsubsection}{PWMGeneration}{51}{subsection.1.14.3}%
+\contentsline {section}{\numberline {1.15}TimerCounter2\_PhaseCorrectedPWM}{51}{section.1.15}%
+\contentsline {subsection}{\numberline {1.15.1}Circuit}{51}{subsection.1.15.1}%
+\contentsline {subsection}{\numberline {1.15.2}Code}{51}{subsection.1.15.2}%
+\contentsline {subsection}{\numberline {1.15.3}Output}{56}{subsection.1.15.3}%
+\contentsline {subsubsection}{Timer2\_NonInverting\_TOP\_at\_MAX}{56}{subsection.1.15.3}%
+\contentsline {subsubsection}{Timer2\_Inverting\_TOP\_at\_MAX}{56}{subsection.1.15.3}%
+\contentsline {subsubsection}{Timer0\_NonInverting\_TOP\_at\_OCR2A}{56}{subsection.1.15.3}%
+\contentsline {subsubsection}{Timer2\_Inverting\_TOP\_at\_OCR2A}{56}{subsection.1.15.3}%
+\contentsline {subsubsection}{Timer2\_OC2A\_Square}{56}{subsection.1.15.3}%
+\contentsline {subsubsection}{PWMGeneration}{56}{subsection.1.15.3}%
+\contentsline {section}{\numberline {1.16}SPI}{57}{section.1.16}%
+\contentsline {subsection}{\numberline {1.16.1}Circuit}{57}{subsection.1.16.1}%
+\contentsline {subsection}{\numberline {1.16.2}Code}{57}{subsection.1.16.2}%
+\contentsline {subsection}{\numberline {1.16.3}Output}{58}{subsection.1.16.3}%
+\contentsline {section}{\numberline {1.17}USART0}{58}{section.1.17}%
+\contentsline {subsection}{\numberline {1.17.1}Circuit}{58}{subsection.1.17.1}%
+\contentsline {subsection}{\numberline {1.17.2}Code}{58}{subsection.1.17.2}%
+\contentsline {subsection}{\numberline {1.17.3}Output}{60}{subsection.1.17.3}%
+\contentsline {section}{\numberline {1.18}TwinWireInterface}{60}{section.1.18}%
+\contentsline {subsection}{\numberline {1.18.1}Circuit}{60}{subsection.1.18.1}%
+\contentsline {subsection}{\numberline {1.18.2}Code}{60}{subsection.1.18.2}%
+\contentsline {subsubsection}{Master Code}{60}{subsection.1.18.2}%
+\contentsline {subsubsection}{Slave Code}{63}{subsection.1.18.2}%
+\contentsline {subsection}{\numberline {1.18.3}Output}{66}{subsection.1.18.3}%
+\contentsline {section}{\numberline {1.19}AnalogComparator}{67}{section.1.19}%
+\contentsline {subsection}{\numberline {1.19.1}Circuit}{67}{subsection.1.19.1}%
+\contentsline {subsection}{\numberline {1.19.2}Code}{67}{subsection.1.19.2}%
+\contentsline {subsection}{\numberline {1.19.3}Output}{68}{subsection.1.19.3}%
+\contentsline {section}{\numberline {1.20}AnalogToDigital}{68}{section.1.20}%
+\contentsline {subsection}{\numberline {1.20.1}Circuit}{68}{subsection.1.20.1}%
+\contentsline {subsection}{\numberline {1.20.2}Code}{68}{subsection.1.20.2}%
+\contentsline {subsection}{\numberline {1.20.3}Output}{69}{subsection.1.20.3}%
+\contentsline {chapter}{\numberline {2}Applications}{70}{chapter.2}%
+\contentsline {section}{\numberline {2.1}BasicLCD}{70}{section.2.1}%
+\contentsline {section}{\numberline {2.2}I2C EEPROM}{70}{section.2.2}%
+\contentsline {subsection}{\numberline {2.2.1}Code}{70}{subsection.2.2.1}%
+\contentsline {chapter}{\numberline {3}APPENDIX}{71}{chapter.3}%

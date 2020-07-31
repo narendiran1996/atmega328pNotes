@@ -19,7 +19,7 @@ void LCD_custom_delay(uint8_t del_val)
 		}
 	}
 }
-void LCD_port_init()
+void LCD_port_init(void)
 {
 	DDRC = DDRC | 0b00111111;	// PC0-PC5
 	PORTC = PORTC & 0b11000000;
@@ -52,7 +52,7 @@ void LCD_send_data(uint8_t data_)
 	LCD_custom_delay(1);
 	clear_En
 }
-void LCD_sequence()
+void LCD_sequence(void)
 {
 	/* The module powers up in 8-bit mode.
 	   The initial start-up instructions are sent in 8-bit mode, 
@@ -104,17 +104,17 @@ void LCD_sequence()
 	
 	LCD_send_cmd(0x80);
 }
-void LCD_clear()
+void LCD_clear(void)
 {	
 	// 0x01 for clearing display
 	LCD_send_cmd(0x01);	
 }
-void LCD_home()
+void LCD_home(void)
 {
 	// 0000_001x for moving cursor to inital position and moving DRAM address to 00H
 	LCD_send_cmd(0x02);
 }
-void LCD_print_left()
+void LCD_print_left(void)
 {
 	// moving left
 	/* Entry Mode */
@@ -126,7 +126,7 @@ void LCD_print_left()
 	// so we select D[7:0] = 0b0000_0100 --- 0x04
 	LCD_send_cmd(0x04);
 }
-void LCD_print_right()
+void LCD_print_right(void)
 {
 	// moving left
 	/* Entry Mode */
@@ -138,7 +138,7 @@ void LCD_print_right()
 	// so we select D[7:0] = 0b0000_0100 --- 0x06
 	LCD_send_cmd(0x06);
 }
-void LCD_shift_left()
+void LCD_shift_left(void)
 {
 	/* Entry Mode */
 	// Entry Mode Set --> D[7:0] -- 0000_01(I/D)(S)
@@ -149,7 +149,7 @@ void LCD_shift_left()
 	// so we select D[7:0] = 0b0000_0100 --- 0x06
 	LCD_send_cmd(0x07);
 }
-void LCD_shift_right()
+void LCD_shift_right(void)
 {
 	/* Works when there is character before the first character */
 	/* Entry Mode */
@@ -161,7 +161,7 @@ void LCD_shift_right()
 	// so we select D[7:0] = 0b0000_0100 --- 0x06
 	LCD_send_cmd(0x05);
 }
-void LCD_display_off()
+void LCD_display_off(void)
 {
 	// Display On/off --> D[7:0] -- 0000_1(D)(C)(B)
 	// D === 0 -- display off display data is remained in DDRAM
@@ -173,7 +173,7 @@ void LCD_display_off()
 	// so we slect D[7:0] = 0b0000_10xx = 0x0F;
 	LCD_send_cmd(0x08);
 }
-void LCD_display_on_cursor_off_blink_off()
+void LCD_display_on_cursor_off_blink_off(void)
 {
 	// Display On/off --> D[7:0] -- 0000_1(D)(C)(B)
 	// D === 0 -- display off display data is remained in DDRAM
@@ -185,7 +185,7 @@ void LCD_display_on_cursor_off_blink_off()
 	// so we slect D[7:0] = 0b0000_1100 = 0x0E;
 	LCD_send_cmd(0x0C);
 }
-void LCD_display_on_cursor_on_blink_off()
+void LCD_display_on_cursor_on_blink_off(void)
 {
 	// Display On/off --> D[7:0] -- 0000_1(D)(C)(B)
 	// D === 0 -- display off display data is remained in DDRAM
@@ -197,7 +197,7 @@ void LCD_display_on_cursor_on_blink_off()
 	// so we slect D[7:0] = 0b0000_1110 = 0x0E;
 	LCD_send_cmd(0xE);
 }
-void LCD_display_on_cursor_off_blink_on()
+void LCD_display_on_cursor_off_blink_on(void)
 {
 	// Display On/off --> D[7:0] -- 0000_1(D)(C)(B)
 	// D === 0 -- display off display data is remained in DDRAM
@@ -209,7 +209,7 @@ void LCD_display_on_cursor_off_blink_on()
 	// so we slect D[7:0] = 0b0000_1101 = 0x0D;
 	LCD_send_cmd(0x0D);
 }
-void LCD_display_on_cursor_on_blink_on()
+void LCD_display_on_cursor_on_blink_on(void)
 {
 	// Display On/off --> D[7:0] -- 0000_1(D)(C)(B)
 	// D === 0 -- display off display data is remained in DDRAM
@@ -221,7 +221,7 @@ void LCD_display_on_cursor_on_blink_on()
 	// so we slect D[7:0] = 0b0000_1111 = 0x0F;
 	LCD_send_cmd(0x0F);
 }
-void LCD_cursor_leftShift()
+void LCD_cursor_leftShift(void)
 {
 	// Cursor or Display Shift --> D[7:0] -- 0001_(S/C)(R/L)xx
 	// (S/C)(R/L) === 00 -- Shift Cursor to left
@@ -231,7 +231,7 @@ void LCD_cursor_leftShift()
 	// so we slect D[7:0] = 0b0001_00xx = 0x10;
 	LCD_send_cmd(0x010);	
 }
-void LCD_cursor_rightShift()
+void LCD_cursor_rightShift(void)
 {
 	// Cursor or Display Shift --> D[7:0] -- 0001_(S/C)(R/L)xx
 	// (S/C)(R/L) === 00 -- Shift Cursor to left
@@ -241,7 +241,7 @@ void LCD_cursor_rightShift()
 	// so we slect D[7:0] = 0b0001_01xx = 0x14;
 	LCD_send_cmd(0x014);	
 }
-void LCD_display_leftShift()
+void LCD_display_leftShift(void)
 {
 	// Cursor or Display Shift --> D[7:0] -- 0001_(S/C)(R/L)xx
 	// (S/C)(R/L) === 00 -- Shift Cursor to left
@@ -251,7 +251,7 @@ void LCD_display_leftShift()
 	// so we slect D[7:0] = 0b0001_10xx = 0x18;
 	LCD_send_cmd(0x018);
 }
-void LCD_display_rightShift()
+void LCD_display_rightShift(void)
 {
 	// Cursor or Display Shift --> D[7:0] -- 0001_(S/C)(R/L)xx
 	// (S/C)(R/L) === 00 -- Shift Cursor to left
@@ -298,7 +298,7 @@ void LCD_print_num(int num,uint8_t dig)
 	
 	LCD_send_string_l(buf,dig);
 }
-void LCD_init()
+void LCD_init(void)
 {
 	LCD_port_init();
 	LCD_sequence();

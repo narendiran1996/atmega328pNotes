@@ -7,7 +7,7 @@
 #include <util/delay.h>
 
 void UARTLCD_init(void);
-void UARTLCD_send_char(uint8_t data_);
+void UARTLCD_send_data(uint8_t data_);
 void UARTLCD_send_cmd(uint8_t cmd_);
 void UARTLCD_clear(void);
 void UARTLCD_home(void);

@@ -1,12 +1,13 @@
 #define F_CPU 16000000L
 #include <avr/io.h>
 #include <avr/interrupt.h>
-#include <avr/delay.h>
+#include <util/delay.h>
 
 #include "UARTLCDinclude.c"
+#define ss_low PORTB &= ~(1<<PORTB2);
+#define ss_high PORTB |= (1<<PORTB2);
 
-
-void init_spi()
+void SPI_init()
 {
 	// making SCK, MOSI, SS' as outptut
 	DDRB |= (1<<DDB2) | (1<<DDB3) | (1<<DDB5);
@@ -93,10 +94,8 @@ void EEPROM_write_byte(uint16_t address_, uint8_t data_)
 	SPI_transfer_byte(address_>>8); // sendiNG MSB data first
 	SPI_transfer_byte(address_); // address where data should be writen	
 	
-	SPI_transfer_byte(data_); // data to be written
-	
-	ss_high
-	
+	SPI_transfer_byte(data_); // data to be written	
+	ss_high	
 	
 	_delay_ms(1);
 }
@@ -121,21 +120,10 @@ int main(void)
 	UARTLCD_init();
 
 
-	init_spi();	
+	SPI_init();	
 	_delay_ms(10);
 	
-	EEPROM_write_string(0x0000,"Could you pronounce");
-	//EEPROM_write_byte(0x00,'A');
-	//EEPROM_write_byte(0x01,' ');
-	//EEPROM_write_byte(0x02,'L');
-	//EEPROM_write_byte(0x03,'O');
-	//EEPROM_write_byte(0x04,'V');
-	//EEPROM_write_byte(0x05,'E');
-	//EEPROM_write_byte(0x06,' ');
-	//EEPROM_write_byte(0x07,'Y');
-	//EEPROM_write_byte(0x08,'O');
-	//EEPROM_write_byte(0x09,'U');
-	
+	EEPROM_write_string(0x0000,(uint8_t *)"hi hello and welcome");	
 	_delay_ms(10);
 	for(uint8_t i=0; i<16; i++)
 	{

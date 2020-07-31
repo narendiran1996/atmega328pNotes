@@ -1655,4 +1655,1423 @@ Underfull \hbox (badness 1360) in paragraph at lines 315--316
  (/home/narendiran/Desktop/Atmega328pNotes/documentation/_minted-ATmega328P_NOTES/5F1EFD5C3E96CB3A7D27AE22E5AC07E90133EA3D4932CA461703780447F0D069.pygtex) [49]
 \openout4 = `ATmega328P_NOTES.pyg'.
 
- (/home/narendiran/Desktop/Atmega328pNotes/documentation/_minted-ATmega328P_NOTES/892BDD1
+ (/home/narendiran/Desktop/Atmega328pNotes/documentation/_minted-ATmega328P_NOTES/892BDD1B917C73B8A5B0A05D988B828D0133EA3D4932CA461703780447F0D069.pygtex) [50]
+\openout4 = `ATmega328P_NOTES.pyg'.
+
+ (/home/narendiran/Desktop/Atmega328pNotes/documentation/_minted-ATmega328P_NOTES/4863C8D0B6F1C14FEB185CFCDC1B31750133EA3D4932CA461703780447F0D069.pygtex)
+\openout4 = `ATmega328P_NOTES.pyg'.
+
+ (/home/narendiran/Desktop/Atmega328pNotes/documentation/_minted-ATmega328P_NOTES/09E62EF486E2F7707E080D1826CBCCD30133EA3D4932CA461703780447F0D069.pygtex) [51]
+Underfull \vbox (badness 10000) detected at line 1142
+ []
+
+
+Underfull \vbox (badness 10000) detected at line 1142
+ []
+
+[52]
+\openout4 = `ATmega328P_NOTES.pyg'.
+
+ (/home/narendiran/Desktop/Atmega328pNotes/documentation/_minted-ATmega328P_NOTES/A7691C2FFA02ACC16DB4ABB8D0CAB3B70133EA3D4932CA461703780447F0D069.pygtex)
+\openout4 = `ATmega328P_NOTES.pyg'.
+
+ (/home/narendiran/Desktop/Atmega328pNotes/documentation/_minted-ATmega328P_NOTES/6EDC1B72F55E9ACF3136523F03B8A0550133EA3D4932CA461703780447F0D069.pygtex) [53]
+\openout4 = `ATmega328P_NOTES.pyg'.
+
+ [54] (/home/narendiran/Desktop/Atmega328pNotes/documentation/_minted-ATmega328P_NOTES/5A724847B4D65A101D1C753D4733DE930133EA3D4932CA461703780447F0D069.pygtex) [55]
+\openout4 = `ATmega328P_NOTES.pyg'.
+
+ (/home/narendiran/Desktop/Atmega328pNotes/documentation/_minted-ATmega328P_NOTES/23752CEE6802437537309C417817CB800133EA3D4932CA461703780447F0D069.pygtex)
+\openout4 = `ATmega328P_NOTES.pyg'.
+
+ [56] (/home/narendiran/Desktop/Atmega328pNotes/documentation/_minted-ATmega328P_NOTES/499634A6497CC30654AD65927051EE5C0133EA3D4932CA461703780447F0D069.pygtex)
+\openout4 = `ATmega328P_NOTES.pyg'.
+
+ (/home/narendiran/Desktop/Atmega328pNotes/documentation/_minted-ATmega328P_NOTES/C4C17141D5D7BD94D501046166490D4A0133EA3D4932CA461703780447F0D069.pygtex) [57]
+\openout4 = `ATmega328P_NOTES.pyg'.
+
+ (/home/narendiran/Desktop/Atmega328pNotes/documentation/_minted-ATmega328P_NOTES/F30A63EB9FD24981C8A31805075664B10133EA3D4932CA461703780447F0D069.pygtex) [58]) [59]
+Chapter 6.
+(/home/narendiran/Desktop/Atmega328pNotes/documentation/TimerCounter1.tex
+<./Resources/pics/Timer1BlockDiagram.png, id=1441, 705.63625pt x 660.4675pt>
+File: ./Resources/pics/Timer1BlockDiagram.png Graphic file (type png)
+<use ./Resources/pics/Timer1BlockDiagram.png>
+Package pdftex.def Info: ./Resources/pics/Timer1BlockDiagram.png  used on input line 26.
+(pdftex.def)             Requested size: 495.39557pt x 463.67082pt.
+ [60
+
+]
+File: ./Resources/pics/Timer0ClockSelector.png Graphic file (type png)
+<use ./Resources/pics/Timer0ClockSelector.png>
+Package pdftex.def Info: ./Resources/pics/Timer0ClockSelector.png  used on input line 66.
+(pdftex.def)             Requested size: 262.61894pt x 105.10434pt.
+ [61 <./Resources/pics/Timer1BlockDiagram.png>]
+<./Resources/pics/Timer1CounterUnit.png, id=1453, 851.18pt x 414.54875pt>
+File: ./Resources/pics/Timer1CounterUnit.png Graphic file (type png)
+<use ./Resources/pics/Timer1CounterUnit.png>
+Package pdftex.def Info: ./Resources/pics/Timer1CounterUnit.png  used on input line 80.
+(pdftex.def)             Requested size: 262.61894pt x 127.90154pt.
+<./Resources/pics/Timer1InputCapture.png, id=1454, 1096.095pt x 688.5725pt>
+File: ./Resources/pics/Timer1InputCapture.png Graphic file (type png)
+<use ./Resources/pics/Timer1InputCapture.png>
+Package pdftex.def Info: ./Resources/pics/Timer1InputCapture.png  used on input line 105.
+(pdftex.def)             Requested size: 393.9284pt x 247.46564pt.
+ [62 <./Resources/pics/Timer1CounterUnit.png>]
+<./Resources/pics/Timer1OutputCompare.png, id=1461, 892.33376pt x 669.50125pt>
+File: ./Resources/pics/Timer1OutputCompare.png Graphic file (type png)
+<use ./Resources/pics/Timer1OutputCompare.png>
+Package pdftex.def Info: ./Resources/pics/Timer1OutputCompare.png  used on input line 122.
+(pdftex.def)             Requested size: 315.14594pt x 236.4436pt.
+ [63 <./Resources/pics/Timer1InputCapture.png> <./Resources/pics/Timer1OutputCompare.png>]
+<./Resources/pics/Timer1ComparteMatchOutput.png, id=1470, 838.13126pt x 639.38875pt>
+File: ./Resources/pics/Timer1ComparteMatchOutput.png Graphic file (type png)
+<use ./Resources/pics/Timer1ComparteMatchOutput.png>
+Package pdftex.def Info: ./Resources/pics/Timer1ComparteMatchOutput.png  used on input line 135.
+(pdftex.def)             Requested size: 303.90112pt x 231.8354pt.
+ [64 <./Resources/pics/Timer1ComparteMatchOutput.png>] [65] [66] [67]
+\height=\dimen855
+\depth=\dimen856
+\totalheight=\dimen857
+\width=\dimen858
+\height=\dimen859
+\depth=\dimen860
+\totalheight=\dimen861
+\width=\dimen862
+\height=\dimen863
+\depth=\dimen864
+\totalheight=\dimen865
+\width=\dimen866
+\height=\dimen867
+\depth=\dimen868
+\totalheight=\dimen869
+\width=\dimen870
+\height=\dimen871
+\depth=\dimen872
+\totalheight=\dimen873
+\width=\dimen874
+\height=\dimen875
+\depth=\dimen876
+\totalheight=\dimen877
+\width=\dimen878
+\height=\dimen879
+\depth=\dimen880
+\totalheight=\dimen881
+\width=\dimen882
+\height=\dimen883
+\depth=\dimen884
+\totalheight=\dimen885
+\width=\dimen886
+
+Underfull \hbox (badness 1400) in paragraph at lines 455--455
+[]\OT1/cmr/m/n/10 Toggle []\OT1/cmr/m/it/10 PB1 - OC1A[] \OT1/cmr/m/n/10 or
+ []
+
+
+Underfull \hbox (badness 2310) in paragraph at lines 455--456
+[]\OT1/cmr/m/n/10 When []\OT1/cmr/bx/it/10 WGM[3:0][] \OT1/cmr/m/n/10 == 1110
+ []
+
+
+Underfull \hbox (badness 1259) in paragraph at lines 459--460
+\OT1/cmr/m/n/10 match when up-counting and
+ []
+
+\height=\dimen887
+\depth=\dimen888
+\totalheight=\dimen889
+\width=\dimen890
+\height=\dimen891
+\depth=\dimen892
+\totalheight=\dimen893
+\width=\dimen894
+\height=\dimen895
+\depth=\dimen896
+\totalheight=\dimen897
+\width=\dimen898
+\height=\dimen899
+\depth=\dimen900
+\totalheight=\dimen901
+\width=\dimen902
+\height=\dimen903
+\depth=\dimen904
+\totalheight=\dimen905
+\width=\dimen906
+\height=\dimen907
+\depth=\dimen908
+\totalheight=\dimen909
+\width=\dimen910
+\height=\dimen911
+\depth=\dimen912
+\totalheight=\dimen913
+\width=\dimen914
+\height=\dimen915
+\depth=\dimen916
+\totalheight=\dimen917
+\width=\dimen918
+[68]
+\height=\dimen919
+\depth=\dimen920
+\totalheight=\dimen921
+\width=\dimen922
+\height=\dimen923
+\depth=\dimen924
+\totalheight=\dimen925
+\width=\dimen926
+\height=\dimen927
+\depth=\dimen928
+\totalheight=\dimen929
+\width=\dimen930
+\height=\dimen931
+\depth=\dimen932
+\totalheight=\dimen933
+\width=\dimen934
+\height=\dimen935
+\depth=\dimen936
+\totalheight=\dimen937
+\width=\dimen938
+\height=\dimen939
+\depth=\dimen940
+\totalheight=\dimen941
+\width=\dimen942
+\height=\dimen943
+\depth=\dimen944
+\totalheight=\dimen945
+\width=\dimen946
+\height=\dimen947
+\depth=\dimen948
+\totalheight=\dimen949
+\width=\dimen950
+ [69]
+\height=\dimen951
+\depth=\dimen952
+\totalheight=\dimen953
+\width=\dimen954
+\height=\dimen955
+\depth=\dimen956
+\totalheight=\dimen957
+\width=\dimen958
+\height=\dimen959
+\depth=\dimen960
+\totalheight=\dimen961
+\width=\dimen962
+\height=\dimen963
+\depth=\dimen964
+\totalheight=\dimen965
+\width=\dimen966
+\height=\dimen967
+\depth=\dimen968
+\totalheight=\dimen969
+\width=\dimen970
+\height=\dimen971
+\depth=\dimen972
+\totalheight=\dimen973
+\width=\dimen974
+\height=\dimen975
+\depth=\dimen976
+\totalheight=\dimen977
+\width=\dimen978
+\height=\dimen979
+\depth=\dimen980
+\totalheight=\dimen981
+\width=\dimen982
+\height=\dimen983
+\depth=\dimen984
+\totalheight=\dimen985
+\width=\dimen986
+\height=\dimen987
+\depth=\dimen988
+\totalheight=\dimen989
+\width=\dimen990
+\height=\dimen991
+\depth=\dimen992
+\totalheight=\dimen993
+\width=\dimen994
+\height=\dimen995
+\depth=\dimen996
+\totalheight=\dimen997
+\width=\dimen998
+\height=\dimen999
+\depth=\dimen1000
+\totalheight=\dimen1001
+\width=\dimen1002
+\height=\dimen1003
+\depth=\dimen1004
+\totalheight=\dimen1005
+\width=\dimen1006
+\height=\dimen1007
+\depth=\dimen1008
+\totalheight=\dimen1009
+\width=\dimen1010
+\height=\dimen1011
+\depth=\dimen1012
+\totalheight=\dimen1013
+\width=\dimen1014
+\openout4 = `ATmega328P_NOTES.pyg'.
+
+ (/home/narendiran/Desktop/Atmega328pNotes/documentation/_minted-ATmega328P_NOTES/5C330E4AC514325214F8461DBD4FC8F20133EA3D4932CA461703780447F0D069.pygtex) [70]
+\openout4 = `ATmega328P_NOTES.pyg'.
+
+ (/home/narendiran/Desktop/Atmega328pNotes/documentation/_minted-ATmega328P_NOTES/E6E002E6BF029F05B8791FFE6663E7740133EA3D4932CA461703780447F0D069.pygtex) [71]
+\openout4 = `ATmega328P_NOTES.pyg'.
+
+ (/home/narendiran/Desktop/Atmega328pNotes/documentation/_minted-ATmega328P_NOTES/477DB727C6F640DAA243E514DFBA83790133EA3D4932CA461703780447F0D069.pygtex)
+\openout4 = `ATmega328P_NOTES.pyg'.
+
+ (/home/narendiran/Desktop/Atmega328pNotes/documentation/_minted-ATmega328P_NOTES/F735C53983997A1DF979728FD02F6B250133EA3D4932CA461703780447F0D069.pygtex) [72] [73]
+\openout4 = `ATmega328P_NOTES.pyg'.
+
+ (/home/narendiran/Desktop/Atmega328pNotes/documentation/_minted-ATmega328P_NOTES/CDF1422B6F64C732EB01D625C1488FE40133EA3D4932CA461703780447F0D069.pygtex)
+\openout4 = `ATmega328P_NOTES.pyg'.
+
+ (/home/narendiran/Desktop/Atmega328pNotes/documentation/_minted-ATmega328P_NOTES/6E003C6086CBE50ABEDCB4B12C0CCC740133EA3D4932CA461703780447F0D069.pygtex) [74]
+\openout4 = `ATmega328P_NOTES.pyg'.
+
+ (/home/narendiran/Desktop/Atmega328pNotes/documentation/_minted-ATmega328P_NOTES/CF2B0029794174864EC90F6B77A08B7F0133EA3D4932CA461703780447F0D069.pygtex)
+\openout4 = `ATmega328P_NOTES.pyg'.
+
+ (/home/narendiran/Desktop/Atmega328pNotes/documentation/_minted-ATmega328P_NOTES/259054A341A122396622DFE3A1D4D2130133EA3D4932CA461703780447F0D069.pygtex) [75]
+Underfull \vbox (badness 10000) detected at line 1051
+ []
+
+
+Underfull \vbox (badness 10000) detected at line 1051
+ []
+
+[76]
+\openout4 = `ATmega328P_NOTES.pyg'.
+
+ (/home/narendiran/Desktop/Atmega328pNotes/documentation/_minted-ATmega328P_NOTES/436714F7768803D3E748D48F8C99953D0133EA3D4932CA461703780447F0D069.pygtex)
+\openout4 = `ATmega328P_NOTES.pyg'.
+
+ [77] (/home/narendiran/Desktop/Atmega328pNotes/documentation/_minted-ATmega328P_NOTES/A69ED4473C3B7CC0F8072B63AC4D49480133EA3D4932CA461703780447F0D069.pygtex) [78]
+\openout4 = `ATmega328P_NOTES.pyg'.
+
+ (/home/narendiran/Desktop/Atmega328pNotes/documentation/_minted-ATmega328P_NOTES/2FA0760AC5D7224194EC4D818E8799DF0133EA3D4932CA461703780447F0D069.pygtex) [79]
+\openout4 = `ATmega328P_NOTES.pyg'.
+
+ (/home/narendiran/Desktop/Atmega328pNotes/documentation/_minted-ATmega328P_NOTES/AEBAF3FDD923CABB7F1F1F426F8E7EAB0133EA3D4932CA461703780447F0D069.pygtex) [80]
+\openout4 = `ATmega328P_NOTES.pyg'.
+
+ (/home/narendiran/Desktop/Atmega328pNotes/documentation/_minted-ATmega328P_NOTES/FB3351C1F478AEB11764C2DE8003E7110133EA3D4932CA461703780447F0D069.pygtex) [81]
+\openout4 = `ATmega328P_NOTES.pyg'.
+
+ (/home/narendiran/Desktop/Atmega328pNotes/documentation/_minted-ATmega328P_NOTES/297FD9C08195C634F51762E8261870E60133EA3D4932CA461703780447F0D069.pygtex) [82]
+\openout4 = `ATmega328P_NOTES.pyg'.
+
+ (/home/narendiran/Desktop/Atmega328pNotes/documentation/_minted-ATmega328P_NOTES/EF26BD570C9C0C894066CE9999DA1C680133EA3D4932CA461703780447F0D069.pygtex) [83]
+Underfull \vbox (badness 10000) detected at line 1570
+ []
+
+
+Underfull \vbox (badness 10000) detected at line 1570
+ []
+
+[84]
+\openout4 = `ATmega328P_NOTES.pyg'.
+
+ (/home/narendiran/Desktop/Atmega328pNotes/documentation/_minted-ATmega328P_NOTES/436714F7768803D3E748D48F8C99953D0133EA3D4932CA461703780447F0D069.pygtex)
+\openout4 = `ATmega328P_NOTES.pyg'.
+
+ (/home/narendiran/Desktop/Atmega328pNotes/documentation/_minted-ATmega328P_NOTES/19BDF8CBC1DCF6BD06890839D8E6543F0133EA3D4932CA461703780447F0D069.pygtex) [85] [86]
+\openout4 = `ATmega328P_NOTES.pyg'.
+
+ (/home/narendiran/Desktop/Atmega328pNotes/documentation/_minted-ATmega328P_NOTES/BBB85A728B27E0D4EF42D85F150514450133EA3D4932CA461703780447F0D069.pygtex) [87]
+\openout4 = `ATmega328P_NOTES.pyg'.
+
+ (/home/narendiran/Desktop/Atmega328pNotes/documentation/_minted-ATmega328P_NOTES/EBB980C1E08B323EB2446AF2E21C7F400133EA3D4932CA461703780447F0D069.pygtex) [88]
+\openout4 = `ATmega328P_NOTES.pyg'.
+
+ (/home/narendiran/Desktop/Atmega328pNotes/documentation/_minted-ATmega328P_NOTES/AD98C6E8A8AC6BF9172820A20DC4581F0133EA3D4932CA461703780447F0D069.pygtex) [89]
+\openout4 = `ATmega328P_NOTES.pyg'.
+
+ (/home/narendiran/Desktop/Atmega328pNotes/documentation/_minted-ATmega328P_NOTES/D73E9095B1D990566D5092971DFBDDC70133EA3D4932CA461703780447F0D069.pygtex) [90]
+Underfull \vbox (badness 10000) detected at line 2015
+ []
+
+
+Underfull \vbox (badness 10000) detected at line 2015
+ []
+
+[91]) [92]
+Chapter 7.
+(/home/narendiran/Desktop/Atmega328pNotes/documentation/TimerCounter2.tex
+File: ./Resources/pics/Timer0BlockDiagram.png Graphic file (type png)
+<use ./Resources/pics/Timer0BlockDiagram.png>
+Package pdftex.def Info: ./Resources/pics/Timer0BlockDiagram.png  used on input line 24.
+(pdftex.def)             Requested size: 493.30515pt x 463.67082pt.
+ [93
+
+]
+Overfull \hbox (9.09164pt too wide) in paragraph at lines 39--50
+[][] 
+ []
+
+File: ./Resources/pics/Timer0ClockSelector.png Graphic file (type png)
+<use ./Resources/pics/Timer0ClockSelector.png>
+Package pdftex.def Info: ./Resources/pics/Timer0ClockSelector.png  used on input line 56.
+(pdftex.def)             Requested size: 262.61894pt x 105.10434pt.
+[94]
+File: ./Resources/pics/Timer0CounterUnit.png Graphic file (type png)
+<use ./Resources/pics/Timer0CounterUnit.png>
+Package pdftex.def Info: ./Resources/pics/Timer0CounterUnit.png  used on input line 70.
+(pdftex.def)             Requested size: 262.61894pt x 128.87839pt.
+File: ./Resources/pics/Timer0CompareUnit.png Graphic file (type png)
+<use ./Resources/pics/Timer0CompareUnit.png>
+Package pdftex.def Info: ./Resources/pics/Timer0CompareUnit.png  used on input line 95.
+(pdftex.def)             Requested size: 262.61894pt x 134.02902pt.
+ [95]
+File: ./Resources/pics/Timer0ComparteMatch.png Graphic file (type png)
+<use ./Resources/pics/Timer0ComparteMatch.png>
+Package pdftex.def Info: ./Resources/pics/Timer0ComparteMatch.png  used on input line 108.
+(pdftex.def)             Requested size: 302.09499pt x 231.8354pt.
+ [96] [97] [98]
+\height=\dimen1015
+\depth=\dimen1016
+\totalheight=\dimen1017
+\width=\dimen1018
+\height=\dimen1019
+\depth=\dimen1020
+\totalheight=\dimen1021
+\width=\dimen1022
+\height=\dimen1023
+\depth=\dimen1024
+\totalheight=\dimen1025
+\width=\dimen1026
+\height=\dimen1027
+\depth=\dimen1028
+\totalheight=\dimen1029
+\width=\dimen1030
+\height=\dimen1031
+\depth=\dimen1032
+\totalheight=\dimen1033
+\width=\dimen1034
+\height=\dimen1035
+\depth=\dimen1036
+\totalheight=\dimen1037
+\width=\dimen1038
+\height=\dimen1039
+\depth=\dimen1040
+\totalheight=\dimen1041
+\width=\dimen1042
+\height=\dimen1043
+\depth=\dimen1044
+\totalheight=\dimen1045
+\width=\dimen1046
+
+Underfull \hbox (badness 1448) in paragraph at lines 302--302
+[]\OT1/cmr/m/n/10 Set []\OT1/cmr/m/it/10 PD3 - OC2B[] \OT1/cmr/m/n/10 on com-pare
+ []
+
+
+Underfull \hbox (badness 1448) in paragraph at lines 302--303
+[]\OT1/cmr/m/n/10 Set []\OT1/cmr/m/it/10 PD3 - OC2B[] \OT1/cmr/m/n/10 on com-pare
+ []
+
+
+Underfull \hbox (badness 1472) in paragraph at lines 318--318
+[]\OT1/cmr/m/n/10 Set []\OT1/cmr/m/it/10 PB3 - OC2A[] \OT1/cmr/m/n/10 on com-pare
+ []
+
+
+Underfull \hbox (badness 1472) in paragraph at lines 318--319
+[]\OT1/cmr/m/n/10 Set []\OT1/cmr/m/it/10 PB3 - OC2A[] \OT1/cmr/m/n/10 on com-pare
+ []
+
+\height=\dimen1047
+\depth=\dimen1048
+\totalheight=\dimen1049
+\width=\dimen1050
+\height=\dimen1051
+\depth=\dimen1052
+\totalheight=\dimen1053
+\width=\dimen1054
+\height=\dimen1055
+\depth=\dimen1056
+\totalheight=\dimen1057
+\width=\dimen1058
+\height=\dimen1059
+\depth=\dimen1060
+\totalheight=\dimen1061
+\width=\dimen1062
+\height=\dimen1063
+\depth=\dimen1064
+\totalheight=\dimen1065
+\width=\dimen1066
+\height=\dimen1067
+\depth=\dimen1068
+\totalheight=\dimen1069
+\width=\dimen1070
+\height=\dimen1071
+\depth=\dimen1072
+\totalheight=\dimen1073
+\width=\dimen1074
+\height=\dimen1075
+\depth=\dimen1076
+\totalheight=\dimen1077
+\width=\dimen1078
+[99]
+\height=\dimen1079
+\depth=\dimen1080
+\totalheight=\dimen1081
+\width=\dimen1082
+\height=\dimen1083
+\depth=\dimen1084
+\totalheight=\dimen1085
+\width=\dimen1086
+\height=\dimen1087
+\depth=\dimen1088
+\totalheight=\dimen1089
+\width=\dimen1090
+\height=\dimen1091
+\depth=\dimen1092
+\totalheight=\dimen1093
+\width=\dimen1094
+\height=\dimen1095
+\depth=\dimen1096
+\totalheight=\dimen1097
+\width=\dimen1098
+\height=\dimen1099
+\depth=\dimen1100
+\totalheight=\dimen1101
+\width=\dimen1102
+\height=\dimen1103
+\depth=\dimen1104
+\totalheight=\dimen1105
+\width=\dimen1106
+\height=\dimen1107
+\depth=\dimen1108
+\totalheight=\dimen1109
+\width=\dimen1110
+\height=\dimen1111
+\depth=\dimen1112
+\totalheight=\dimen1113
+\width=\dimen1114
+\height=\dimen1115
+\depth=\dimen1116
+\totalheight=\dimen1117
+\width=\dimen1118
+\height=\dimen1119
+\depth=\dimen1120
+\totalheight=\dimen1121
+\width=\dimen1122
+\height=\dimen1123
+\depth=\dimen1124
+\totalheight=\dimen1125
+\width=\dimen1126
+\height=\dimen1127
+\depth=\dimen1128
+\totalheight=\dimen1129
+\width=\dimen1130
+\height=\dimen1131
+\depth=\dimen1132
+\totalheight=\dimen1133
+\width=\dimen1134
+\height=\dimen1135
+\depth=\dimen1136
+\totalheight=\dimen1137
+\width=\dimen1138
+\height=\dimen1139
+\depth=\dimen1140
+\totalheight=\dimen1141
+\width=\dimen1142
+ [100]
+\openout4 = `ATmega328P_NOTES.pyg'.
+
+ (/home/narendiran/Desktop/Atmega328pNotes/documentation/_minted-ATmega328P_NOTES/F12584AD427693944D05661A331C01540133EA3D4932CA461703780447F0D069.pygtex) [101]
+\openout4 = `ATmega328P_NOTES.pyg'.
+
+ (/home/narendiran/Desktop/Atmega328pNotes/documentation/_minted-ATmega328P_NOTES/76EA59FADF198680C16256FC54D459270133EA3D4932CA461703780447F0D069.pygtex)
+\openout4 = `ATmega328P_NOTES.pyg'.
+
+ (/home/narendiran/Desktop/Atmega328pNotes/documentation/_minted-ATmega328P_NOTES/7A351DAB6CFD0C7CBE4659E6A6C0273C0133EA3D4932CA461703780447F0D069.pygtex) [102]
+\openout4 = `ATmega328P_NOTES.pyg'.
+
+ (/home/narendiran/Desktop/Atmega328pNotes/documentation/_minted-ATmega328P_NOTES/1569E039F3454695BB66A6AB04F43DAE0133EA3D4932CA461703780447F0D069.pygtex)
+\openout4 = `ATmega328P_NOTES.pyg'.
+
+ (/home/narendiran/Desktop/Atmega328pNotes/documentation/_minted-ATmega328P_NOTES/A3D6740A24302FA3CE7F1A9B2B846D180133EA3D4932CA461703780447F0D069.pygtex)
+\openout4 = `ATmega328P_NOTES.pyg'.
+
+ [103] (/home/narendiran/Desktop/Atmega328pNotes/documentation/_minted-ATmega328P_NOTES/5D95B1B606716274BD21B759127136D10133EA3D4932CA461703780447F0D069.pygtex)
+\openout4 = `ATmega328P_NOTES.pyg'.
+
+ (/home/narendiran/Desktop/Atmega328pNotes/documentation/_minted-ATmega328P_NOTES/D242203EE73D47C1BA9D688BFAE1C4BB0133EA3D4932CA461703780447F0D069.pygtex) [104]
+\openout4 = `ATmega328P_NOTES.pyg'.
+
+ (/home/narendiran/Desktop/Atmega328pNotes/documentation/_minted-ATmega328P_NOTES/0371FCC6B0E665EE01FC24C315CEB2550133EA3D4932CA461703780447F0D069.pygtex) [105]
+\openout4 = `ATmega328P_NOTES.pyg'.
+
+ (/home/narendiran/Desktop/Atmega328pNotes/documentation/_minted-ATmega328P_NOTES/E172F65C06D6D262C4E42026B3567F970133EA3D4932CA461703780447F0D069.pygtex) [106]
+\openout4 = `ATmega328P_NOTES.pyg'.
+
+ (/home/narendiran/Desktop/Atmega328pNotes/documentation/_minted-ATmega328P_NOTES/39A1241C9D8503FDC1274A24833362520133EA3D4932CA461703780447F0D069.pygtex) [107]
+\openout4 = `ATmega328P_NOTES.pyg'.
+
+ (/home/narendiran/Desktop/Atmega328pNotes/documentation/_minted-ATmega328P_NOTES/82727B1A9EB24A82B0ABCBB6A9EB6F650133EA3D4932CA461703780447F0D069.pygtex) [108]
+\openout4 = `ATmega328P_NOTES.pyg'.
+
+ (/home/narendiran/Desktop/Atmega328pNotes/documentation/_minted-ATmega328P_NOTES/09BDE4458455404A71EB78C07B0019800133EA3D4932CA461703780447F0D069.pygtex)
+\openout4 = `ATmega328P_NOTES.pyg'.
+
+ (/home/narendiran/Desktop/Atmega328pNotes/documentation/_minted-ATmega328P_NOTES/2EA61B965D6283700582E654559C4E4A0133EA3D4932CA461703780447F0D069.pygtex) [109]
+Underfull \vbox (badness 10000) detected at line 1091
+ []
+
+
+Underfull \vbox (badness 10000) detected at line 1091
+ []
+
+[110]
+\openout4 = `ATmega328P_NOTES.pyg'.
+
+ (/home/narendiran/Desktop/Atmega328pNotes/documentation/_minted-ATmega328P_NOTES/D242203EE73D47C1BA9D688BFAE1C4BB0133EA3D4932CA461703780447F0D069.pygtex)
+\openout4 = `ATmega328P_NOTES.pyg'.
+
+ (/home/narendiran/Desktop/Atmega328pNotes/documentation/_minted-ATmega328P_NOTES/6EC495B6595228B1170F958B34EC58C50133EA3D4932CA461703780447F0D069.pygtex) [111]
+\openout4 = `ATmega328P_NOTES.pyg'.
+
+ [112] (/home/narendiran/Desktop/Atmega328pNotes/documentation/_minted-ATmega328P_NOTES/C5F70CA487AD0A76B2157CD4C8D6D6950133EA3D4932CA461703780447F0D069.pygtex) [113]
+\openout4 = `ATmega328P_NOTES.pyg'.
+
+ (/home/narendiran/Desktop/Atmega328pNotes/documentation/_minted-ATmega328P_NOTES/6D71DCC910C3C1C10FB0216E29C0BAE30133EA3D4932CA461703780447F0D069.pygtex)
+\openout4 = `ATmega328P_NOTES.pyg'.
+
+ [114] (/home/narendiran/Desktop/Atmega328pNotes/documentation/_minted-ATmega328P_NOTES/EC655A322FF87CE5B445E80F88B10D8B0133EA3D4932CA461703780447F0D069.pygtex)
+\openout4 = `ATmega328P_NOTES.pyg'.
+
+ (/home/narendiran/Desktop/Atmega328pNotes/documentation/_minted-ATmega328P_NOTES/49DEDF2660C5A89CBA6EB520812451300133EA3D4932CA461703780447F0D069.pygtex) [115]
+\openout4 = `ATmega328P_NOTES.pyg'.
+
+ (/home/narendiran/Desktop/Atmega328pNotes/documentation/_minted-ATmega328P_NOTES/0E7D53FB8960530A1ADCA0B32FB0A8590133EA3D4932CA461703780447F0D069.pygtex) [116]) [117]
+Chapter 8.
+(/home/narendiran/Desktop/Atmega328pNotes/documentation/SerialPeripheralInterface.tex
+<./Resources/pics/SPIBlockDiagram.png, id=1711, 753.81625pt x 688.5725pt>
+File: ./Resources/pics/SPIBlockDiagram.png Graphic file (type png)
+<use ./Resources/pics/SPIBlockDiagram.png>
+Package pdftex.def Info: ./Resources/pics/SPIBlockDiagram.png  used on input line 23.
+(pdftex.def)             Requested size: 507.60779pt x 463.67082pt.
+<./Resources/pics/SPIInterconnection.png, id=1712, 1315.91624pt x 575.14874pt>
+File: ./Resources/pics/SPIInterconnection.png Graphic file (type png)
+<use ./Resources/pics/SPIInterconnection.png>
+Package pdftex.def Info: ./Resources/pics/SPIInterconnection.png  used on input line 29.
+(pdftex.def)             Requested size: 315.14594pt x 137.74013pt.
+ [118
+
+ <./Resources/pics/SPIBlockDiagram.png>] [119 <./Resources/pics/SPIInterconnection.png>]
+\height=\dimen1143
+\depth=\dimen1144
+\totalheight=\dimen1145
+\width=\dimen1146
+\height=\dimen1147
+\depth=\dimen1148
+\totalheight=\dimen1149
+\width=\dimen1150
+\height=\dimen1151
+\depth=\dimen1152
+\totalheight=\dimen1153
+\width=\dimen1154
+\height=\dimen1155
+\depth=\dimen1156
+\totalheight=\dimen1157
+\width=\dimen1158
+\height=\dimen1159
+\depth=\dimen1160
+\totalheight=\dimen1161
+\width=\dimen1162
+\height=\dimen1163
+\depth=\dimen1164
+\totalheight=\dimen1165
+\width=\dimen1166
+\height=\dimen1167
+\depth=\dimen1168
+\totalheight=\dimen1169
+\width=\dimen1170
+\height=\dimen1171
+\depth=\dimen1172
+\totalheight=\dimen1173
+\width=\dimen1174
+\height=\dimen1175
+\depth=\dimen1176
+\totalheight=\dimen1177
+\width=\dimen1178
+\height=\dimen1179
+\depth=\dimen1180
+\totalheight=\dimen1181
+\width=\dimen1182
+\height=\dimen1183
+\depth=\dimen1184
+\totalheight=\dimen1185
+\width=\dimen1186
+\height=\dimen1187
+\depth=\dimen1188
+\totalheight=\dimen1189
+\width=\dimen1190
+\height=\dimen1191
+\depth=\dimen1192
+\totalheight=\dimen1193
+\width=\dimen1194
+\height=\dimen1195
+\depth=\dimen1196
+\totalheight=\dimen1197
+\width=\dimen1198
+\height=\dimen1199
+\depth=\dimen1200
+\totalheight=\dimen1201
+\width=\dimen1202
+\height=\dimen1203
+\depth=\dimen1204
+\totalheight=\dimen1205
+\width=\dimen1206
+\height=\dimen1207
+\depth=\dimen1208
+\totalheight=\dimen1209
+\width=\dimen1210
+\height=\dimen1211
+\depth=\dimen1212
+\totalheight=\dimen1213
+\width=\dimen1214
+\height=\dimen1215
+\depth=\dimen1216
+\totalheight=\dimen1217
+\width=\dimen1218
+\height=\dimen1219
+\depth=\dimen1220
+\totalheight=\dimen1221
+\width=\dimen1222
+\height=\dimen1223
+\depth=\dimen1224
+\totalheight=\dimen1225
+\width=\dimen1226
+\height=\dimen1227
+\depth=\dimen1228
+\totalheight=\dimen1229
+\width=\dimen1230
+\height=\dimen1231
+\depth=\dimen1232
+\totalheight=\dimen1233
+\width=\dimen1234
+\height=\dimen1235
+\depth=\dimen1236
+\totalheight=\dimen1237
+\width=\dimen1238
+ [120]
+\openout4 = `ATmega328P_NOTES.pyg'.
+
+ (/home/narendiran/Desktop/Atmega328pNotes/documentation/_minted-ATmega328P_NOTES/CB327A9AFD6C55D4627F4A876B222B8E0133EA3D4932CA461703780447F0D069.pygtex)
+\openout4 = `ATmega328P_NOTES.pyg'.
+
+ (/home/narendiran/Desktop/Atmega328pNotes/documentation/_minted-ATmega328P_NOTES/506A6B5850732B73D6E0D415FF1D4D5C0133EA3D4932CA461703780447F0D069.pygtex)) [121]
+Chapter 9.
+(/home/narendiran/Desktop/Atmega328pNotes/documentation/USART0.tex
+<./Resources/pics/USART0BlockDiagram.png, id=1736, 646.415pt x 716.6775pt>
+File: ./Resources/pics/USART0BlockDiagram.png Graphic file (type png)
+<use ./Resources/pics/USART0BlockDiagram.png>
+Package pdftex.def Info: ./Resources/pics/USART0BlockDiagram.png  used on input line 25.
+(pdftex.def)             Requested size: 404.27469pt x 448.21199pt.
+ [122
+
+]
+<./Resources/pics/USART0ClockGeneration.png, id=1741, 1322.9425pt x 548.0475pt>
+File: ./Resources/pics/USART0ClockGeneration.png Graphic file (type png)
+<use ./Resources/pics/USART0ClockGeneration.png>
+Package pdftex.def Info: ./Resources/pics/USART0ClockGeneration.png  used on input line 52.
+(pdftex.def)             Requested size: 525.23788pt x 217.58441pt.
+
+Overfull \hbox (15.63385pt too wide) has occurred while \output is active
+\OT1/cmr/m/sl/10 CHAPTER 9.  UNIVERSAL SYNCHRONOUS AND ASYNCHRONOUS SERIAL RECEIVER AND TRANSMITTER 0 \OT1/cmr/m/n/10 123
+ []
+
+[123 <./Resources/pics/USART0BlockDiagram.png>]
+<./Resources/pics/USART0FrameFormat.png, id=1748, 1286.8075pt x 462.72874pt>
+File: ./Resources/pics/USART0FrameFormat.png Graphic file (type png)
+<use ./Resources/pics/USART0FrameFormat.png>
+Package pdftex.def Info: ./Resources/pics/USART0FrameFormat.png  used on input line 111.
+(pdftex.def)             Requested size: 525.23788pt x 188.87979pt.
+
+Overfull \hbox (15.63385pt too wide) has occurred while \output is active
+\OT1/cmr/m/sl/10 CHAPTER 9.  UNIVERSAL SYNCHRONOUS AND ASYNCHRONOUS SERIAL RECEIVER AND TRANSMITTER 0 \OT1/cmr/m/n/10 124
+ []
+
+[124 <./Resources/pics/USART0ClockGeneration.png>]
+\height=\dimen1239
+\depth=\dimen1240
+\totalheight=\dimen1241
+\width=\dimen1242
+\height=\dimen1243
+\depth=\dimen1244
+\totalheight=\dimen1245
+\width=\dimen1246
+\height=\dimen1247
+\depth=\dimen1248
+\totalheight=\dimen1249
+\width=\dimen1250
+\height=\dimen1251
+\depth=\dimen1252
+\totalheight=\dimen1253
+\width=\dimen1254
+\height=\dimen1255
+\depth=\dimen1256
+\totalheight=\dimen1257
+\width=\dimen1258
+\height=\dimen1259
+\depth=\dimen1260
+\totalheight=\dimen1261
+\width=\dimen1262
+\height=\dimen1263
+\depth=\dimen1264
+\totalheight=\dimen1265
+\width=\dimen1266
+\height=\dimen1267
+\depth=\dimen1268
+\totalheight=\dimen1269
+\width=\dimen1270
+\height=\dimen1271
+\depth=\dimen1272
+\totalheight=\dimen1273
+\width=\dimen1274
+\height=\dimen1275
+\depth=\dimen1276
+\totalheight=\dimen1277
+\width=\dimen1278
+\height=\dimen1279
+\depth=\dimen1280
+\totalheight=\dimen1281
+\width=\dimen1282
+\height=\dimen1283
+\depth=\dimen1284
+\totalheight=\dimen1285
+\width=\dimen1286
+\height=\dimen1287
+\depth=\dimen1288
+\totalheight=\dimen1289
+\width=\dimen1290
+\height=\dimen1291
+\depth=\dimen1292
+\totalheight=\dimen1293
+\width=\dimen1294
+\height=\dimen1295
+\depth=\dimen1296
+\totalheight=\dimen1297
+\width=\dimen1298
+\height=\dimen1299
+\depth=\dimen1300
+\totalheight=\dimen1301
+\width=\dimen1302
+\height=\dimen1303
+\depth=\dimen1304
+\totalheight=\dimen1305
+\width=\dimen1306
+\height=\dimen1307
+\depth=\dimen1308
+\totalheight=\dimen1309
+\width=\dimen1310
+\height=\dimen1311
+\depth=\dimen1312
+\totalheight=\dimen1313
+\width=\dimen1314
+\height=\dimen1315
+\depth=\dimen1316
+\totalheight=\dimen1317
+\width=\dimen1318
+\height=\dimen1319
+\depth=\dimen1320
+\totalheight=\dimen1321
+\width=\dimen1322
+\height=\dimen1323
+\depth=\dimen1324
+\totalheight=\dimen1325
+\width=\dimen1326
+\height=\dimen1327
+\depth=\dimen1328
+\totalheight=\dimen1329
+\width=\dimen1330
+\height=\dimen1331
+\depth=\dimen1332
+\totalheight=\dimen1333
+\width=\dimen1334
+\height=\dimen1335
+\depth=\dimen1336
+\totalheight=\dimen1337
+\width=\dimen1338
+\height=\dimen1339
+\depth=\dimen1340
+\totalheight=\dimen1341
+\width=\dimen1342
+
+Overfull \hbox (15.63385pt too wide) has occurred while \output is active
+\OT1/cmr/m/sl/10 CHAPTER 9.  UNIVERSAL SYNCHRONOUS AND ASYNCHRONOUS SERIAL RECEIVER AND TRANSMITTER 0 \OT1/cmr/m/n/10 125
+ []
+
+[125 <./Resources/pics/USART0FrameFormat.png>]
+\height=\dimen1343
+\depth=\dimen1344
+\totalheight=\dimen1345
+\width=\dimen1346
+\height=\dimen1347
+\depth=\dimen1348
+\totalheight=\dimen1349
+\width=\dimen1350
+\height=\dimen1351
+\depth=\dimen1352
+\totalheight=\dimen1353
+\width=\dimen1354
+\height=\dimen1355
+\depth=\dimen1356
+\totalheight=\dimen1357
+\width=\dimen1358
+\height=\dimen1359
+\depth=\dimen1360
+\totalheight=\dimen1361
+\width=\dimen1362
+\height=\dimen1363
+\depth=\dimen1364
+\totalheight=\dimen1365
+\width=\dimen1366
+
+Overfull \hbox (15.63385pt too wide) has occurred while \output is active
+\OT1/cmr/m/sl/10 CHAPTER 9.  UNIVERSAL SYNCHRONOUS AND ASYNCHRONOUS SERIAL RECEIVER AND TRANSMITTER 0 \OT1/cmr/m/n/10 126
+ []
+
+[126]
+\openout4 = `ATmega328P_NOTES.pyg'.
+
+ (/home/narendiran/Desktop/Atmega328pNotes/documentation/_minted-ATmega328P_NOTES/AA8DB62D0476325D069FAAE98D3F9E600133EA3D4932CA461703780447F0D069.pygtex)
+\openout4 = `ATmega328P_NOTES.pyg'.
+
+ (/home/narendiran/Desktop/Atmega328pNotes/documentation/_minted-ATmega328P_NOTES/37BA0589E21C45807EC484A9D3FA0E340133EA3D4932CA461703780447F0D069.pygtex)
+Overfull \hbox (15.63385pt too wide) has occurred while \output is active
+\OT1/cmr/m/sl/10 CHAPTER 9.  UNIVERSAL SYNCHRONOUS AND ASYNCHRONOUS SERIAL RECEIVER AND TRANSMITTER 0 \OT1/cmr/m/n/10 127
+ []
+
+[127])
+Overfull \hbox (15.63385pt too wide) has occurred while \output is active
+\OT1/cmr/m/sl/10 CHAPTER 9.  UNIVERSAL SYNCHRONOUS AND ASYNCHRONOUS SERIAL RECEIVER AND TRANSMITTER 0 \OT1/cmr/m/n/10 128
+ []
+
+[128]
+Chapter 10.
+(/home/narendiran/Desktop/Atmega328pNotes/documentation/I2C_TWi.tex
+<./Resources/pics/i2cElectrical.png, id=1783, 573.14125pt x 326.21875pt>
+File: ./Resources/pics/i2cElectrical.png Graphic file (type png)
+<use ./Resources/pics/i2cElectrical.png>
+Package pdftex.def Info: ./Resources/pics/i2cElectrical.png  used on input line 51.
+(pdftex.def)             Requested size: 157.57297pt x 89.68802pt.
+ [129
+
+ <./Resources/pics/i2cElectrical.png>]
+<./Resources/pics/i2cTransferBits.png, id=1792, 851.18pt x 405.515pt>
+File: ./Resources/pics/i2cTransferBits.png Graphic file (type png)
+<use ./Resources/pics/i2cTransferBits.png>
+Package pdftex.def Info: ./Resources/pics/i2cTransferBits.png  used on input line 64.
+(pdftex.def)             Requested size: 262.61894pt x 125.11432pt.
+<./Resources/pics/i2cSTARTSTOP.png, id=1793, 370.38374pt x 197.98969pt>
+File: ./Resources/pics/i2cSTARTSTOP.png Graphic file (type png)
+<use ./Resources/pics/i2cSTARTSTOP.png>
+Package pdftex.def Info: ./Resources/pics/i2cSTARTSTOP.png  used on input line 74.
+(pdftex.def)             Requested size: 367.6649pt x 196.53908pt.
+<./Resources/pics/i2cAddressPacketFormat.png, id=1794, 1119.18124pt x 311.1625pt>
+File: ./Resources/pics/i2cAddressPacketFormat.png Graphic file (type png)
+<use ./Resources/pics/i2cAddressPacketFormat.png>
+Package pdftex.def Info: ./Resources/pics/i2cAddressPacketFormat.png  used on input line 87.
+(pdftex.def)             Requested size: 420.19191pt x 116.82333pt.
+ [130 <./Resources/pics/i2cTransferBits.png> <./Resources/pics/i2cSTARTSTOP.png>]
+<./Resources/pics/i2cDataFrame.png, id=1801, 1014.79124pt x 449.68pt>
+File: ./Resources/pics/i2cDataFrame.png Graphic file (type png)
+<use ./Resources/pics/i2cDataFrame.png>
+Package pdftex.def Info: ./Resources/pics/i2cDataFrame.png  used on input line 113.
+(pdftex.def)             Requested size: 420.19191pt x 186.19516pt.
+ [131 <./Resources/pics/i2cAddressPacketFormat.png> <./Resources/pics/i2cDataFrame.png>] [132]
+<./Resources/pics/TWIModuleOVerview.png, id=1813, 770.88pt x 692.5875pt>
+File: ./Resources/pics/TWIModuleOVerview.png Graphic file (type png)
+<use ./Resources/pics/TWIModuleOVerview.png>
+Package pdftex.def Info: ./Resources/pics/TWIModuleOVerview.png  used on input line 165.
+(pdftex.def)             Requested size: 525.23788pt x 471.89381pt.
+ [133 <./Resources/pics/TWIModuleOVerview.png>]
+<./Resources/pics/TWIExample.png, id=1820, 1282.7925pt x 514.92375pt>
+File: ./Resources/pics/TWIExample.png Graphic file (type png)
+<use ./Resources/pics/TWIExample.png>
+Package pdftex.def Info: ./Resources/pics/TWIExample.png  used on input line 224.
+(pdftex.def)             Requested size: 525.23788pt x 210.83723pt.
+ [134 <./Resources/pics/TWIExample.png>] [135] [136]
+\height=\dimen1367
+\depth=\dimen1368
+\totalheight=\dimen1369
+\width=\dimen1370
+ [137]
+\height=\dimen1371
+\depth=\dimen1372
+\totalheight=\dimen1373
+\width=\dimen1374
+\height=\dimen1375
+\depth=\dimen1376
+\totalheight=\dimen1377
+\width=\dimen1378
+\height=\dimen1379
+\depth=\dimen1380
+\totalheight=\dimen1381
+\width=\dimen1382
+\height=\dimen1383
+\depth=\dimen1384
+\totalheight=\dimen1385
+\width=\dimen1386
+\height=\dimen1387
+\depth=\dimen1388
+\totalheight=\dimen1389
+\width=\dimen1390
+\height=\dimen1391
+\depth=\dimen1392
+\totalheight=\dimen1393
+\width=\dimen1394
+\height=\dimen1395
+\depth=\dimen1396
+\totalheight=\dimen1397
+\width=\dimen1398
+\height=\dimen1399
+\depth=\dimen1400
+\totalheight=\dimen1401
+\width=\dimen1402
+\height=\dimen1403
+\depth=\dimen1404
+\totalheight=\dimen1405
+\width=\dimen1406
+\height=\dimen1407
+\depth=\dimen1408
+\totalheight=\dimen1409
+\width=\dimen1410
+\height=\dimen1411
+\depth=\dimen1412
+\totalheight=\dimen1413
+\width=\dimen1414
+\height=\dimen1415
+\depth=\dimen1416
+\totalheight=\dimen1417
+\width=\dimen1418
+\height=\dimen1419
+\depth=\dimen1420
+\totalheight=\dimen1421
+\width=\dimen1422
+\height=\dimen1423
+\depth=\dimen1424
+\totalheight=\dimen1425
+\width=\dimen1426
+\height=\dimen1427
+\depth=\dimen1428
+\totalheight=\dimen1429
+\width=\dimen1430
+\openout4 = `ATmega328P_NOTES.pyg'.
+
+ [138] (/home/narendiran/Desktop/Atmega328pNotes/documentation/_minted-ATmega328P_NOTES/8915674D402D4D688C493994FE0EF9F10133EA3D4932CA461703780447F0D069.pygtex) [139]
+Underfull \vbox (badness 10000) detected at line 654
+ []
+
+
+Underfull \vbox (badness 10000) detected at line 654
+ []
+
+[140] [141]
+\openout4 = `ATmega328P_NOTES.pyg'.
+
+ (/home/narendiran/Desktop/Atmega328pNotes/documentation/_minted-ATmega328P_NOTES/64DE495473A401ECF193E5D80C02D2F70133EA3D4932CA461703780447F0D069.pygtex)
+Underfull \vbox (badness 1688) detected at line 802
+ []
+
+[142]
+Underfull \vbox (badness 10000) detected at line 802
+ []
+
+
+Underfull \vbox (badness 10000) detected at line 802
+ []
+
+[143]) [144]
+Chapter 11.
+(/home/narendiran/Desktop/Atmega328pNotes/documentation/AnalogComparator.tex
+<./Resources/pics/AnalogComparatorBlock.png, id=1884, 1264.725pt x 635.37375pt>
+File: ./Resources/pics/AnalogComparatorBlock.png Graphic file (type png)
+<use ./Resources/pics/AnalogComparatorBlock.png>
+Package pdftex.def Info: ./Resources/pics/AnalogComparatorBlock.png  used on input line 21.
+(pdftex.def)             Requested size: 525.23788pt x 263.86908pt.
+ [145
+
+ <./Resources/pics/AnalogComparatorBlock.png>]
+\height=\dimen1431
+\depth=\dimen1432
+\totalheight=\dimen1433
+\width=\dimen1434
+\height=\dimen1435
+\depth=\dimen1436
+\totalheight=\dimen1437
+\width=\dimen1438
+\height=\dimen1439
+\depth=\dimen1440
+\totalheight=\dimen1441
+\width=\dimen1442
+\height=\dimen1443
+\depth=\dimen1444
+\totalheight=\dimen1445
+\width=\dimen1446
+\height=\dimen1447
+\depth=\dimen1448
+\totalheight=\dimen1449
+\width=\dimen1450
+\height=\dimen1451
+\depth=\dimen1452
+\totalheight=\dimen1453
+\width=\dimen1454
+\height=\dimen1455
+\depth=\dimen1456
+\totalheight=\dimen1457
+\width=\dimen1458
+\height=\dimen1459
+\depth=\dimen1460
+\totalheight=\dimen1461
+\width=\dimen1462
+\height=\dimen1463
+\depth=\dimen1464
+\totalheight=\dimen1465
+\width=\dimen1466
+\height=\dimen1467
+\depth=\dimen1468
+\totalheight=\dimen1469
+\width=\dimen1470
+\height=\dimen1471
+\depth=\dimen1472
+\totalheight=\dimen1473
+\width=\dimen1474
+\height=\dimen1475
+\depth=\dimen1476
+\totalheight=\dimen1477
+\width=\dimen1478
+\height=\dimen1479
+\depth=\dimen1480
+\totalheight=\dimen1481
+\width=\dimen1482
+\height=\dimen1483
+\depth=\dimen1484
+\totalheight=\dimen1485
+\width=\dimen1486
+\height=\dimen1487
+\depth=\dimen1488
+\totalheight=\dimen1489
+\width=\dimen1490
+\height=\dimen1491
+\depth=\dimen1492
+\totalheight=\dimen1493
+\width=\dimen1494
+ [146]
+\openout4 = `ATmega328P_NOTES.pyg'.
+
+ (/home/narendiran/Desktop/Atmega328pNotes/documentation/_minted-ATmega328P_NOTES/18FDDBDD47B46E5744DAB6CF97376D490133EA3D4932CA461703780447F0D069.pygtex)) [147]
+Chapter 12.
+(/home/narendiran/Desktop/Atmega328pNotes/documentation/AanalogToDigitalConverter.tex [148
+
+]
+<./Resources/pics/ADCBlock.png, id=1905, 613.29124pt x 696.6025pt>
+File: ./Resources/pics/ADCBlock.png Graphic file (type png)
+<use ./Resources/pics/ADCBlock.png>
+Package pdftex.def Info: ./Resources/pics/ADCBlock.png  used on input line 41.
+(pdftex.def)             Requested size: 510.28557pt x 579.58264pt.
+ [149 <./Resources/pics/ADCBlock.png>]
+\height=\dimen1495
+\depth=\dimen1496
+\totalheight=\dimen1497
+\width=\dimen1498
+\height=\dimen1499
+\depth=\dimen1500
+\totalheight=\dimen1501
+\width=\dimen1502
+\height=\dimen1503
+\depth=\dimen1504
+\totalheight=\dimen1505
+\width=\dimen1506
+\height=\dimen1507
+\depth=\dimen1508
+\totalheight=\dimen1509
+\width=\dimen1510
+\height=\dimen1511
+\depth=\dimen1512
+\totalheight=\dimen1513
+\width=\dimen1514
+\height=\dimen1515
+\depth=\dimen1516
+\totalheight=\dimen1517
+\width=\dimen1518
+\height=\dimen1519
+\depth=\dimen1520
+\totalheight=\dimen1521
+\width=\dimen1522
+\height=\dimen1523
+\depth=\dimen1524
+\totalheight=\dimen1525
+\width=\dimen1526
+\height=\dimen1527
+\depth=\dimen1528
+\totalheight=\dimen1529
+\width=\dimen1530
+\height=\dimen1531
+\depth=\dimen1532
+\totalheight=\dimen1533
+\width=\dimen1534
+\height=\dimen1535
+\depth=\dimen1536
+\totalheight=\dimen1537
+\width=\dimen1538
+\height=\dimen1539
+\depth=\dimen1540
+\totalheight=\dimen1541
+\width=\dimen1542
+\height=\dimen1543
+\depth=\dimen1544
+\totalheight=\dimen1545
+\width=\dimen1546
+\height=\dimen1547
+\depth=\dimen1548
+\totalheight=\dimen1549
+\width=\dimen1550
+\height=\dimen1551
+\depth=\dimen1552
+\totalheight=\dimen1553
+\width=\dimen1554
+\height=\dimen1555
+\depth=\dimen1556
+\totalheight=\dimen1557
+\width=\dimen1558
+ [150]
+\height=\dimen1559
+\depth=\dimen1560
+\totalheight=\dimen1561
+\width=\dimen1562
+\height=\dimen1563
+\depth=\dimen1564
+\totalheight=\dimen1565
+\width=\dimen1566
+\height=\dimen1567
+\depth=\dimen1568
+\totalheight=\dimen1569
+\width=\dimen1570
+\height=\dimen1571
+\depth=\dimen1572
+\totalheight=\dimen1573
+\width=\dimen1574
+\height=\dimen1575
+\depth=\dimen1576
+\totalheight=\dimen1577
+\width=\dimen1578
+\height=\dimen1579
+\depth=\dimen1580
+\totalheight=\dimen1581
+\width=\dimen1582
+\height=\dimen1583
+\depth=\dimen1584
+\totalheight=\dimen1585
+\width=\dimen1586
+\height=\dimen1587
+\depth=\dimen1588
+\totalheight=\dimen1589
+\width=\dimen1590
+\height=\dimen1591
+\depth=\dimen1592
+\totalheight=\dimen1593
+\width=\dimen1594
+\height=\dimen1595
+\depth=\dimen1596
+\totalheight=\dimen1597
+\width=\dimen1598
+\height=\dimen1599
+\depth=\dimen1600
+\totalheight=\dimen1601
+\width=\dimen1602
+\height=\dimen1603
+\depth=\dimen1604
+\totalheight=\dimen1605
+\width=\dimen1606
+\height=\dimen1607
+\depth=\dimen1608
+\totalheight=\dimen1609
+\width=\dimen1610
+\height=\dimen1611
+\depth=\dimen1612
+\totalheight=\dimen1613
+\width=\dimen1614
+\height=\dimen1615
+\depth=\dimen1616
+\totalheight=\dimen1617
+\width=\dimen1618
+\height=\dimen1619
+\depth=\dimen1620
+\totalheight=\dimen1621
+\width=\dimen1622
+\height=\dimen1623
+\depth=\dimen1624
+\totalheight=\dimen1625
+\width=\dimen1626
+\height=\dimen1627
+\depth=\dimen1628
+\totalheight=\dimen1629
+\width=\dimen1630
+\height=\dimen1631
+\depth=\dimen1632
+\totalheight=\dimen1633
+\width=\dimen1634
+\height=\dimen1635
+\depth=\dimen1636
+\totalheight=\dimen1637
+\width=\dimen1638
+\height=\dimen1639
+\depth=\dimen1640
+\totalheight=\dimen1641
+\width=\dimen1642
+\height=\dimen1643
+\depth=\dimen1644
+\totalheight=\dimen1645
+\width=\dimen1646
+\height=\dimen1647
+\depth=\dimen1648
+\totalheight=\dimen1649
+\width=\dimen1650
+\height=\dimen1651
+\depth=\dimen1652
+\totalheight=\dimen1653
+\width=\dimen1654
+ [151]
+\openout4 = `ATmega328P_NOTES.pyg'.
+
+ (/home/narendiran/Desktop/Atmega328pNotes/documentation/_minted-ATmega328P_NOTES/2A7569AB7EEF233D30124AE1FC20258C0133EA3D4932CA461703780447F0D069.pygtex) [152]
+\openout4 = `ATmega328P_NOTES.pyg'.
+
+ (/home/narendiran/Desktop/Atmega328pNotes/documentation/_minted-ATmega328P_NOTES/6A2053582A43838E52B33432EAC688470133EA3D4932CA461703780447F0D069.pygtex)) [153]
+Chapter 13.
+(/home/narendiran/Desktop/Atmega328pNotes/documentation/Miscellaneous.tex
+\height=\dimen1655
+\depth=\dimen1656
+\totalheight=\dimen1657
+\width=\dimen1658
+\height=\dimen1659
+\depth=\dimen1660
+\totalheight=\dimen1661
+\width=\dimen1662
+\height=\dimen1663
+\depth=\dimen1664
+\totalheight=\dimen1665
+\width=\dimen1666
+\height=\dimen1667
+\depth=\dimen1668
+\totalheight=\dimen1669
+\width=\dimen1670
+\height=\dimen1671
+\depth=\dimen1672
+\totalheight=\dimen1673
+\width=\dimen1674
+\height=\dimen1675
+\depth=\dimen1676
+\totalheight=\dimen1677
+\width=\dimen1678
+\height=\dimen1679
+\depth=\dimen1680
+\totalheight=\dimen1681
+\width=\dimen1682
+\height=\dimen1683
+\depth=\dimen1684
+\totalheight=\dimen1685
+\width=\dimen1686
+\height=\dimen1687
+\depth=\dimen1688
+\totalheight=\dimen1689
+\width=\dimen1690
+\height=\dimen1691
+\depth=\dimen1692
+\totalheight=\dimen1693
+\width=\dimen1694
+\height=\dimen1695
+\depth=\dimen1696
+\totalheight=\dimen1697
+\width=\dimen1698
+\height=\dimen1699
+\depth=\dimen1700
+\totalheight=\dimen1701
+\width=\dimen1702
+\height=\dimen1703
+\depth=\dimen1704
+\totalheight=\dimen1705
+\width=\dimen1706
+\height=\dimen1707
+\depth=\dimen1708
+\totalheight=\dimen1709
+\width=\dimen1710
+\height=\dimen1711
+\depth=\dimen1712
+\totalheight=\dimen1713
+\width=\dimen1714
+\height=\dimen1715
+\depth=\dimen1716
+\totalheight=\dimen1717
+\width=\dimen1718
+\height=\dimen1719
+\depth=\dimen1720
+\totalheight=\dimen1721
+\width=\dimen1722
+\height=\dimen1723
+\depth=\dimen1724
+\totalheight=\dimen1725
+\width=\dimen1726
+\height=\dimen1727
+\depth=\dimen1728
+\totalheight=\dimen1729
+\width=\dimen1730
+\height=\dimen1731
+\depth=\dimen1732
+\totalheight=\dimen1733
+\width=\dimen1734
+\height=\dimen1735
+\depth=\dimen1736
+\totalheight=\dimen1737
+\width=\dimen1738
+\height=\dimen1739
+\depth=\dimen1740
+\totalheight=\dimen1741
+\width=\dimen1742
+\height=\dimen1743
+\depth=\dimen1744
+\totalheight=\dimen1745
+\width=\dimen1746
+\height=\dimen1747
+\depth=\dimen1748
+\totalheight=\dimen1749
+\width=\dimen1750
+ [154
+
+]) (/home/narendiran/Desktop/Atmega328pNotes/documentation/ATmega328P_NOTES.bbl [155]
+Overfull \hbox (109.81808pt too wide) in paragraph at lines 11--13
+[]\OT1/cmr/m/it/10 Atmega328p Datasheet\OT1/cmr/m/n/10 , [][]$\OT1/cmtt/m/n/10 http : / / ww1 . microchip . com / downloads / en / DeviceDoc / Atmel-[]7810-[]Automotive-[]Microcontrollers-[]ATmega328P _
+ []
+
+) [156
+
+]
+Package atveryend Info: Empty hook `BeforeClearDocument' on input line 68.
+Package atveryend Info: Empty hook `AfterLastShipout' on input line 68.
+ (/home/narendiran/Desktop/Atmega328pNotes/documentation/ATmega328P_NOTES.aux)
+Package atveryend Info: Executing hook `AtVeryEndDocument' on input line 68.
+Package atveryend Info: Executing hook `AtEndAfterFileList' on input line 68.
+Package rerunfilecheck Info: File `ATmega328P_NOTES.out' has not changed.
+(rerunfilecheck)             Checksum: FC016B3C3387049C4567EC807E859AFA;14108.
+runsystem(rm ATmega328P_NOTES.pyg)...executed.
+
+Package atveryend Info: Empty hook `AtVeryVeryEnd' on input line 68.
+ ) 
+Here is how much of TeX's memory you used:
+ 28189 strings out of 483183
+ 592237 string characters out of 5966292
+ 1102143 words of memory out of 5000000
+ 41814 multiletter control sequences out of 15000+600000
+ 545630 words of font info for 75 fonts, out of 8000000 for 9000
+ 14 hyphenation exceptions out of 8191
+ 82i,14n,80p,1003b,1220s stack positions out of 5000i,500n,10000p,200000b,80000s
+ </home/narendiran/.texlive2019/texmf-var/fonts/pk/ljfour/jknappen/ec/tcrm1000.600pk></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmbx10.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmbx12.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmbxti10.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmitt10.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi10.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi12.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi5.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi7.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi8.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmr10.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmr12.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmr17.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmr7.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmr8.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmr9.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmsl10.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmss10.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmss8.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy10.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy5.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy7.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmti10.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmtt10.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmtt8.pfb>
+Output written on /home/narendiran/Desktop/Atmega328pNotes/documentation/ATmega328P_NOTES.pdf (157 pages, 2436873 bytes).
+PDF statistics:
+ 2164 PDF objects out of 2487 (max. 8388607)
+ 1868 compressed objects within 19 object streams
+ 513 named destinations out of 1000 (max. 500000)
+ 1869 words of extra memory for PDF output out of 10000 (max. 10000000)
+

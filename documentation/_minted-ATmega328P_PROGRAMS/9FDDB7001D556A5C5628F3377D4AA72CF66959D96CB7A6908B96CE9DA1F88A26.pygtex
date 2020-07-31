@@ -1,0 +1,42 @@
+\begin{Verbatim}[commandchars=\\\{\}]
+\PYG{c+cp}{\PYGZsh{}define F\PYGZus{}CPU 16000000L}
+
+\PYG{c+cp}{\PYGZsh{}include} \PYG{c+cpf}{\PYGZlt{}avr/io.h\PYGZgt{}}
+\PYG{c+cp}{\PYGZsh{}include} \PYG{c+cpf}{\PYGZlt{}util/delay.h\PYGZgt{}}
+\PYG{c+cp}{\PYGZsh{}include} \PYG{c+cpf}{\PYGZlt{}avr/interrupt.h\PYGZgt{}}
+
+\PYG{k+kt}{void} \PYG{n+nf}{AnalogCompartorInit}\PYG{p}{()}
+\PYG{p}{\PYGZob{}}
+	\PYG{c+cm}{/* Disabling the Analog Comparator Multiplexer Enable bit}
+\PYG{c+cm}{	 so that AIN1 is selected as positive input */}
+	\PYG{n}{ADCSRB} \PYG{o}{\PYGZam{}=} \PYG{o}{\PYGZti{}}\PYG{p}{(}\PYG{l+m+mi}{1}\PYG{o}{\PYGZlt{}\PYGZlt{}}\PYG{n}{ACME}\PYG{p}{);}
+	\PYG{c+cm}{/* Disabling the Analog Comparator Bandgap Select bit }
+\PYG{c+cm}{	so that AIN0 is selected as negative input */}
+	\PYG{n}{ACSR} \PYG{o}{\PYGZam{}=} \PYG{o}{\PYGZti{}}\PYG{p}{(}\PYG{l+m+mi}{1}\PYG{o}{\PYGZlt{}\PYGZlt{}}\PYG{n}{ACBG}\PYG{p}{);}
+	\PYG{c+c1}{// Choosing the interrupt mode to toggle ACO bit }
+	\PYG{c+c1}{// By selecting 00 to ACIS[1:0]}
+	\PYG{n}{ACSR} \PYG{o}{\PYGZam{}=} \PYG{o}{\PYGZti{}}\PYG{p}{(}\PYG{l+m+mi}{1}\PYG{o}{\PYGZlt{}\PYGZlt{}}\PYG{n}{ACIS1}\PYG{p}{);}
+	\PYG{n}{ACSR} \PYG{o}{\PYGZam{}=} \PYG{o}{\PYGZti{}}\PYG{p}{(}\PYG{l+m+mi}{1}\PYG{o}{\PYGZlt{}\PYGZlt{}}\PYG{n}{ACIS0}\PYG{p}{);}
+	\PYG{c+c1}{// Enabling the Analog Comparator interrupt Enable to see the output}
+	\PYG{n}{ACSR} \PYG{o}{|=} \PYG{p}{(}\PYG{l+m+mi}{1}\PYG{o}{\PYGZlt{}\PYGZlt{}}\PYG{n}{ACIE}\PYG{p}{);}
+	\PYG{c+c1}{// enabling the Analog Comparator by clearing the Analog Comparator Disable bit}
+	\PYG{n}{ACSR} \PYG{o}{\PYGZam{}=} \PYG{o}{\PYGZti{}}\PYG{p}{(}\PYG{l+m+mi}{1}\PYG{o}{\PYGZlt{}\PYGZlt{}}\PYG{n}{ACD}\PYG{p}{);}
+	\PYG{n}{sei}\PYG{p}{();}
+\PYG{p}{\PYGZcb{}}
+
+\PYG{k+kt}{int} \PYG{n+nf}{main}\PYG{p}{(}\PYG{k+kt}{void}\PYG{p}{)}
+\PYG{p}{\PYGZob{}}
+	\PYG{c+c1}{// making the AIN0(PD6) and AIN1(PD7) as input}
+	\PYG{n}{DDRD} \PYG{o}{\PYGZam{}=} \PYG{o}{\PYGZti{}}\PYG{p}{(}\PYG{l+m+mi}{1}\PYG{o}{\PYGZlt{}\PYGZlt{}}\PYG{l+m+mi}{6}\PYG{p}{);}
+	\PYG{n}{DDRD} \PYG{o}{\PYGZam{}=} \PYG{o}{\PYGZti{}}\PYG{p}{(}\PYG{l+m+mi}{1}\PYG{o}{\PYGZlt{}\PYGZlt{}}\PYG{l+m+mi}{7}\PYG{p}{);}	
+	\PYG{c+c1}{// making PC0 as output \PYGZhy{} to show output}
+	\PYG{n}{DDRC} \PYG{o}{|=} \PYG{p}{(}\PYG{l+m+mi}{1}\PYG{o}{\PYGZlt{}\PYGZlt{}}\PYG{l+m+mi}{0}\PYG{p}{);}	
+    \PYG{k}{while}\PYG{p}{(}\PYG{l+m+mi}{1}\PYG{p}{)}
+    \PYG{p}{\PYGZob{}}
+    \PYG{p}{\PYGZcb{}}
+\PYG{p}{\PYGZcb{}}
+\PYG{n}{ISR}\PYG{p}{(}\PYG{n}{ANALOG\PYGZus{}COMP\PYGZus{}vect}\PYG{p}{)}
+\PYG{p}{\PYGZob{}}
+    \PYG{n}{PINC} \PYG{o}{|=} \PYG{p}{(}\PYG{l+m+mi}{1}\PYG{o}{\PYGZlt{}\PYGZlt{}}\PYG{l+m+mi}{0}\PYG{p}{);}
+\PYG{p}{\PYGZcb{}}
+\end{Verbatim}

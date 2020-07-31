@@ -1,3 +1,0 @@
-\begin{Verbatim}[commandchars=\\\{\}]
-avr\PYGZhy{}gcc \PYGZhy{}Os \PYGZhy{}Wall \PYGZhy{}g \PYGZhy{}mmcu\PYG{o}{=}atmega8 hello.o \PYGZhy{}o hello.elf
-\end{Verbatim}

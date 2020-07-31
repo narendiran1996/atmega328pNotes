@@ -1,0 +1,54 @@
+This is BibTeX, Version 0.99d (TeX Live 2019/Debian)
+Capacity: max_strings=200000, hash_size=200000, hash_prime=170003
+The top-level auxiliary file: ATmega328P_NOTES.aux
+The style file: amsplain.bst
+Database file #1: ReferenceM.bib
+Warning--to sort, need author or key in atmega328pPage
+Warning--to sort, need author or key in atmega328datasheet
+Warning--to sort, need author or key in toolChain
+Warning--to sort, need author or key in compilerOptimize
+Warning--to sort, need author or key in avrgccman
+Warning--to sort, need author or key in avrdude
+Warning--to sort, need author or key in alsosee
+You've used 7 entries,
+            2213 wiz_defined-function locations,
+            523 strings with 4650 characters,
+and the built_in function-call counts, 1196 in all, are:
+= -- 84
+> -- 7
+< -- 0
++ -- 7
+- -- 0
+* -- 58
+:= -- 128
+add.period$ -- 7
+call.type$ -- 7
+change.case$ -- 21
+chr.to.int$ -- 0
+cite$ -- 14
+duplicate$ -- 77
+empty$ -- 183
+format.name$ -- 0
+if$ -- 288
+int.to.chr$ -- 0
+int.to.str$ -- 7
+missing$ -- 7
+newline$ -- 31
+num.names$ -- 0
+pop$ -- 70
+preamble$ -- 1
+purify$ -- 14
+quote$ -- 0
+skip$ -- 49
+stack$ -- 0
+substring$ -- 35
+swap$ -- 7
+text.length$ -- 0
+text.prefix$ -- 0
+top$ -- 0
+type$ -- 28
+warning$ -- 7
+while$ -- 0
+width$ -- 8
+write$ -- 51
+(There were 7 warnings)

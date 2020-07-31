@@ -1,0 +1,329 @@
+\begin{Verbatim}[commandchars=\\\{\}]
+\PYG{c+cp}{\PYGZsh{}define F\PYGZus{}CPU 16000000L}
+\PYG{c+cp}{\PYGZsh{}include} \PYG{c+cpf}{\PYGZlt{}avr/io.h\PYGZgt{}}
+\PYG{c+cp}{\PYGZsh{}include} \PYG{c+cpf}{\PYGZlt{}avr/interrupt.h\PYGZgt{}}
+\PYG{c+cp}{\PYGZsh{}include} \PYG{c+cpf}{\PYGZlt{}util/delay.h\PYGZgt{}}
+\PYG{c+c1}{// Reset}
+\PYG{c+cp}{\PYGZsh{}define RES PORTB0}
+\PYG{c+c1}{// Data/Command}
+\PYG{c+cp}{\PYGZsh{}define DC PORTB1}
+\PYG{c+c1}{// Chip Enable}
+\PYG{c+cp}{\PYGZsh{}define SS PORTB2}
+\PYG{c+c1}{// Data In}
+\PYG{c+cp}{\PYGZsh{}define SIN PORTB3}
+\PYG{c+c1}{// Serial Clock}
+\PYG{c+cp}{\PYGZsh{}define SCK PORTB5}
+
+\PYG{c+cp}{\PYGZsh{}define chip\PYGZus{}enable PORTB \PYGZam{}= \PYGZti{}(1\PYGZlt{}\PYGZlt{}SS)}
+\PYG{c+cp}{\PYGZsh{}define chip\PYGZus{}disable PORTB |= (1\PYGZlt{}\PYGZlt{}SS)}
+\PYG{c+cp}{\PYGZsh{}define cmd\PYGZus{}mode PORTB \PYGZam{}= \PYGZti{}(1\PYGZlt{}\PYGZlt{}DC)}
+\PYG{c+cp}{\PYGZsh{}define data\PYGZus{}mode PORTB |= (1\PYGZlt{}\PYGZlt{}DC)}
+
+\PYG{k+kt}{void} \PYG{n+nf}{OLED\PYGZus{}init\PYGZus{}pins}\PYG{p}{()}
+\PYG{p}{\PYGZob{}}
+	\PYG{n}{DDRB} \PYG{o}{|=} \PYG{p}{(}\PYG{l+m+mi}{1}\PYG{o}{\PYGZlt{}\PYGZlt{}}\PYG{n}{RES}\PYG{p}{)} \PYG{o}{|} \PYG{p}{(}\PYG{l+m+mi}{1}\PYG{o}{\PYGZlt{}\PYGZlt{}}\PYG{n}{DC}\PYG{p}{)} \PYG{o}{|} \PYG{p}{(}\PYG{l+m+mi}{1}\PYG{o}{\PYGZlt{}\PYGZlt{}}\PYG{n}{SS}\PYG{p}{)} \PYG{o}{|} \PYG{p}{(}\PYG{l+m+mi}{1}\PYG{o}{\PYGZlt{}\PYGZlt{}}\PYG{n}{SIN}\PYG{p}{)} \PYG{o}{|} \PYG{p}{(}\PYG{l+m+mi}{1}\PYG{o}{\PYGZlt{}\PYGZlt{}}\PYG{n}{SCK}\PYG{p}{);}
+	
+	\PYG{n}{PORTB} \PYG{o}{|=} \PYG{p}{(}\PYG{l+m+mi}{1}\PYG{o}{\PYGZlt{}\PYGZlt{}}\PYG{n}{RES}\PYG{p}{);} \PYG{c+c1}{// initially let\PYGZsq{}s reset}
+	\PYG{n}{PORTB} \PYG{o}{\PYGZam{}=} \PYG{o}{\PYGZti{}}\PYG{p}{(}\PYG{l+m+mi}{1}\PYG{o}{\PYGZlt{}\PYGZlt{}}\PYG{n}{DC}\PYG{p}{);} \PYG{c+c1}{// initially command mode}
+	\PYG{n}{PORTB} \PYG{o}{|=} \PYG{p}{(}\PYG{l+m+mi}{1}\PYG{o}{\PYGZlt{}\PYGZlt{}}\PYG{n}{SS}\PYG{p}{);} \PYG{c+c1}{// initially disable chip}
+	\PYG{n}{PORTB} \PYG{o}{\PYGZam{}=} \PYG{o}{\PYGZti{}}\PYG{p}{(}\PYG{l+m+mi}{1}\PYG{o}{\PYGZlt{}\PYGZlt{}}\PYG{n}{SIN}\PYG{p}{);} \PYG{c+c1}{// initially SIN is 0}
+	\PYG{n}{PORTB} \PYG{o}{\PYGZam{}=} \PYG{o}{\PYGZti{}}\PYG{p}{(}\PYG{l+m+mi}{1}\PYG{o}{\PYGZlt{}\PYGZlt{}}\PYG{n}{SCK}\PYG{p}{);} \PYG{c+c1}{// initially SCK is 0}
+\PYG{p}{\PYGZcb{}}
+\PYG{k+kt}{void} \PYG{n+nf}{SPI\PYGZus{}init}\PYG{p}{()}
+\PYG{p}{\PYGZob{}}
+	
+	\PYG{c+c1}{// dISBALE SPIE bit for interrupt on Serial Transfer Completion}
+	\PYG{n}{SPCR} \PYG{o}{\PYGZam{}=} \PYG{o}{\PYGZti{}}\PYG{p}{(}\PYG{l+m+mi}{1}\PYG{o}{\PYGZlt{}\PYGZlt{}}\PYG{n}{SPIE}\PYG{p}{);}
+	
+	\PYG{c+c1}{// Select MSB first or LSB first by DORD}
+	\PYG{n}{SPCR} \PYG{o}{\PYGZam{}=} \PYG{o}{\PYGZti{}}\PYG{p}{(}\PYG{l+m+mi}{1}\PYG{o}{\PYGZlt{}\PYGZlt{}}\PYG{n}{DORD}\PYG{p}{);}
+	
+	\PYG{c+c1}{// Select this as Master}
+	\PYG{n}{SPCR} \PYG{o}{|=} \PYG{p}{(}\PYG{l+m+mi}{1}\PYG{o}{\PYGZlt{}\PYGZlt{}}\PYG{n}{MSTR}\PYG{p}{);}
+	
+	\PYG{c+c1}{// Let the clock polarity be SCK is low when idle}
+	\PYG{n}{SPCR} \PYG{o}{\PYGZam{}=} \PYG{o}{\PYGZti{}}\PYG{p}{(}\PYG{l+m+mi}{1}\PYG{o}{\PYGZlt{}\PYGZlt{}}\PYG{n}{CPOL}\PYG{p}{);}
+	
+	\PYG{c+c1}{// Sampled at Rising or Falling Edge}
+	\PYG{c+c1}{// we choose rising edge}
+	\PYG{n}{SPCR} \PYG{o}{\PYGZam{}=} \PYG{o}{\PYGZti{}}\PYG{p}{(}\PYG{l+m+mi}{1}\PYG{o}{\PYGZlt{}\PYGZlt{}}\PYG{n}{CPHA}\PYG{p}{);}
+	
+	\PYG{c+c1}{// Selecting a SCK frequnecy}
+	\PYG{c+c1}{// we select Fosc/8 by 001}
+	\PYG{n}{SPSR} \PYG{o}{\PYGZam{}=} \PYG{o}{\PYGZti{}}\PYG{p}{(}\PYG{l+m+mi}{1}\PYG{o}{\PYGZlt{}\PYGZlt{}}\PYG{n}{SPI2X}\PYG{p}{);}
+	\PYG{n}{SPCR} \PYG{o}{\PYGZam{}=} \PYG{o}{\PYGZti{}}\PYG{p}{(}\PYG{l+m+mi}{1}\PYG{o}{\PYGZlt{}\PYGZlt{}}\PYG{n}{SPR1}\PYG{p}{);}
+	\PYG{n}{SPCR} \PYG{o}{|=} \PYG{p}{(}\PYG{l+m+mi}{1}\PYG{o}{\PYGZlt{}\PYGZlt{}}\PYG{n}{SPR0}\PYG{p}{);}
+	
+	\PYG{c+c1}{// Enabling SPI}
+	\PYG{n}{SPCR} \PYG{o}{|=} \PYG{p}{(}\PYG{l+m+mi}{1}\PYG{o}{\PYGZlt{}\PYGZlt{}}\PYG{n}{SPE}\PYG{p}{);}
+	
+\PYG{p}{\PYGZcb{}}
+\PYG{k+kt}{void} \PYG{n+nf}{SPI\PYGZus{}transfer\PYGZus{}byte}\PYG{p}{(}\PYG{k+kt}{uint8\PYGZus{}t} \PYG{n}{val}\PYG{p}{)}
+\PYG{p}{\PYGZob{}}
+	\PYG{n}{SPDR} \PYG{o}{=} \PYG{n}{val}\PYG{p}{;}
+	
+	\PYG{c+c1}{// wait till serial transmission is complete by checking the SPI Interrupt Flag}
+	\PYG{k}{while}\PYG{p}{((}\PYG{n}{SPSR} \PYG{o}{\PYGZam{}} \PYG{p}{(}\PYG{l+m+mi}{1}\PYG{o}{\PYGZlt{}\PYGZlt{}}\PYG{n}{SPIF}\PYG{p}{))} \PYG{o}{==} \PYG{l+m+mi}{0} \PYG{p}{)} \PYG{p}{\PYGZob{}\PYGZcb{};}
+
+	\PYG{c+c1}{// return the recieved data \PYGZhy{} can use it or ignore it}
+	\PYG{c+c1}{//return SPDR;}
+\PYG{p}{\PYGZcb{}}
+
+\PYG{k+kt}{void} \PYG{n+nf}{OLED\PYGZus{}reset\PYGZus{}init}\PYG{p}{()}
+\PYG{p}{\PYGZob{}}
+	\PYG{n}{chip\PYGZus{}enable}\PYG{p}{;}
+	\PYG{n}{PORTB} \PYG{o}{|=} \PYG{p}{(}\PYG{l+m+mi}{1}\PYG{o}{\PYGZlt{}\PYGZlt{}}\PYG{n}{RES}\PYG{p}{);}
+	\PYG{n}{\PYGZus{}delay\PYGZus{}ms}\PYG{p}{(}\PYG{l+m+mi}{10}\PYG{p}{);}
+	\PYG{n}{PORTB} \PYG{o}{\PYGZam{}=} \PYG{o}{\PYGZti{}}\PYG{p}{(}\PYG{l+m+mi}{1}\PYG{o}{\PYGZlt{}\PYGZlt{}}\PYG{n}{RES}\PYG{p}{);}
+	\PYG{n}{\PYGZus{}delay\PYGZus{}ms}\PYG{p}{(}\PYG{l+m+mi}{10}\PYG{p}{);}
+	\PYG{n}{PORTB} \PYG{o}{|=} \PYG{p}{(}\PYG{l+m+mi}{1}\PYG{o}{\PYGZlt{}\PYGZlt{}}\PYG{n}{RES}\PYG{p}{);}
+\PYG{p}{\PYGZcb{}}
+
+\PYG{k+kt}{void} \PYG{n+nf}{OLED\PYGZus{}send\PYGZus{}command}\PYG{p}{(}\PYG{k+kt}{uint8\PYGZus{}t} \PYG{n}{cmd\PYGZus{}}\PYG{p}{)}
+\PYG{p}{\PYGZob{}}
+	\PYG{n}{cmd\PYGZus{}mode}\PYG{p}{;}
+	\PYG{n}{SPI\PYGZus{}transfer\PYGZus{}byte}\PYG{p}{(}\PYG{n}{cmd\PYGZus{}}\PYG{p}{);}
+\PYG{p}{\PYGZcb{}}
+\PYG{k+kt}{void} \PYG{n+nf}{OLED\PYGZus{}send\PYGZus{}data}\PYG{p}{(}\PYG{k+kt}{uint8\PYGZus{}t} \PYG{n}{data\PYGZus{}}\PYG{p}{)}
+\PYG{p}{\PYGZob{}}
+	\PYG{n}{data\PYGZus{}mode}\PYG{p}{;}
+	\PYG{n}{SPI\PYGZus{}transfer\PYGZus{}byte}\PYG{p}{(}\PYG{n}{data\PYGZus{}}\PYG{p}{);}
+\PYG{p}{\PYGZcb{}}
+\PYG{k+kt}{void} \PYG{n+nf}{OLED\PYGZus{}init}\PYG{p}{()}
+\PYG{p}{\PYGZob{}}
+	
+	\PYG{n}{OLED\PYGZus{}init\PYGZus{}pins}\PYG{p}{();}
+	\PYG{n}{SPI\PYGZus{}init}\PYG{p}{();}
+	\PYG{n}{OLED\PYGZus{}reset\PYGZus{}init}\PYG{p}{();}
+
+	\PYG{c+c1}{// Set Display ON/OFF}
+	\PYG{c+c1}{// D[7:0] == 0b1010\PYGZus{}111(X0)}
+	\PYG{c+c1}{// X0 = 0 \PYGZhy{} Display OFF}
+	\PYG{c+c1}{// X0 = 1 \PYGZhy{} Display ON}
+	\PYG{c+c1}{// we display off}
+	\PYG{n}{OLED\PYGZus{}send\PYGZus{}command}\PYG{p}{(}\PYG{l+m+mi}{0}\PYG{n}{XAE}\PYG{p}{);}
+	
+	\PYG{c+c1}{// Setting Clock divide Ratio and Oscillator Frequency \PYGZhy{} 0xD5}
+	\PYG{n}{OLED\PYGZus{}send\PYGZus{}command}\PYG{p}{(}\PYG{l+m+mi}{0}\PYG{n}{XD5}\PYG{p}{);}
+	\PYG{c+c1}{// Setting 0b1000\PYGZus{}0000 \PYGZhy{} 0x80}
+	\PYG{c+c1}{// A[7:4]== 1000 for oscillator frequency for RESET}
+	\PYG{c+c1}{// A[3:0]== 0000 for divide ratio of 1 for RESET}
+	\PYG{n}{OLED\PYGZus{}send\PYGZus{}command}\PYG{p}{(}\PYG{l+m+mh}{0x80}\PYG{p}{);}
+	
+	\PYG{c+c1}{// Setting Multipler Ratio \PYGZhy{} 0xA8}
+	\PYG{n}{OLED\PYGZus{}send\PYGZus{}command}\PYG{p}{(}\PYG{l+m+mh}{0xA8}\PYG{p}{);}
+	\PYG{c+c1}{// any value of A[5:0] between 0b00\PYGZus{}1111 to 0b11\PYGZus{}1111}
+	\PYG{c+c1}{// A[5:0]== 0b0011\PYGZus{}1111 for RESET}
+	\PYG{n}{OLED\PYGZus{}send\PYGZus{}command}\PYG{p}{(}\PYG{l+m+mh}{0x3F}\PYG{p}{);}
+	
+	
+	\PYG{c+c1}{// Set Display Offset \PYGZhy{} 0xD3}
+	\PYG{n}{OLED\PYGZus{}send\PYGZus{}command}\PYG{p}{(}\PYG{l+m+mh}{0xD3}\PYG{p}{);}
+	\PYG{c+c1}{// NO offset in display for RESET}
+	\PYG{n}{OLED\PYGZus{}send\PYGZus{}command}\PYG{p}{(}\PYG{l+m+mh}{0x00}\PYG{p}{);}
+	
+	
+	\PYG{c+c1}{// Set Display Start Line \PYGZhy{} 0X40}
+	\PYG{n}{OLED\PYGZus{}send\PYGZus{}command}\PYG{p}{(}\PYG{l+m+mh}{0x40} \PYG{o}{|} \PYG{l+m+mh}{0x0}\PYG{p}{);}
+	
+	\PYG{c+c1}{// Set Charge Pump \PYGZhy{} 0X8D}
+	\PYG{n}{OLED\PYGZus{}send\PYGZus{}command}\PYG{p}{(}\PYG{l+m+mh}{0x8D}\PYG{p}{);}
+	\PYG{c+c1}{// A[5:0] == 0b01\PYGZus{}0(A2)00}
+	\PYG{c+c1}{// A2 \PYGZhy{} 0 == Disable charge}
+	\PYG{c+c1}{// A2 \PYGZhy{} 1 == Enable charge}
+	\PYG{c+c1}{// we enable charge pump}
+	\PYG{n}{OLED\PYGZus{}send\PYGZus{}command}\PYG{p}{(}\PYG{l+m+mh}{0x14}\PYG{p}{);}
+	
+	\PYG{c+c1}{// memory mode \PYGZhy{} 0x20}
+	\PYG{n}{OLED\PYGZus{}send\PYGZus{}command}\PYG{p}{(}\PYG{l+m+mh}{0x20}\PYG{p}{);}
+	\PYG{n}{OLED\PYGZus{}send\PYGZus{}command}\PYG{p}{(}\PYG{l+m+mh}{0x00}\PYG{p}{);}                              \PYG{c+c1}{// 0x0 act like ks0108}
+	
+	\PYG{c+c1}{// Set Segment Re\PYGZhy{}map \PYGZhy{}\PYGZhy{}  0XA0 + Enable}
+	\PYG{c+c1}{// Enabling so that we get remapped address \PYGZhy{}\PYGZhy{} see diagram}
+	\PYG{n}{OLED\PYGZus{}send\PYGZus{}command}\PYG{p}{(}\PYG{l+m+mi}{0}\PYG{n}{XA0} \PYG{o}{|} \PYG{l+m+mh}{0x1}\PYG{p}{);}
+	
+	\PYG{c+c1}{// Set COM Output Scan Direction}
+	\PYG{c+c1}{// A[7:0] == 0b1100\PYGZus{}(X3)000}
+	\PYG{c+c1}{// X3 \PYGZhy{} 0 == Normal scan}
+	\PYG{c+c1}{// X3 \PYGZhy{} 1 == Remapped Scan}
+	\PYG{c+c1}{// We use normal scan}
+	\PYG{n}{OLED\PYGZus{}send\PYGZus{}command}\PYG{p}{(}\PYG{l+m+mh}{0xC8}\PYG{p}{);}
+	
+	\PYG{c+c1}{// Set COM Pins Hardware Configuration \PYGZhy{} 0xDA}
+	\PYG{n}{OLED\PYGZus{}send\PYGZus{}command}\PYG{p}{(}\PYG{l+m+mh}{0xDA}\PYG{p}{);}
+	\PYG{c+c1}{// A[7:0] == 0b00(A5)(A4)\PYGZus{}0010}
+	\PYG{c+c1}{// A4 = 0 \PYGZhy{} Sequential COM pin configuration}
+	\PYG{c+c1}{// A4 = 1 \PYGZhy{} RESET \PYGZhy{} alternative COM pin configuration}
+	\PYG{c+c1}{// A5 = 0 \PYGZhy{} Disable COM Left/Rigth remap}
+	\PYG{c+c1}{// A5 = 1 \PYGZhy{} Enable COM Left/Rigth remap}
+	\PYG{c+c1}{// we use alternative COM pin configuration and disable COM left right rempa}
+	\PYG{n}{OLED\PYGZus{}send\PYGZus{}command}\PYG{p}{(}\PYG{l+m+mh}{0x12}\PYG{p}{);}
+	
+	\PYG{c+c1}{// Set Contrast Control \PYGZhy{} 0x81}
+	\PYG{n}{OLED\PYGZus{}send\PYGZus{}command}\PYG{p}{(}\PYG{l+m+mh}{0x81}\PYG{p}{);}
+	\PYG{c+c1}{// any value between 1 and 256}
+	\PYG{n}{OLED\PYGZus{}send\PYGZus{}command}\PYG{p}{(}\PYG{l+m+mh}{0xAF}\PYG{p}{);}
+	
+	\PYG{c+c1}{// Set pre\PYGZhy{}charge period \PYGZhy{} 0XD9}
+	\PYG{n}{OLED\PYGZus{}send\PYGZus{}command}\PYG{p}{(}\PYG{l+m+mh}{0xD9}\PYG{p}{);}
+	\PYG{c+c1}{// See data sheet \PYGZhy{}\PYGZhy{} 0xF1}
+	\PYG{n}{OLED\PYGZus{}send\PYGZus{}command}\PYG{p}{(}\PYG{l+m+mh}{0xF1}\PYG{p}{);}
+	
+	\PYG{c+c1}{// Set VCOMH Deselect Level \PYGZhy{} 0xDB}
+	\PYG{n}{OLED\PYGZus{}send\PYGZus{}command}\PYG{p}{(}\PYG{l+m+mh}{0xDB}\PYG{p}{);}
+	\PYG{c+c1}{// See data sheet \PYGZhy{}\PYGZhy{} 0x20}
+	\PYG{n}{OLED\PYGZus{}send\PYGZus{}command}\PYG{p}{(}\PYG{l+m+mh}{0x20}\PYG{p}{);}
+	
+	\PYG{c+c1}{// Set Entier Display On/Off}
+	\PYG{c+c1}{// A[7:0] == 0b1010\PYGZus{}010(X0)}
+	\PYG{c+c1}{// X0 = 0 \PYGZhy{} Display OFF}
+	\PYG{c+c1}{// X0 = 1 \PYGZhy{} Display ON}
+	\PYG{c+c1}{// we display offf}
+	\PYG{n}{OLED\PYGZus{}send\PYGZus{}command}\PYG{p}{(}\PYG{l+m+mh}{0xA4}\PYG{p}{);}
+	
+	\PYG{c+c1}{// Selection between normal or inverse mode}
+	\PYG{c+c1}{// A[7:0] == 0b1010\PYGZus{}011(X0)}
+	\PYG{c+c1}{// X0 = 0 \PYGZhy{} normal display}
+	\PYG{c+c1}{// X0 = 1 \PYGZhy{} inverse display}
+	\PYG{c+c1}{// we seect normal display}
+	\PYG{n}{OLED\PYGZus{}send\PYGZus{}command}\PYG{p}{(}\PYG{l+m+mh}{0xA6}\PYG{p}{);}
+	
+	\PYG{c+c1}{// Set Display ON/OFF}
+	\PYG{c+c1}{// D[7:0] == 0b1010\PYGZus{}111(X0)}
+	\PYG{c+c1}{// X0 = 0 \PYGZhy{} Display OFF}
+	\PYG{c+c1}{// X0 = 1 \PYGZhy{} Display ON}
+	\PYG{c+c1}{// we display ON}
+	\PYG{n}{OLED\PYGZus{}send\PYGZus{}command}\PYG{p}{(}\PYG{l+m+mh}{0xAF}\PYG{p}{);}
+\PYG{p}{\PYGZcb{}}
+
+\PYG{k+kt}{void} \PYG{n+nf}{OLED\PYGZus{}set\PYGZus{}pixel\PYGZus{}one\PYGZus{}byte}\PYG{p}{(}\PYG{k+kt}{uint8\PYGZus{}t} \PYG{n}{page\PYGZus{}}\PYG{p}{,} \PYG{k+kt}{uint8\PYGZus{}t} \PYG{n}{column\PYGZus{}}\PYG{p}{)}
+\PYG{p}{\PYGZob{}}
+	\PYG{c+c1}{// Set page address \PYGZhy{} 0x22}
+	\PYG{n}{OLED\PYGZus{}send\PYGZus{}command}\PYG{p}{(}\PYG{l+m+mh}{0x22}\PYG{p}{);}
+	\PYG{c+c1}{// set page start address}
+	\PYG{n}{OLED\PYGZus{}send\PYGZus{}command}\PYG{p}{(}\PYG{n}{page\PYGZus{}}\PYG{p}{);}
+	\PYG{c+c1}{// set column End Address}
+	\PYG{n}{OLED\PYGZus{}send\PYGZus{}command}\PYG{p}{(}\PYG{l+m+mi}{8} \PYG{o}{\PYGZhy{}} \PYG{l+m+mi}{1}\PYG{p}{);}
+	
+	\PYG{c+c1}{// Set Column address \PYGZhy{} 0x21}
+	\PYG{n}{OLED\PYGZus{}send\PYGZus{}command}\PYG{p}{(}\PYG{l+m+mi}{0}\PYG{n}{X21}\PYG{p}{);}
+	\PYG{c+c1}{// Set column  Start Address}
+	\PYG{n}{OLED\PYGZus{}send\PYGZus{}command}\PYG{p}{(}\PYG{n}{column\PYGZus{}}\PYG{p}{);}
+	\PYG{c+c1}{// Set column End address}
+	\PYG{n}{OLED\PYGZus{}send\PYGZus{}command}\PYG{p}{(}\PYG{l+m+mi}{128} \PYG{o}{\PYGZhy{}} \PYG{l+m+mi}{1}\PYG{p}{);}
+\PYG{p}{\PYGZcb{}}
+
+
+\PYG{k+kt}{void} \PYG{n+nf}{OLED\PYGZus{}demo}\PYG{p}{()}
+\PYG{p}{\PYGZob{}}
+	\PYG{n}{OLED\PYGZus{}set\PYGZus{}pixel\PYGZus{}one\PYGZus{}byte}\PYG{p}{(}\PYG{l+m+mi}{0}\PYG{p}{,}\PYG{l+m+mi}{0}\PYG{p}{);}
+	\PYG{n}{OLED\PYGZus{}send\PYGZus{}data}\PYG{p}{(}\PYG{l+m+mi}{0}\PYG{n}{b11111111}\PYG{p}{);}
+	\PYG{n}{OLED\PYGZus{}set\PYGZus{}pixel\PYGZus{}one\PYGZus{}byte}\PYG{p}{(}\PYG{l+m+mi}{0}\PYG{p}{,}\PYG{l+m+mi}{2}\PYG{p}{);}
+	\PYG{n}{OLED\PYGZus{}send\PYGZus{}data}\PYG{p}{(}\PYG{l+m+mi}{0}\PYG{n}{b11100111}\PYG{p}{);}
+	\PYG{n}{OLED\PYGZus{}set\PYGZus{}pixel\PYGZus{}one\PYGZus{}byte}\PYG{p}{(}\PYG{l+m+mi}{0}\PYG{p}{,}\PYG{l+m+mi}{4}\PYG{p}{);}
+	\PYG{n}{OLED\PYGZus{}send\PYGZus{}data}\PYG{p}{(}\PYG{l+m+mi}{0}\PYG{n}{b11110000}\PYG{p}{);}
+	\PYG{n}{OLED\PYGZus{}set\PYGZus{}pixel\PYGZus{}one\PYGZus{}byte}\PYG{p}{(}\PYG{l+m+mi}{0}\PYG{p}{,}\PYG{l+m+mi}{6}\PYG{p}{);}
+	\PYG{n}{OLED\PYGZus{}send\PYGZus{}data}\PYG{p}{(}\PYG{l+m+mi}{0}\PYG{n}{b00001111}\PYG{p}{);}
+	\PYG{n}{OLED\PYGZus{}set\PYGZus{}pixel\PYGZus{}one\PYGZus{}byte}\PYG{p}{(}\PYG{l+m+mi}{0}\PYG{p}{,}\PYG{l+m+mi}{8}\PYG{p}{);}
+	\PYG{n}{OLED\PYGZus{}send\PYGZus{}data}\PYG{p}{(}\PYG{l+m+mi}{0}\PYG{n}{b11001100}\PYG{p}{);}
+	\PYG{n}{OLED\PYGZus{}set\PYGZus{}pixel\PYGZus{}one\PYGZus{}byte}\PYG{p}{(}\PYG{l+m+mi}{0}\PYG{p}{,}\PYG{l+m+mi}{10}\PYG{p}{);}
+	\PYG{n}{OLED\PYGZus{}send\PYGZus{}data}\PYG{p}{(}\PYG{l+m+mi}{0}\PYG{n}{b10010010}\PYG{p}{);}
+	
+	\PYG{k}{for} \PYG{p}{(}\PYG{k+kt}{uint8\PYGZus{}t} \PYG{n}{i}\PYG{o}{=}\PYG{l+m+mi}{0}\PYG{p}{;} \PYG{n}{i}\PYG{o}{\PYGZlt{}}\PYG{l+m+mi}{128}\PYG{p}{;} \PYG{n}{i}\PYG{o}{++}\PYG{p}{)}
+	\PYG{p}{\PYGZob{}}
+		\PYG{n}{OLED\PYGZus{}set\PYGZus{}pixel\PYGZus{}one\PYGZus{}byte}\PYG{p}{(}\PYG{l+m+mi}{1}\PYG{p}{,}\PYG{l+m+mi}{0}\PYG{o}{+}\PYG{n}{i}\PYG{p}{);}
+		\PYG{n}{OLED\PYGZus{}send\PYGZus{}data}\PYG{p}{(}\PYG{l+m+mi}{0}\PYG{n}{b10000001}\PYG{p}{);}
+	\PYG{p}{\PYGZcb{}}
+	\PYG{k}{for} \PYG{p}{(}\PYG{k+kt}{uint8\PYGZus{}t} \PYG{n}{i}\PYG{o}{=}\PYG{l+m+mi}{0}\PYG{p}{;}\PYG{n}{i}\PYG{o}{\PYGZlt{}}\PYG{l+m+mi}{8}\PYG{p}{;}\PYG{n}{i}\PYG{o}{++}\PYG{p}{)}
+	\PYG{p}{\PYGZob{}}
+		\PYG{n}{OLED\PYGZus{}set\PYGZus{}pixel\PYGZus{}one\PYGZus{}byte}\PYG{p}{(}\PYG{l+m+mi}{0}\PYG{o}{+}\PYG{n}{i}\PYG{p}{,}\PYG{l+m+mi}{12}\PYG{p}{);}
+		\PYG{n}{OLED\PYGZus{}send\PYGZus{}data}\PYG{p}{(}\PYG{l+m+mi}{0}\PYG{n}{b11111111}\PYG{p}{);}
+	\PYG{p}{\PYGZcb{}}
+	\PYG{k+kt}{uint8\PYGZus{}t} \PYG{n}{heartine}\PYG{p}{[]}\PYG{o}{=}\PYG{p}{\PYGZob{}} \PYG{l+m+mh}{0x18}\PYG{p}{,} \PYG{l+m+mh}{0x3c}\PYG{p}{,} \PYG{l+m+mh}{0x7c}\PYG{p}{,} \PYG{l+m+mh}{0x3c}\PYG{p}{,} \PYG{l+m+mh}{0x18}\PYG{p}{\PYGZcb{};}
+	\PYG{k}{for}\PYG{p}{(}\PYG{k+kt}{uint8\PYGZus{}t} \PYG{n}{i}\PYG{o}{=}\PYG{l+m+mi}{0}\PYG{p}{;}\PYG{n}{i}\PYG{o}{\PYGZlt{}}\PYG{l+m+mi}{5}\PYG{p}{;}\PYG{n}{i}\PYG{o}{++}\PYG{p}{)}
+	\PYG{p}{\PYGZob{}}
+		\PYG{n}{OLED\PYGZus{}set\PYGZus{}pixel\PYGZus{}one\PYGZus{}byte}\PYG{p}{(}\PYG{l+m+mi}{3}\PYG{p}{,}\PYG{l+m+mi}{42}\PYG{o}{+}\PYG{n}{i}\PYG{p}{);}
+		\PYG{n}{OLED\PYGZus{}send\PYGZus{}data}\PYG{p}{(}\PYG{n}{heartine}\PYG{p}{[}\PYG{n}{i}\PYG{p}{]);}
+	\PYG{p}{\PYGZcb{}}
+\PYG{p}{\PYGZcb{}}
+\PYG{k+kt}{void} \PYG{n+nf}{OLED\PYGZus{}uyir}\PYG{p}{()}
+\PYG{p}{\PYGZob{}}
+	\PYG{c+c1}{// obtained by 	GLCD Font creater from MikroElektronika}
+\PYG{k+kt}{uint8\PYGZus{}t} \PYG{n}{test16x16}\PYG{p}{[]} \PYG{o}{=} \PYG{p}{\PYGZob{}}
+\PYG{l+m+mh}{0x00}\PYG{p}{,} \PYG{l+m+mh}{0x1C}\PYG{p}{,} \PYG{l+m+mh}{0x00}\PYG{p}{,} \PYG{l+m+mh}{0x16}\PYG{p}{,} \PYG{l+m+mh}{0x00}\PYG{p}{,} \PYG{l+m+mh}{0x22}\PYG{p}{,} \PYG{l+m+mh}{0x38}\PYG{p}{,} \PYG{l+m+mh}{0x22}\PYG{p}{,} \PYG{l+m+mh}{0x7C}\PYG{p}{,} \PYG{l+m+mh}{0x22}\PYG{p}{,}\PYG{l+m+mh}{0x64}\PYG{p}{,}
+\PYG{l+m+mh}{0x22}\PYG{p}{,} \PYG{l+m+mh}{0x7C}\PYG{p}{,} \PYG{l+m+mh}{0x22}\PYG{p}{,} \PYG{l+m+mh}{0x3C}\PYG{p}{,} \PYG{l+m+mh}{0x22}\PYG{p}{,} \PYG{l+m+mh}{0x04}\PYG{p}{,} \PYG{l+m+mh}{0x22}\PYG{p}{,} \PYG{l+m+mh}{0x0C}\PYG{p}{,} \PYG{l+m+mh}{0x32}\PYG{p}{,} \PYG{l+m+mh}{0x08}\PYG{p}{,} \PYG{l+m+mh}{0x1A}\PYG{p}{,}
+\PYG{l+m+mh}{0x38}\PYG{p}{,} \PYG{l+m+mh}{0x0E}\PYG{p}{,} \PYG{l+m+mh}{0xE0}\PYG{p}{,} \PYG{l+m+mh}{0x07}\PYG{p}{,} \PYG{l+m+mh}{0x00}\PYG{p}{,} \PYG{l+m+mh}{0x03}\PYG{p}{,} \PYG{l+m+mh}{0xFC}\PYG{p}{,} \PYG{l+m+mh}{0x3F}\PYG{p}{,} \PYG{l+m+mh}{0x00}\PYG{p}{,} \PYG{l+m+mh}{0x00}\PYG{p}{,}
+
+\PYG{l+m+mh}{0x00}\PYG{p}{,} \PYG{l+m+mh}{0x00}\PYG{p}{,} \PYG{l+m+mh}{0x80}\PYG{p}{,} \PYG{l+m+mh}{0x01}\PYG{p}{,} \PYG{l+m+mh}{0xCC}\PYG{p}{,} \PYG{l+m+mh}{0x03}\PYG{p}{,} \PYG{l+m+mh}{0x5E}\PYG{p}{,} \PYG{l+m+mh}{0x02}\PYG{p}{,} \PYG{l+m+mh}{0x52}\PYG{p}{,} \PYG{l+m+mh}{0x02}\PYG{p}{,} \PYG{l+m+mh}{0x5E}\PYG{p}{,}
+\PYG{l+m+mh}{0x02}\PYG{p}{,} \PYG{l+m+mh}{0x42}\PYG{p}{,} \PYG{l+m+mh}{0x02}\PYG{p}{,} \PYG{l+m+mh}{0x46}\PYG{p}{,} \PYG{l+m+mh}{0x72}\PYG{p}{,} \PYG{l+m+mh}{0x5C}\PYG{p}{,} \PYG{l+m+mh}{0x5B}\PYG{p}{,} \PYG{l+m+mh}{0xF8}\PYG{p}{,} \PYG{l+m+mh}{0x59}\PYG{p}{,} \PYG{l+m+mh}{0x40}\PYG{p}{,} \PYG{l+m+mh}{0x70}\PYG{p}{,}
+\PYG{l+m+mh}{0xFE}\PYG{p}{,} \PYG{l+m+mh}{0x43}\PYG{p}{,} \PYG{l+m+mh}{0x40}\PYG{p}{,} \PYG{l+m+mh}{0x60}\PYG{p}{,} \PYG{l+m+mh}{0xC0}\PYG{p}{,} \PYG{l+m+mh}{0x38}\PYG{p}{,} \PYG{l+m+mh}{0x80}\PYG{p}{,} \PYG{l+m+mh}{0x0F}\PYG{p}{,} \PYG{l+m+mh}{0x00}\PYG{p}{,} \PYG{l+m+mh}{0x00}\PYG{p}{,}
+
+\PYG{l+m+mh}{0x00}\PYG{p}{,} \PYG{l+m+mh}{0x0E}\PYG{p}{,} \PYG{l+m+mh}{0x00}\PYG{p}{,} \PYG{l+m+mh}{0x1A}\PYG{p}{,} \PYG{l+m+mh}{0xF0}\PYG{p}{,} \PYG{l+m+mh}{0x13}\PYG{p}{,} \PYG{l+m+mh}{0x38}\PYG{p}{,} \PYG{l+m+mh}{0x16}\PYG{p}{,} \PYG{l+m+mh}{0x0C}\PYG{p}{,} \PYG{l+m+mh}{0x1A}\PYG{p}{,} \PYG{l+m+mh}{0x66}\PYG{p}{,}
+\PYG{l+m+mh}{0x1A}\PYG{p}{,} \PYG{l+m+mh}{0x93}\PYG{p}{,} \PYG{l+m+mh}{0x32}\PYG{p}{,} \PYG{l+m+mh}{0xF1}\PYG{p}{,} \PYG{l+m+mh}{0x52}\PYG{p}{,} \PYG{l+m+mh}{0x11}\PYG{p}{,} \PYG{l+m+mh}{0x52}\PYG{p}{,} \PYG{l+m+mh}{0x31}\PYG{p}{,} \PYG{l+m+mh}{0x52}\PYG{p}{,} \PYG{l+m+mh}{0xE1}\PYG{p}{,} \PYG{l+m+mh}{0x52}\PYG{p}{,}
+\PYG{l+m+mh}{0xC3}\PYG{p}{,} \PYG{l+m+mh}{0x5A}\PYG{p}{,} \PYG{l+m+mh}{0x86}\PYG{p}{,} \PYG{l+m+mh}{0x4F}\PYG{p}{,} \PYG{l+m+mh}{0x3C}\PYG{p}{,} \PYG{l+m+mh}{0x22}\PYG{p}{,} \PYG{l+m+mh}{0x60}\PYG{p}{,} \PYG{l+m+mh}{0x3E}\PYG{p}{,} \PYG{l+m+mh}{0x00}\PYG{p}{,} \PYG{l+m+mh}{0x00}\PYG{p}{,}
+
+\PYG{l+m+mh}{0x00}\PYG{p}{,} \PYG{l+m+mh}{0x00}\PYG{p}{,} \PYG{l+m+mh}{0xFE}\PYG{p}{,} \PYG{l+m+mh}{0x3F}\PYG{p}{,} \PYG{l+m+mh}{0xFE}\PYG{p}{,} \PYG{l+m+mh}{0x3F}\PYG{p}{,} \PYG{l+m+mh}{0x02}\PYG{p}{,} \PYG{l+m+mh}{0x00}\PYG{p}{,} \PYG{l+m+mh}{0x02}\PYG{p}{,} \PYG{l+m+mh}{0x00}\PYG{p}{,} \PYG{l+m+mh}{0xC2}\PYG{p}{,}
+\PYG{l+m+mh}{0x00}\PYG{p}{,} \PYG{l+m+mh}{0x02}\PYG{p}{,} \PYG{l+m+mh}{0x00}\PYG{p}{,} \PYG{l+m+mh}{0x02}\PYG{p}{,} \PYG{l+m+mh}{0x00}\PYG{p}{,} \PYG{l+m+mh}{0xFE}\PYG{p}{,} \PYG{l+m+mh}{0x3F}\PYG{p}{,} \PYG{l+m+mh}{0xFE}\PYG{p}{,} \PYG{l+m+mh}{0x3F}\PYG{p}{,} \PYG{l+m+mh}{0x02}\PYG{p}{,} \PYG{l+m+mh}{0x00}\PYG{p}{,}
+\PYG{l+m+mh}{0x00}\PYG{p}{,} \PYG{l+m+mh}{0x00}\PYG{p}{,} \PYG{l+m+mh}{0xC0}\PYG{p}{,} \PYG{l+m+mh}{0x00}\PYG{p}{,} \PYG{l+m+mh}{0x00}\PYG{p}{,} \PYG{l+m+mh}{0x00}\PYG{p}{,} \PYG{l+m+mh}{0x00}\PYG{p}{,} \PYG{l+m+mh}{0x00}\PYG{p}{,} \PYG{l+m+mh}{0x00}\PYG{p}{,} \PYG{l+m+mh}{0x00}\PYG{p}{,}
+
+\PYG{l+m+mh}{0x00}\PYG{p}{,} \PYG{l+m+mh}{0x00}\PYG{p}{,} \PYG{l+m+mh}{0x00}\PYG{p}{,} \PYG{l+m+mh}{0x18}\PYG{p}{,} \PYG{l+m+mh}{0x78}\PYG{p}{,} \PYG{l+m+mh}{0x3C}\PYG{p}{,} \PYG{l+m+mh}{0x4C}\PYG{p}{,} \PYG{l+m+mh}{0x24}\PYG{p}{,} \PYG{l+m+mh}{0x4C}\PYG{p}{,} \PYG{l+m+mh}{0x24}\PYG{p}{,} \PYG{l+m+mh}{0x7C}\PYG{p}{,}
+\PYG{l+m+mh}{0x24}\PYG{p}{,} \PYG{l+m+mh}{0x08}\PYG{p}{,} \PYG{l+m+mh}{0x24}\PYG{p}{,} \PYG{l+m+mh}{0x78}\PYG{p}{,} \PYG{l+m+mh}{0x26}\PYG{p}{,} \PYG{l+m+mh}{0xE0}\PYG{p}{,} \PYG{l+m+mh}{0x23}\PYG{p}{,} \PYG{l+m+mh}{0x00}\PYG{p}{,} \PYG{l+m+mh}{0x20}\PYG{p}{,} \PYG{l+m+mh}{0x00}\PYG{p}{,} \PYG{l+m+mh}{0x20}\PYG{p}{,}
+\PYG{l+m+mh}{0x00}\PYG{p}{,} \PYG{l+m+mh}{0x20}\PYG{p}{,} \PYG{l+m+mh}{0x00}\PYG{p}{,} \PYG{l+m+mh}{0x20}\PYG{p}{,} \PYG{l+m+mh}{0x00}\PYG{p}{,} \PYG{l+m+mh}{0x20}\PYG{p}{,} \PYG{l+m+mh}{0x00}\PYG{p}{,} \PYG{l+m+mh}{0x20}\PYG{p}{,} \PYG{l+m+mh}{0x00}\PYG{p}{,} \PYG{l+m+mh}{0x00}\PYG{p}{,}
+
+\PYG{l+m+mh}{0x00}\PYG{p}{,} \PYG{l+m+mh}{0x18}\PYG{p}{,} \PYG{l+m+mh}{0x78}\PYG{p}{,} \PYG{l+m+mh}{0x3C}\PYG{p}{,} \PYG{l+m+mh}{0x4C}\PYG{p}{,} \PYG{l+m+mh}{0x24}\PYG{p}{,} \PYG{l+m+mh}{0x7C}\PYG{p}{,} \PYG{l+m+mh}{0x24}\PYG{p}{,} \PYG{l+m+mh}{0x0C}\PYG{p}{,} \PYG{l+m+mh}{0x26}\PYG{p}{,} \PYG{l+m+mh}{0x38}\PYG{p}{,}
+\PYG{l+m+mh}{0x27}\PYG{p}{,} \PYG{l+m+mh}{0xF0}\PYG{p}{,} \PYG{l+m+mh}{0x21}\PYG{p}{,} \PYG{l+m+mh}{0x00}\PYG{p}{,} \PYG{l+m+mh}{0x28}\PYG{p}{,} \PYG{l+m+mh}{0x00}\PYG{p}{,} \PYG{l+m+mh}{0x34}\PYG{p}{,} \PYG{l+m+mh}{0x00}\PYG{p}{,} \PYG{l+m+mh}{0x2A}\PYG{p}{,} \PYG{l+m+mh}{0x00}\PYG{p}{,} \PYG{l+m+mh}{0x22}\PYG{p}{,}
+\PYG{l+m+mh}{0x00}\PYG{p}{,} \PYG{l+m+mh}{0x3E}\PYG{p}{,} \PYG{l+m+mh}{0x00}\PYG{p}{,} \PYG{l+m+mh}{0x22}\PYG{p}{,} \PYG{l+m+mh}{0x00}\PYG{p}{,} \PYG{l+m+mh}{0x3E}\PYG{p}{,} \PYG{l+m+mh}{0x00}\PYG{p}{,} \PYG{l+m+mh}{0x22}\PYG{p}{,} \PYG{l+m+mh}{0x00}\PYG{p}{,} \PYG{l+m+mh}{0x00}\PYG{p}{,}
+
+\PYG{l+m+mh}{0x00}\PYG{p}{,} \PYG{l+m+mh}{0x00}\PYG{p}{,} \PYG{l+m+mh}{0x80}\PYG{p}{,} \PYG{l+m+mh}{0x0F}\PYG{p}{,} \PYG{l+m+mh}{0xC0}\PYG{p}{,} \PYG{l+m+mh}{0x11}\PYG{p}{,} \PYG{l+m+mh}{0x60}\PYG{p}{,} \PYG{l+m+mh}{0x11}\PYG{p}{,} \PYG{l+m+mh}{0x20}\PYG{p}{,} \PYG{l+m+mh}{0x1B}\PYG{p}{,} \PYG{l+m+mh}{0x10}\PYG{p}{,}
+\PYG{l+m+mh}{0x0E}\PYG{p}{,} \PYG{l+m+mh}{0x10}\PYG{p}{,} \PYG{l+m+mh}{0x00}\PYG{p}{,} \PYG{l+m+mh}{0x10}\PYG{p}{,} \PYG{l+m+mh}{0x00}\PYG{p}{,} \PYG{l+m+mh}{0x10}\PYG{p}{,} \PYG{l+m+mh}{0x00}\PYG{p}{,} \PYG{l+m+mh}{0x10}\PYG{p}{,} \PYG{l+m+mh}{0x00}\PYG{p}{,} \PYG{l+m+mh}{0x10}\PYG{p}{,} \PYG{l+m+mh}{0x00}\PYG{p}{,}
+\PYG{l+m+mh}{0xF0}\PYG{p}{,} \PYG{l+m+mh}{0x1F}\PYG{p}{,} \PYG{l+m+mh}{0x10}\PYG{p}{,} \PYG{l+m+mh}{0x00}\PYG{p}{,} \PYG{l+m+mh}{0x10}\PYG{p}{,} \PYG{l+m+mh}{0x00}\PYG{p}{,} \PYG{l+m+mh}{0x00}\PYG{p}{,} \PYG{l+m+mh}{0x00}\PYG{p}{,} \PYG{l+m+mh}{0x00}\PYG{p}{,} \PYG{l+m+mh}{0x00}\PYG{p}{,}
+
+\PYG{l+m+mh}{0x00}\PYG{p}{,} \PYG{l+m+mh}{0x00}\PYG{p}{,} \PYG{l+m+mh}{0xF0}\PYG{p}{,} \PYG{l+m+mh}{0x01}\PYG{p}{,} \PYG{l+m+mh}{0x38}\PYG{p}{,} \PYG{l+m+mh}{0x02}\PYG{p}{,} \PYG{l+m+mh}{0x2C}\PYG{p}{,} \PYG{l+m+mh}{0x02}\PYG{p}{,} \PYG{l+m+mh}{0x64}\PYG{p}{,} \PYG{l+m+mh}{0x03}\PYG{p}{,} \PYG{l+m+mh}{0xC2}\PYG{p}{,}
+\PYG{l+m+mh}{0x41}\PYG{p}{,} \PYG{l+m+mh}{0x02}\PYG{p}{,} \PYG{l+m+mh}{0x60}\PYG{p}{,} \PYG{l+m+mh}{0x02}\PYG{p}{,} \PYG{l+m+mh}{0x30}\PYG{p}{,} \PYG{l+m+mh}{0x02}\PYG{p}{,} \PYG{l+m+mh}{0x10}\PYG{p}{,} \PYG{l+m+mh}{0x02}\PYG{p}{,} \PYG{l+m+mh}{0x08}\PYG{p}{,} \PYG{l+m+mh}{0x02}\PYG{p}{,} \PYG{l+m+mh}{0x0C}\PYG{p}{,}
+\PYG{l+m+mh}{0xFE}\PYG{p}{,} \PYG{l+m+mh}{0x07}\PYG{p}{,} \PYG{l+m+mh}{0x02}\PYG{p}{,} \PYG{l+m+mh}{0x00}\PYG{p}{,} \PYG{l+m+mh}{0x02}\PYG{p}{,} \PYG{l+m+mh}{0x00}\PYG{p}{,} \PYG{l+m+mh}{0x00}\PYG{p}{,} \PYG{l+m+mh}{0x00}\PYG{p}{,} \PYG{l+m+mh}{0x00}\PYG{p}{,} \PYG{l+m+mh}{0x00}\PYG{p}{,}
+
+\PYG{l+m+mh}{0x00}\PYG{p}{,} \PYG{l+m+mh}{0x00}\PYG{p}{,} \PYG{l+m+mh}{0x18}\PYG{p}{,} \PYG{l+m+mh}{0x00}\PYG{p}{,} \PYG{l+m+mh}{0x64}\PYG{p}{,} \PYG{l+m+mh}{0x3E}\PYG{p}{,} \PYG{l+m+mh}{0x44}\PYG{p}{,} \PYG{l+m+mh}{0x71}\PYG{p}{,} \PYG{l+m+mh}{0x46}\PYG{p}{,} \PYG{l+m+mh}{0x41}\PYG{p}{,} \PYG{l+m+mh}{0x3E}\PYG{p}{,}
+\PYG{l+m+mh}{0x41}\PYG{p}{,} \PYG{l+m+mh}{0x02}\PYG{p}{,} \PYG{l+m+mh}{0x41}\PYG{p}{,} \PYG{l+m+mh}{0x0E}\PYG{p}{,} \PYG{l+m+mh}{0x61}\PYG{p}{,} \PYG{l+m+mh}{0x3E}\PYG{p}{,} \PYG{l+m+mh}{0x31}\PYG{p}{,} \PYG{l+m+mh}{0x02}\PYG{p}{,} \PYG{l+m+mh}{0x39}\PYG{p}{,} \PYG{l+m+mh}{0x02}\PYG{p}{,} \PYG{l+m+mh}{0x61}\PYG{p}{,}
+\PYG{l+m+mh}{0x02}\PYG{p}{,} \PYG{l+m+mh}{0x41}\PYG{p}{,} \PYG{l+m+mh}{0x06}\PYG{p}{,} \PYG{l+m+mh}{0x41}\PYG{p}{,} \PYG{l+m+mh}{0xFC}\PYG{p}{,} \PYG{l+m+mh}{0x41}\PYG{p}{,} \PYG{l+m+mh}{0x00}\PYG{p}{,} \PYG{l+m+mh}{0x7C}\PYG{p}{,} \PYG{l+m+mh}{0x00}\PYG{p}{,} \PYG{l+m+mh}{0x00}\PYG{p}{,}
+
+\PYG{l+m+mh}{0x00}\PYG{p}{,} \PYG{l+m+mh}{0x00}\PYG{p}{,} \PYG{l+m+mh}{0x00}\PYG{p}{,} \PYG{l+m+mh}{0x00}\PYG{p}{,} \PYG{l+m+mh}{0x78}\PYG{p}{,} \PYG{l+m+mh}{0x00}\PYG{p}{,} \PYG{l+m+mh}{0x9C}\PYG{p}{,} \PYG{l+m+mh}{0x00}\PYG{p}{,} \PYG{l+m+mh}{0x96}\PYG{p}{,} \PYG{l+m+mh}{0x1E}\PYG{p}{,} \PYG{l+m+mh}{0x62}\PYG{p}{,}
+\PYG{l+m+mh}{0x38}\PYG{p}{,} \PYG{l+m+mh}{0x03}\PYG{p}{,} \PYG{l+m+mh}{0x60}\PYG{p}{,} \PYG{l+m+mh}{0x03}\PYG{p}{,} \PYG{l+m+mh}{0x40}\PYG{p}{,} \PYG{l+m+mh}{0xC1}\PYG{p}{,} \PYG{l+m+mh}{0x40}\PYG{p}{,} \PYG{l+m+mh}{0x81}\PYG{p}{,} \PYG{l+m+mh}{0x41}\PYG{p}{,} \PYG{l+m+mh}{0x83}\PYG{p}{,} \PYG{l+m+mh}{0x63}\PYG{p}{,}
+\PYG{l+m+mh}{0xCE}\PYG{p}{,} \PYG{l+m+mh}{0x3E}\PYG{p}{,} \PYG{l+m+mh}{0x7C}\PYG{p}{,} \PYG{l+m+mh}{0x06}\PYG{p}{,} \PYG{l+m+mh}{0x00}\PYG{p}{,} \PYG{l+m+mh}{0x03}\PYG{p}{,} \PYG{l+m+mh}{0x00}\PYG{p}{,} \PYG{l+m+mh}{0x01}\PYG{p}{,} \PYG{l+m+mh}{0x00}\PYG{p}{,} \PYG{l+m+mh}{0x00}\PYG{p}{,}
+
+\PYG{l+m+mh}{0x00}\PYG{p}{,} \PYG{l+m+mh}{0x00}\PYG{p}{,} \PYG{l+m+mh}{0x00}\PYG{p}{,} \PYG{l+m+mh}{0x00}\PYG{p}{,} \PYG{l+m+mh}{0x78}\PYG{p}{,} \PYG{l+m+mh}{0x00}\PYG{p}{,} \PYG{l+m+mh}{0x9C}\PYG{p}{,} \PYG{l+m+mh}{0x00}\PYG{p}{,} \PYG{l+m+mh}{0x96}\PYG{p}{,} \PYG{l+m+mh}{0x1E}\PYG{p}{,} \PYG{l+m+mh}{0x62}\PYG{p}{,}
+\PYG{l+m+mh}{0x32}\PYG{p}{,} \PYG{l+m+mh}{0x03}\PYG{p}{,} \PYG{l+m+mh}{0x7E}\PYG{p}{,} \PYG{l+m+mh}{0x03}\PYG{p}{,} \PYG{l+m+mh}{0x40}\PYG{p}{,} \PYG{l+m+mh}{0xC1}\PYG{p}{,} \PYG{l+m+mh}{0x40}\PYG{p}{,} \PYG{l+m+mh}{0x81}\PYG{p}{,} \PYG{l+m+mh}{0x41}\PYG{p}{,} \PYG{l+m+mh}{0x83}\PYG{p}{,} \PYG{l+m+mh}{0x63}\PYG{p}{,}
+\PYG{l+m+mh}{0xCE}\PYG{p}{,} \PYG{l+m+mh}{0x3E}\PYG{p}{,} \PYG{l+m+mh}{0x7C}\PYG{p}{,} \PYG{l+m+mh}{0x06}\PYG{p}{,} \PYG{l+m+mh}{0x00}\PYG{p}{,} \PYG{l+m+mh}{0x03}\PYG{p}{,} \PYG{l+m+mh}{0x00}\PYG{p}{,} \PYG{l+m+mh}{0x01}\PYG{p}{,} \PYG{l+m+mh}{0x00}\PYG{p}{,} \PYG{l+m+mh}{0x00}\PYG{p}{,}
+
+\PYG{l+m+mh}{0xF8}\PYG{p}{,} \PYG{l+m+mh}{0x00}\PYG{p}{,} \PYG{l+m+mh}{0x9C}\PYG{p}{,} \PYG{l+m+mh}{0x1C}\PYG{p}{,} \PYG{l+m+mh}{0xF4}\PYG{p}{,} \PYG{l+m+mh}{0x34}\PYG{p}{,} \PYG{l+m+mh}{0x04}\PYG{p}{,} \PYG{l+m+mh}{0x64}\PYG{p}{,} \PYG{l+m+mh}{0x04}\PYG{p}{,} \PYG{l+m+mh}{0x40}\PYG{p}{,} \PYG{l+m+mh}{0xC4}\PYG{p}{,}
+\PYG{l+m+mh}{0x40}\PYG{p}{,} \PYG{l+m+mh}{0x4C}\PYG{p}{,} \PYG{l+m+mh}{0x63}\PYG{p}{,} \PYG{l+m+mh}{0x78}\PYG{p}{,} \PYG{l+m+mh}{0x3E}\PYG{p}{,} \PYG{l+m+mh}{0x00}\PYG{p}{,} \PYG{l+m+mh}{0x00}\PYG{p}{,} \PYG{l+m+mh}{0x80}\PYG{p}{,} \PYG{l+m+mh}{0x03}\PYG{p}{,} \PYG{l+m+mh}{0x40}\PYG{p}{,} \PYG{l+m+mh}{0x00}\PYG{p}{,}
+\PYG{l+m+mh}{0xC0}\PYG{p}{,} \PYG{l+m+mh}{0x03}\PYG{p}{,} \PYG{l+m+mh}{0x40}\PYG{p}{,} \PYG{l+m+mh}{0x00}\PYG{p}{,} \PYG{l+m+mh}{0xC0}\PYG{p}{,} \PYG{l+m+mh}{0x03}\PYG{p}{,} \PYG{l+m+mh}{0x40}\PYG{p}{,} \PYG{l+m+mh}{0x00}\PYG{p}{,} \PYG{l+m+mh}{0x00}\PYG{p}{,} \PYG{l+m+mh}{0x00}\PYG{p}{\PYGZcb{};}
+
+	\PYG{k+kt}{int} \PYG{n}{col\PYGZus{}val}\PYG{o}{=}\PYG{l+m+mi}{0}\PYG{p}{;}
+	\PYG{k+kt}{uint8\PYGZus{}t} \PYG{n}{page\PYGZus{}inc}\PYG{o}{=}\PYG{l+m+mi}{0}\PYG{p}{;}
+	\PYG{k}{for} \PYG{p}{(}\PYG{k+kt}{uint8\PYGZus{}t} \PYG{n}{letters}\PYG{o}{=}\PYG{l+m+mi}{0}\PYG{p}{;}\PYG{n}{letters}\PYG{o}{\PYGZlt{}}\PYG{l+m+mi}{12}\PYG{p}{;}\PYG{n}{letters}\PYG{o}{++}\PYG{p}{)}
+	\PYG{p}{\PYGZob{}}
+		\PYG{k}{for} \PYG{p}{(}\PYG{k+kt}{uint8\PYGZus{}t} \PYG{n}{i} \PYG{o}{=}\PYG{l+m+mi}{0}\PYG{p}{;}\PYG{n}{i}\PYG{o}{\PYGZlt{}}\PYG{l+m+mi}{16}\PYG{p}{;}\PYG{n}{i}\PYG{o}{++}\PYG{p}{)}
+		\PYG{p}{\PYGZob{}}
+			\PYG{k+kt}{uint8\PYGZus{}t} \PYG{n}{indx} \PYG{o}{=} \PYG{n}{i}\PYG{o}{\PYGZlt{}\PYGZlt{}}\PYG{l+m+mi}{1}\PYG{p}{;}
+			\PYG{k+kt}{uint16\PYGZus{}t} \PYG{n}{let\PYGZus{}sel} \PYG{o}{=} \PYG{n}{letters}\PYG{o}{\PYGZlt{}\PYGZlt{}}\PYG{l+m+mi}{5}\PYG{p}{;}
+			\PYG{n}{OLED\PYGZus{}set\PYGZus{}pixel\PYGZus{}one\PYGZus{}byte}\PYG{p}{(}\PYG{n}{page\PYGZus{}inc}\PYG{p}{,}\PYG{n}{col\PYGZus{}val}\PYG{p}{);}
+			\PYG{n}{OLED\PYGZus{}send\PYGZus{}data}\PYG{p}{(}\PYG{n}{test16x16}\PYG{p}{[}\PYG{n}{let\PYGZus{}sel} \PYG{o}{+} \PYG{n}{indx}\PYG{p}{]);}
+			\PYG{n}{OLED\PYGZus{}set\PYGZus{}pixel\PYGZus{}one\PYGZus{}byte}\PYG{p}{(}\PYG{n}{page\PYGZus{}inc}\PYG{o}{+}\PYG{l+m+mi}{1}\PYG{p}{,}\PYG{n}{col\PYGZus{}val}\PYG{p}{);}
+			\PYG{n}{OLED\PYGZus{}send\PYGZus{}data}\PYG{p}{(}\PYG{n}{test16x16}\PYG{p}{[}\PYG{n}{let\PYGZus{}sel} \PYG{o}{+} \PYG{n}{indx}\PYG{o}{+}\PYG{l+m+mi}{1}\PYG{p}{]);}
+			\PYG{n}{col\PYGZus{}val}\PYG{o}{++}\PYG{p}{;}
+		\PYG{p}{\PYGZcb{}}
+		\PYG{k}{if} \PYG{p}{((}\PYG{n}{col\PYGZus{}val}\PYG{o}{\PYGZpc{}}\PYG{l+m+mi}{128}\PYG{p}{)} \PYG{o}{==}\PYG{l+m+mi}{0} \PYG{p}{)}
+		\PYG{p}{\PYGZob{}}
+			\PYG{n}{page\PYGZus{}inc}\PYG{o}{=}\PYG{n}{page\PYGZus{}inc}\PYG{o}{+}\PYG{l+m+mi}{2}\PYG{p}{;}
+		\PYG{p}{\PYGZcb{}}
+	\PYG{p}{\PYGZcb{}}
+\PYG{p}{\PYGZcb{}}
+\PYG{k+kt}{int} \PYG{n+nf}{main}\PYG{p}{(}\PYG{k+kt}{void}\PYG{p}{)}
+\PYG{p}{\PYGZob{}}
+	\PYG{n}{OLED\PYGZus{}init}\PYG{p}{();}
+	\PYG{n}{OLED\PYGZus{}uyir}\PYG{p}{();}
+	
+	\PYG{k}{while}\PYG{p}{(}\PYG{l+m+mi}{1}\PYG{p}{)}
+	\PYG{p}{\PYGZob{}}    \PYG{p}{\PYGZcb{}}
+\PYG{p}{\PYGZcb{}}
+\end{Verbatim}

@@ -1,0 +1,98 @@
+\begin{Verbatim}[commandchars=\\\{\}]
+\PYG{c+cp}{\PYGZsh{}define F\PYGZus{}CPU 16000000L}
+\PYG{c+cp}{\PYGZsh{}include} \PYG{c+cpf}{\PYGZlt{}avr/io.h\PYGZgt{}}
+\PYG{c+cp}{\PYGZsh{}include} \PYG{c+cpf}{\PYGZlt{}avr/interrupt.h\PYGZgt{}}
+
+\PYG{k+kt}{void} \PYG{n+nf}{Timer2\PYGZus{}asTimer}\PYG{p}{()}
+\PYG{p}{\PYGZob{}}
+	\PYG{c+c1}{// MOde of operation to CTC Mode \PYGZhy{}\PYGZhy{} WGM2[2:0] === 010}
+	\PYG{c+c1}{// WGM2[2](bit3) from TCCR2B, WGM2[1](bit1)  from TCCR2A, WGM2[0](bit0)  from TCCR2A}
+	\PYG{n}{TCCR2A} \PYG{o}{=} \PYG{n}{TCCR2A} \PYG{o}{\PYGZam{}} \PYG{o}{\PYGZti{}}\PYG{p}{(}\PYG{l+m+mi}{1}\PYG{o}{\PYGZlt{}\PYGZlt{}}\PYG{l+m+mi}{0}\PYG{p}{);}
+	\PYG{n}{TCCR2A} \PYG{o}{=} \PYG{n}{TCCR2A} \PYG{o}{|} \PYG{p}{(}\PYG{l+m+mi}{1}\PYG{o}{\PYGZlt{}\PYGZlt{}}\PYG{l+m+mi}{1}\PYG{p}{);}
+	\PYG{n}{TCCR2B} \PYG{o}{=} \PYG{n}{TCCR2B} \PYG{o}{\PYGZam{}} \PYG{o}{\PYGZti{}}\PYG{p}{(}\PYG{l+m+mi}{1}\PYG{o}{\PYGZlt{}\PYGZlt{}}\PYG{l+m+mi}{3}\PYG{p}{);}
+	\PYG{c+cm}{/* What to do when timer reaches the OCR2A */}
+	\PYG{c+c1}{// toggle OC2A on each time when reaches the OCR2A}
+	\PYG{c+c1}{// which is reflected in PB3}
+	\PYG{c+c1}{// Output OC2A to toglle when reaches MAX \PYGZhy{}\PYGZhy{} COM2A[1:0] === 01}
+	\PYG{c+c1}{// COM2A[1](bit7) from TCCR2A, COM2A[0](bit6) from TCCR2A}
+	\PYG{n}{TCCR2A} \PYG{o}{=} \PYG{n}{TCCR2A} \PYG{o}{\PYGZam{}} \PYG{o}{\PYGZti{}}\PYG{p}{(}\PYG{l+m+mi}{1}\PYG{o}{\PYGZlt{}\PYGZlt{}}\PYG{l+m+mi}{7}\PYG{p}{);}
+	\PYG{n}{TCCR2A} \PYG{o}{=} \PYG{n}{TCCR2A} \PYG{o}{|} \PYG{p}{(}\PYG{l+m+mi}{1}\PYG{o}{\PYGZlt{}\PYGZlt{}}\PYG{l+m+mi}{6}\PYG{p}{);}
+	\PYG{c+c1}{// Output OC2B to toglle when reaches MAX \PYGZhy{}\PYGZhy{} COM2B1:0] === 01}
+	\PYG{c+c1}{// COM2B[1](bit7) from TCCR2A, COM2B[0](bit6) from TCCR2A}
+	\PYG{n}{TCCR2A} \PYG{o}{=} \PYG{n}{TCCR2A} \PYG{o}{\PYGZam{}} \PYG{o}{\PYGZti{}}\PYG{p}{(}\PYG{l+m+mi}{1}\PYG{o}{\PYGZlt{}\PYGZlt{}}\PYG{l+m+mi}{5}\PYG{p}{);}
+	\PYG{n}{TCCR2A} \PYG{o}{=} \PYG{n}{TCCR2A} \PYG{o}{|} \PYG{p}{(}\PYG{l+m+mi}{1}\PYG{o}{\PYGZlt{}\PYGZlt{}}\PYG{l+m+mi}{4}\PYG{p}{);}		
+	\PYG{c+c1}{// Enable Interrupt when counter matches OCR2A Rgister}
+	\PYG{c+c1}{//  OCIE2A bit is enabled}
+	\PYG{n}{TIMSK2} \PYG{o}{=} \PYG{n}{TIMSK2} \PYG{o}{|} \PYG{p}{(}\PYG{l+m+mi}{1}\PYG{o}{\PYGZlt{}\PYGZlt{}}\PYG{l+m+mi}{1}\PYG{p}{);}
+	\PYG{c+c1}{// setting the value till the counter should reach in OCR2A}
+	\PYG{c+c1}{// for toggling of OC2A pin}
+	\PYG{n}{OCR2A} \PYG{o}{=} \PYG{l+m+mh}{0x32}\PYG{p}{;}
+	\PYG{c+c1}{// start timer by setting the clock prescalar}
+	\PYG{c+c1}{// DIVIDE BY 8 from I/O clock}
+	\PYG{c+c1}{// DIVIDE BY 8\PYGZhy{}\PYGZhy{} CS2[2:0] === 010}
+	\PYG{c+c1}{// CS2[2](bit2) from TCCR2B,CS2[1](bit1) from TCCR2B,CS2[0](bit0) from TCCR2B}
+	\PYG{n}{TCCR2B} \PYG{o}{=} \PYG{n}{TCCR2B} \PYG{o}{|} \PYG{p}{(}\PYG{l+m+mi}{1}\PYG{o}{\PYGZlt{}\PYGZlt{}}\PYG{l+m+mi}{1}\PYG{p}{);}
+	\PYG{n}{TCCR2B} \PYG{o}{=} \PYG{n}{TCCR2B} \PYG{o}{\PYGZam{}} \PYG{p}{(}\PYG{o}{\PYGZti{}}\PYG{p}{(}\PYG{l+m+mi}{1}\PYG{o}{\PYGZlt{}\PYGZlt{}}\PYG{l+m+mi}{0}\PYG{p}{)} \PYG{o}{\PYGZam{}} \PYG{o}{\PYGZti{}}\PYG{p}{(}\PYG{l+m+mi}{1}\PYG{o}{\PYGZlt{}\PYGZlt{}}\PYG{l+m+mi}{2}\PYG{p}{));}
+	\PYG{c+c1}{// enabling global interrupt}
+	\PYG{n}{sei}\PYG{p}{();}
+	\PYG{c+c1}{// SO ON TIME = (1 + OCR2A) / (F\PYGZus{}CPU / PRESCALAR)}
+	\PYG{c+c1}{// ON TIME = 0X32 / (16000000/8) = 25.5us}
+	\PYG{c+c1}{// since symmetric as toggling OFF TIME = 25.5us}
+	\PYG{c+c1}{// hence, we get a square wave of fequency 1 / 50us = 20kHz}
+\PYG{p}{\PYGZcb{}}
+\PYG{k+kt}{void} \PYG{n+nf}{Timer2\PYGZus{}asDelayIn\PYGZus{}ms}\PYG{p}{(}\PYG{k+kt}{uint32\PYGZus{}t} \PYG{n}{delayInMs}\PYG{p}{)}
+\PYG{p}{\PYGZob{}}
+	
+	\PYG{c+c1}{// minimum delay being 4us \PYGZhy{}\PYGZhy{} choose like that}
+	\PYG{c+c1}{// use PRESCALAR OF 1 \PYGZhy{}\PYGZhy{} 3us \PYGZhy{} 16us \PYGZhy{}\PYGZhy{} usage 3us \PYGZhy{} 16us \PYGZhy{}\PYGZhy{} factor=0 \PYGZhy{}\PYGZhy{} CS2[2:0]=1}
+	\PYG{c+c1}{// use PRESCALAR OF 8 \PYGZhy{}\PYGZhy{} 3us \PYGZhy{} 128us \PYGZhy{}\PYGZhy{} usage 17us \PYGZhy{} 128us \PYGZhy{}\PYGZhy{} factor=3 \PYGZhy{}\PYGZhy{} CS2[2:0]=2}
+	\PYG{c+c1}{// use PRESCALAR OF 64 \PYGZhy{}\PYGZhy{} 4us \PYGZhy{} 1.024ms \PYGZhy{}\PYGZhy{} usage 129us \PYGZhy{} 1024us \PYGZhy{}\PYGZhy{} factor=6 \PYGZhy{}\PYGZhy{} CS2[2:0]=3}
+	\PYG{c+cm}{/* use PRESCALAR OF 256 \PYGZhy{}\PYGZhy{} 16us \PYGZhy{} 4.096ms.}
+\PYG{c+cm}{	 \PYGZhy{}\PYGZhy{} usage 1025us \PYGZhy{} 4096us \PYGZhy{}\PYGZhy{} factor=8 \PYGZhy{}\PYGZhy{} CS2[2:0]=4 */}
+		
+	\PYG{c+c1}{// MOde of operation to ctc Mode \PYGZhy{}\PYGZhy{} WGM2[2:0] === 010}
+	\PYG{c+c1}{// WGM2[2](bit3) from TCCR2B, WGM2[1](bit1)  from TCCR2A, WGM2[0](bit0)  from TCCR2A}
+	\PYG{n}{TCCR2A} \PYG{o}{=} \PYG{n}{TCCR2A} \PYG{o}{\PYGZam{}} \PYG{o}{\PYGZti{}}\PYG{p}{(}\PYG{l+m+mi}{1}\PYG{o}{\PYGZlt{}\PYGZlt{}}\PYG{l+m+mi}{0}\PYG{p}{);}
+	\PYG{n}{TCCR2A} \PYG{o}{=} \PYG{n}{TCCR2A} \PYG{o}{|} \PYG{p}{(}\PYG{l+m+mi}{1}\PYG{o}{\PYGZlt{}\PYGZlt{}}\PYG{l+m+mi}{1}\PYG{p}{);}
+	\PYG{n}{TCCR2B} \PYG{o}{=} \PYG{n}{TCCR2B} \PYG{o}{\PYGZam{}} \PYG{o}{\PYGZti{}}\PYG{p}{(}\PYG{l+m+mi}{1}\PYG{o}{\PYGZlt{}\PYGZlt{}}\PYG{l+m+mi}{3}\PYG{p}{);}
+	\PYG{k}{while}\PYG{p}{(}\PYG{n}{delayInMs}\PYG{o}{\PYGZhy{}\PYGZhy{}}\PYG{p}{)}
+	\PYG{p}{\PYGZob{}}
+		\PYG{c+c1}{// for 1ms delay}
+		\PYG{n}{OCR2A} \PYG{o}{=} \PYG{l+m+mi}{249}\PYG{p}{;}
+		\PYG{c+c1}{// start timer by setting the clock prescalar}
+		\PYG{c+c1}{//  dived by 64 from I/O clock}
+		\PYG{c+c1}{//  CS2[2:0] === 011}
+		\PYG{c+c1}{// CS2[2](bit2) from TCCR2B,CS2[1](bit1) from TCCR2B,CS2[0](bit0) from TCCR2B}
+		\PYG{n}{TCCR2B} \PYG{o}{=} \PYG{n}{TCCR2B} \PYG{o}{|} \PYG{p}{(}\PYG{l+m+mi}{1}\PYG{o}{\PYGZlt{}\PYGZlt{}}\PYG{l+m+mi}{0}\PYG{p}{);}
+		\PYG{n}{TCCR2B} \PYG{o}{=} \PYG{n}{TCCR2B} \PYG{o}{|} \PYG{p}{(}\PYG{l+m+mi}{1}\PYG{o}{\PYGZlt{}\PYGZlt{}}\PYG{l+m+mi}{1}\PYG{p}{);}
+		\PYG{n}{TCCR2B} \PYG{o}{=} \PYG{n}{TCCR2B} \PYG{o}{\PYGZam{}} \PYG{o}{\PYGZti{}}\PYG{p}{(}\PYG{l+m+mi}{1}\PYG{o}{\PYGZlt{}\PYGZlt{}}\PYG{l+m+mi}{2}\PYG{p}{);}
+		\PYG{c+c1}{// actual delaying \PYGZhy{} wait until delay happens}
+		\PYG{c+c1}{// checking OCF0A (compare match flag A) flag when match happns}
+		\PYG{k}{while}\PYG{p}{((}\PYG{n}{TIFR2} \PYG{o}{\PYGZam{}} \PYG{l+m+mh}{0x02}\PYG{p}{)} \PYG{o}{==} \PYG{l+m+mh}{0x00}\PYG{p}{);} 
+		\PYG{c+c1}{// clearing the compare match flag so that we can further utilize}
+		\PYG{n}{TIFR2} \PYG{o}{=} \PYG{n}{TIFR2} \PYG{o}{|} \PYG{l+m+mh}{0x02}\PYG{p}{;}
+	\PYG{p}{\PYGZcb{}}
+\PYG{p}{\PYGZcb{}}
+\PYG{k+kt}{int} \PYG{n+nf}{main}\PYG{p}{(}\PYG{k+kt}{void}\PYG{p}{)}
+\PYG{p}{\PYGZob{}}	
+    \PYG{c+c1}{// making the PB3 and PD3 as output}
+    \PYG{n}{DDRD} \PYG{o}{=} \PYG{n}{DDRD} \PYG{o}{|} \PYG{p}{(}\PYG{l+m+mi}{1}\PYG{o}{\PYGZlt{}\PYGZlt{}}\PYG{l+m+mi}{3}\PYG{p}{);}
+    \PYG{n}{DDRB} \PYG{o}{=} \PYG{n}{DDRB} \PYG{o}{|} \PYG{p}{(}\PYG{l+m+mi}{1}\PYG{o}{\PYGZlt{}\PYGZlt{}}\PYG{l+m+mi}{3}\PYG{p}{);}
+	\PYG{n}{DDRC} \PYG{o}{|=} \PYG{p}{(}\PYG{l+m+mi}{1}\PYG{o}{\PYGZlt{}\PYGZlt{}}\PYG{l+m+mi}{0}\PYG{p}{);}
+	\PYG{n}{PORTC} \PYG{o}{\PYGZam{}=} \PYG{o}{\PYGZti{}}\PYG{p}{(}\PYG{l+m+mi}{1}\PYG{o}{\PYGZlt{}\PYGZlt{}}\PYG{l+m+mi}{0}\PYG{p}{);}
+	\PYG{c+c1}{//Timer2\PYGZus{}asTimer();}
+    \PYG{k}{while}\PYG{p}{(}\PYG{l+m+mi}{1}\PYG{p}{)}
+    \PYG{p}{\PYGZob{}}    
+		\PYG{n}{PORTC} \PYG{o}{\PYGZam{}=} \PYG{o}{\PYGZti{}}\PYG{p}{(}\PYG{l+m+mi}{1}\PYG{o}{\PYGZlt{}\PYGZlt{}}\PYG{l+m+mi}{0}\PYG{p}{);}
+		\PYG{n}{Timer2\PYGZus{}asDelayIn\PYGZus{}ms}\PYG{p}{(}\PYG{l+m+mi}{10}\PYG{p}{);}
+		\PYG{n}{PORTC} \PYG{o}{|=} \PYG{p}{(}\PYG{l+m+mi}{1}\PYG{o}{\PYGZlt{}\PYGZlt{}}\PYG{l+m+mi}{0}\PYG{p}{);}
+		\PYG{n}{Timer2\PYGZus{}asDelayIn\PYGZus{}ms}\PYG{p}{(}\PYG{l+m+mi}{10}\PYG{p}{);}
+    \PYG{p}{\PYGZcb{}}
+\PYG{p}{\PYGZcb{}}
+
+\PYG{n}{ISR}\PYG{p}{(}\PYG{n}{TIMER2\PYGZus{}COMPA\PYGZus{}vect}\PYG{p}{)}
+\PYG{p}{\PYGZob{}}
+	\PYG{c+c1}{// toggle PC1 when matches}
+	\PYG{n}{PINC} \PYG{o}{|=} \PYG{p}{(}\PYG{l+m+mi}{1}\PYG{o}{\PYGZlt{}\PYGZlt{}}\PYG{l+m+mi}{1}\PYG{p}{);}
+\PYG{p}{\PYGZcb{}}
+\end{Verbatim}

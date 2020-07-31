@@ -1,0 +1,127 @@
+\begin{Verbatim}[commandchars=\\\{\}]
+\PYG{c+cp}{\PYGZsh{}define F\PYGZus{}CPU 16000000L}
+
+\PYG{c+cp}{\PYGZsh{}include} \PYG{c+cpf}{\PYGZlt{}avr/io.h\PYGZgt{}}
+\PYG{c+cp}{\PYGZsh{}include} \PYG{c+cpf}{\PYGZlt{}avr/interrupt.h\PYGZgt{}}
+\PYG{c+cp}{\PYGZsh{}include} \PYG{c+cpf}{\PYGZlt{}util/delay.h\PYGZgt{}}
+
+\PYG{c+cp}{\PYGZsh{}include} \PYG{c+cpf}{\PYGZdq{}UARTLCDinclude.c\PYGZdq{}}
+\PYG{c+cp}{\PYGZsh{}include} \PYG{c+cpf}{\PYGZdq{}I2CMASTERinclude.c\PYGZdq{}}
+
+\PYG{c+c1}{// This address is 7bit without any shifting for R/W bit as my implmentation of I2C takes care of it}
+\PYG{c+cp}{\PYGZsh{}define SLAVE\PYGZus{}ADDRESS 0b1010000}
+
+\PYG{k+kt}{void} \PYG{n+nf}{EEPROM\PYGZus{}writeByte}\PYG{p}{(}\PYG{k+kt}{uint8\PYGZus{}t} \PYG{n}{data\PYGZus{}byte}\PYG{p}{,} \PYG{k+kt}{uint8\PYGZus{}t} \PYG{n}{block\PYGZus{}addres}\PYG{p}{,} \PYG{k+kt}{uint8\PYGZus{}t} \PYG{n}{word\PYGZus{}address}\PYG{p}{)}
+\PYG{p}{\PYGZob{}}
+	\PYG{c+c1}{// start condition}
+	\PYG{n}{I2C\PYGZus{}Master\PYGZus{}START}\PYG{p}{();}
+	
+	\PYG{c+c1}{// Enter Master Transmiter Mode \PYGZhy{}0}
+	\PYG{n}{I2C\PYGZus{}Master\PYGZus{}Mode}\PYG{p}{(}\PYG{n}{SLAVE\PYGZus{}ADDRESS} \PYG{o}{|} \PYG{n}{block\PYGZus{}addres} \PYG{p}{,}\PYG{l+m+mi}{0}\PYG{p}{);}
+	
+	\PYG{c+c1}{// Accoding to datasheet of EEPROM, the word address iss ent}
+	\PYG{n}{I2C\PYGZus{}Master\PYGZus{}DataTransmitByte}\PYG{p}{(}\PYG{n}{word\PYGZus{}address}\PYG{p}{);}
+	
+	\PYG{c+c1}{// Next the actual data is sent}
+	\PYG{n}{I2C\PYGZus{}Master\PYGZus{}DataTransmitByte}\PYG{p}{(}\PYG{n}{data\PYGZus{}byte}\PYG{p}{);}
+	
+	\PYG{c+c1}{// Leave Master Tranmitter Mode \PYGZhy{}0 and stop condition}
+	\PYG{n}{I2C\PYGZus{}Master\PYGZus{}STOP}\PYG{p}{();}
+\PYG{p}{\PYGZcb{}}
+\PYG{k+kt}{void} \PYG{n+nf}{EEPROM\PYGZus{}writeString}\PYG{p}{(}\PYG{k+kt}{uint8\PYGZus{}t} \PYG{o}{*}\PYG{n}{my\PYGZus{}str}\PYG{p}{,} \PYG{k+kt}{uint8\PYGZus{}t} \PYG{n}{block\PYGZus{}address}\PYG{p}{,} \PYG{k+kt}{uint8\PYGZus{}t} \PYG{n}{word\PYGZus{}address}\PYG{p}{)}
+\PYG{p}{\PYGZob{}}
+	\PYG{k+kt}{uint8\PYGZus{}t} \PYG{n}{string\PYGZus{}count}\PYG{o}{=}\PYG{l+m+mi}{0}\PYG{p}{;}
+	\PYG{c+c1}{// start condition}
+	\PYG{n}{I2C\PYGZus{}Master\PYGZus{}START}\PYG{p}{();}
+	
+	\PYG{c+c1}{// Enter Master Transmiter Mode \PYGZhy{}0}
+	\PYG{n}{I2C\PYGZus{}Master\PYGZus{}Mode}\PYG{p}{(}\PYG{n}{SLAVE\PYGZus{}ADDRESS} \PYG{o}{|} \PYG{n}{block\PYGZus{}address} \PYG{p}{,}\PYG{l+m+mi}{0}\PYG{p}{);}
+	
+	\PYG{c+c1}{// Accoding to datasheet of EEPROM, the word address iss ent}
+	\PYG{n}{I2C\PYGZus{}Master\PYGZus{}DataTransmitByte}\PYG{p}{(}\PYG{n}{word\PYGZus{}address}\PYG{p}{);}
+	
+	\PYG{k}{while}\PYG{p}{(}\PYG{o}{*}\PYG{n}{my\PYGZus{}str} \PYG{o}{!=} \PYG{l+s+sc}{\PYGZsq{}\PYGZbs{}0\PYGZsq{}}\PYG{p}{)}
+	\PYG{p}{\PYGZob{}}
+		\PYG{n}{string\PYGZus{}count}\PYG{o}{++}\PYG{p}{;}
+		\PYG{k}{if} \PYG{p}{(}\PYG{n}{string\PYGZus{}count}\PYG{o}{==}\PYG{l+m+mi}{17}\PYG{p}{)}
+		\PYG{p}{\PYGZob{}}
+			\PYG{c+c1}{// if more than sixteen we change the page	}
+		
+			\PYG{n}{string\PYGZus{}count} \PYG{o}{=} \PYG{l+m+mi}{0}\PYG{p}{;}
+			\PYG{n}{I2C\PYGZus{}Master\PYGZus{}STOP}\PYG{p}{();}
+			
+			\PYG{n}{I2C\PYGZus{}Master\PYGZus{}START}\PYG{p}{();}
+			
+			\PYG{n}{I2C\PYGZus{}Master\PYGZus{}Mode}\PYG{p}{(}\PYG{n}{SLAVE\PYGZus{}ADDRESS} \PYG{o}{|} \PYG{n}{block\PYGZus{}address} \PYG{p}{,}\PYG{l+m+mi}{0}\PYG{p}{);}
+			
+			\PYG{n}{I2C\PYGZus{}Master\PYGZus{}DataTransmitByte}\PYG{p}{(}\PYG{n}{word\PYGZus{}address} \PYG{o}{+} \PYG{l+m+mi}{16}\PYG{p}{);}
+			
+		\PYG{p}{\PYGZcb{}}
+		\PYG{n}{I2C\PYGZus{}Master\PYGZus{}DataTransmitByte}\PYG{p}{(}\PYG{o}{*}\PYG{n}{my\PYGZus{}str}\PYG{o}{++}\PYG{p}{);}
+	\PYG{p}{\PYGZcb{}}
+	\PYG{c+c1}{// Leave Master Tranmitter Mode \PYGZhy{}0 and stop condition}
+	\PYG{n}{I2C\PYGZus{}Master\PYGZus{}STOP}\PYG{p}{();}
+	
+\PYG{p}{\PYGZcb{}}
+\PYG{k+kt}{uint8\PYGZus{}t} \PYG{n+nf}{EEPROM\PYGZus{}readByte}\PYG{p}{(}\PYG{k+kt}{uint8\PYGZus{}t} \PYG{n}{block\PYGZus{}address}\PYG{p}{,} \PYG{k+kt}{uint8\PYGZus{}t} \PYG{n}{word\PYGZus{}address}\PYG{p}{)}
+\PYG{p}{\PYGZob{}}
+	\PYG{c+c1}{// start condition}
+	\PYG{n}{I2C\PYGZus{}Master\PYGZus{}START}\PYG{p}{();}
+	
+	\PYG{c+c1}{// For reading first word address needs to be sent  so we enter master transmitter}
+	\PYG{c+c1}{// Enter Master Transmiter Mode \PYGZhy{}0}
+	\PYG{n}{I2C\PYGZus{}Master\PYGZus{}Mode}\PYG{p}{(}\PYG{n}{SLAVE\PYGZus{}ADDRESS} \PYG{o}{|} \PYG{n}{block\PYGZus{}address}\PYG{p}{,}\PYG{l+m+mi}{0}\PYG{p}{);}
+	
+	\PYG{n}{I2C\PYGZus{}Master\PYGZus{}DataTransmitByte}\PYG{p}{(}\PYG{n}{word\PYGZus{}address}\PYG{p}{);}
+	\PYG{n}{I2C\PYGZus{}Master\PYGZus{}STOP}\PYG{p}{();}
+	
+	\PYG{c+c1}{//Next, we can read}
+	\PYG{n}{I2C\PYGZus{}Master\PYGZus{}START}\PYG{p}{();}
+	\PYG{c+c1}{// Enter Master Receiver Mode \PYGZhy{}0}
+	\PYG{n}{I2C\PYGZus{}Master\PYGZus{}Mode}\PYG{p}{(}\PYG{n}{SLAVE\PYGZus{}ADDRESS} \PYG{o}{|} \PYG{n}{block\PYGZus{}address}\PYG{p}{,}\PYG{l+m+mi}{1}\PYG{p}{);}
+	\PYG{k+kt}{uint8\PYGZus{}t} \PYG{n}{value\PYGZus{}} \PYG{o}{=} \PYG{n}{I2C\PYGZus{}Master\PYGZus{}DataReceiveByte}\PYG{p}{();}	
+	\PYG{n}{I2C\PYGZus{}Master\PYGZus{}STOP}\PYG{p}{();}
+	
+	\PYG{k}{return} \PYG{n}{value\PYGZus{}}\PYG{p}{;}
+\PYG{p}{\PYGZcb{}}
+\PYG{k+kt}{void} \PYG{n+nf}{EEPROM\PYGZus{}read\PYGZus{}string}\PYG{p}{(}\PYG{k+kt}{uint8\PYGZus{}t} \PYG{o}{*}\PYG{n}{redval}\PYG{p}{,}\PYG{k+kt}{uint8\PYGZus{}t} \PYG{n}{lenght\PYGZus{}}\PYG{p}{,}\PYG{k+kt}{uint8\PYGZus{}t} \PYG{n}{block\PYGZus{}address}\PYG{p}{,} \PYG{k+kt}{uint8\PYGZus{}t} \PYG{n}{word\PYGZus{}address}\PYG{p}{)}
+\PYG{p}{\PYGZob{}}
+	\PYG{k+kt}{uint8\PYGZus{}t} \PYG{n}{i}\PYG{p}{;}
+	\PYG{k}{for} \PYG{p}{(}\PYG{n}{i}\PYG{o}{=}\PYG{l+m+mi}{0}\PYG{p}{;}\PYG{n}{i}\PYG{o}{\PYGZlt{}}\PYG{n}{lenght\PYGZus{}}\PYG{p}{;}\PYG{n}{i}\PYG{o}{++}\PYG{p}{)}
+	\PYG{p}{\PYGZob{}}
+		 \PYG{n}{redval}\PYG{p}{[}\PYG{n}{i}\PYG{p}{]} \PYG{o}{=} \PYG{n}{EEPROM\PYGZus{}readByte}\PYG{p}{(}\PYG{n}{block\PYGZus{}address}\PYG{p}{,}\PYG{n}{word\PYGZus{}address} \PYG{o}{+} \PYG{n}{i}\PYG{p}{);}	
+	\PYG{p}{\PYGZcb{}}
+	\PYG{n}{redval}\PYG{p}{[}\PYG{n}{i}\PYG{p}{]} \PYG{o}{=} \PYG{l+s+sc}{\PYGZsq{}\PYGZbs{}0\PYGZsq{}}\PYG{p}{;}
+\PYG{p}{\PYGZcb{}}
+
+
+\PYG{k+kt}{int} \PYG{n+nf}{main}\PYG{p}{(}\PYG{k+kt}{void}\PYG{p}{)}
+\PYG{p}{\PYGZob{}}
+	\PYG{n}{UARTLCD\PYGZus{}init}\PYG{p}{();}	
+	\PYG{n}{I2C\PYGZus{}Master\PYGZus{}Init}\PYG{p}{();}
+	
+	\PYG{c+c1}{// The device addressing is 101\PYGZus{}0(B2,B1,B0)}
+	\PYG{c+c1}{// B[2:0] \PYGZhy{}\PYGZhy{} Block Select bits}
+	\PYG{c+c1}{// Since the memory size of 24LC16B is as eight 256x8\PYGZhy{}bit memory}
+	\PYG{c+c1}{// Each block has 256Bytes of data}
+	\PYG{c+c1}{// So total of 8block x 256 Bytes = 2KByte	}
+	
+	\PYG{n}{EEPROM\PYGZus{}writeByte}\PYG{p}{(}\PYG{l+s+sc}{\PYGZsq{}A\PYGZsq{}}\PYG{p}{,} \PYG{l+m+mi}{0}\PYG{p}{,} \PYG{l+m+mi}{0}\PYG{p}{);}
+	\PYG{n}{UARTLCD\PYGZus{}set\PYGZus{}cursor}\PYG{p}{(}\PYG{l+m+mi}{1}\PYG{p}{,}\PYG{l+m+mi}{1}\PYG{p}{);}
+	\PYG{n}{\PYGZus{}delay\PYGZus{}ms}\PYG{p}{(}\PYG{l+m+mi}{10}\PYG{p}{);}
+	\PYG{k+kt}{char} \PYG{n}{a}\PYG{o}{=}\PYG{n}{EEPROM\PYGZus{}readByte}\PYG{p}{(}\PYG{l+m+mi}{0}\PYG{p}{,}\PYG{l+m+mi}{0}\PYG{p}{);}
+	\PYG{n}{UARTLCD\PYGZus{}send\PYGZus{}data}\PYG{p}{(}\PYG{n}{a}\PYG{p}{);}
+	
+	\PYG{n}{EEPROM\PYGZus{}writeString}\PYG{p}{((}\PYG{k+kt}{uint8\PYGZus{}t} \PYG{o}{*}\PYG{p}{)}\PYG{l+s}{\PYGZdq{}abcdefghijklmnopqrstuvwxyz\PYGZdq{}}\PYG{p}{,}\PYG{l+m+mi}{0}\PYG{p}{,}\PYG{l+m+mi}{0}\PYG{p}{);}
+	\PYG{n}{\PYGZus{}delay\PYGZus{}ms}\PYG{p}{(}\PYG{l+m+mi}{10}\PYG{p}{);}
+	\PYG{n}{UARTLCD\PYGZus{}set\PYGZus{}cursor}\PYG{p}{(}\PYG{l+m+mi}{2}\PYG{p}{,}\PYG{l+m+mi}{1}\PYG{p}{);}
+	\PYG{k+kt}{uint8\PYGZus{}t} \PYG{n}{redval}\PYG{p}{[}\PYG{l+m+mi}{50}\PYG{p}{];}
+	\PYG{n}{EEPROM\PYGZus{}read\PYGZus{}string}\PYG{p}{(}\PYG{n}{redval}\PYG{p}{,}\PYG{l+m+mi}{18}\PYG{p}{,}\PYG{l+m+mi}{0}\PYG{p}{,}\PYG{l+m+mi}{0}\PYG{p}{);}
+
+	\PYG{n}{UARTLCD\PYGZus{}send\PYGZus{}string}\PYG{p}{((}\PYG{k+kt}{char} \PYG{o}{*}\PYG{p}{)}\PYG{n}{redval}\PYG{p}{);}
+	\PYG{k}{while}\PYG{p}{(}\PYG{l+m+mi}{1}\PYG{p}{)}
+	\PYG{p}{\PYGZob{}}
+		\PYG{c+c1}{//TODO:: Please write your application code}
+	\PYG{p}{\PYGZcb{}}
+\PYG{p}{\PYGZcb{}}
+\end{Verbatim}

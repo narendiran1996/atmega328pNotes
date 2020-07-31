@@ -1,3 +1,0 @@
-\begin{Verbatim}[commandchars=\\\{\}]
-    avrdude \PYGZhy{}p atmega8 \PYGZhy{}b \PYG{l+m}{19200} \PYGZhy{}c stk500 \PYGZhy{}p /dev/ttyUSB0 \PYGZhy{}v \PYGZhy{}U signature:r:\PYG{l+s+s2}{\PYGZdq{}deviceSinature.text\PYGZdq{}}:h
-\end{Verbatim}

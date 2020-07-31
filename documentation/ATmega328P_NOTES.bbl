@@ -1,0 +1,36 @@
+\providecommand{\bysame}{\leavevmode\hbox to3em{\hrulefill}\thinspace}
+\providecommand{\MR}{\relax\ifhmode\unskip\space\fi MR }
+% \MRhref is called by the amsart/book/proc definition of \MR.
+\providecommand{\MRhref}[2]{%
+  \href{http://www.ams.org/mathscinet-getitem?mr=#1}{#2}
+}
+\providecommand{\href}[2]{#2}
+\begin{thebibliography}{1}
+
+\bibitem{atmega328datasheet}
+\emph{{Atmega328p Datasheet}},
+  \url{http://ww1.microchip.com/downloads/en/DeviceDoc/Atmel-7810-Automotive-Microcontrollers-ATmega328P_Datasheet.pdf}.
+
+\bibitem{atmega328pPage}
+\emph{{Atmega328p Product page}},
+  \url{https://www.microchip.com/wwwproducts/en/ATmega328p}.
+
+\bibitem{alsosee}
+\emph{{AVR rogramming}}, \url{https://ccrma.stanford.edu/wiki/AVR_Programming}.
+
+\bibitem{avrdude}
+\emph{{AVRDUDE}},
+  \url{https://www.nongnu.org/avrdude/user-manual/avrdude.html}.
+
+\bibitem{compilerOptimize}
+\emph{{Compiler Optimize Options}},
+  \url{https://gcc.gnu.org/onlinedocs/gcc/Optimize-Options.html}.
+
+\bibitem{avrgccman}
+\emph{{Linux avr-gcc Man page}}, \url{https://linux.die.net/man/1/avr-gcc}.
+
+\bibitem{toolChain}
+\emph{{Tool Chain Overview}},
+  \url{https://www.nongnu.org/avr-libc/user-manual/overview.html}.
+
+\end{thebibliography}

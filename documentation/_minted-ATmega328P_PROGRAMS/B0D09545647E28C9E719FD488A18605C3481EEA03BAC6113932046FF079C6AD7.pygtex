@@ -1,0 +1,138 @@
+\begin{Verbatim}[commandchars=\\\{\}]
+\PYG{c+cp}{\PYGZsh{}define F\PYGZus{}CPU 16000000L}
+\PYG{c+cp}{\PYGZsh{}include} \PYG{c+cpf}{\PYGZlt{}avr/io.h\PYGZgt{}}
+\PYG{c+cp}{\PYGZsh{}include} \PYG{c+cpf}{\PYGZlt{}avr/interrupt.h\PYGZgt{}}
+\PYG{c+cp}{\PYGZsh{}include} \PYG{c+cpf}{\PYGZlt{}util/delay.h\PYGZgt{}}
+
+\PYG{c+cp}{\PYGZsh{}include} \PYG{c+cpf}{\PYGZdq{}UARTLCDinclude.c\PYGZdq{}}
+\PYG{c+cp}{\PYGZsh{}define ss\PYGZus{}low PORTB \PYGZam{}= \PYGZti{}(1\PYGZlt{}\PYGZlt{}PORTB2);}
+\PYG{c+cp}{\PYGZsh{}define ss\PYGZus{}high PORTB |= (1\PYGZlt{}\PYGZlt{}PORTB2);}
+
+\PYG{k+kt}{void} \PYG{n+nf}{SPI\PYGZus{}init}\PYG{p}{()}
+\PYG{p}{\PYGZob{}}
+	\PYG{c+c1}{// making SCK, MOSI, SS\PYGZsq{} as outptut}
+	\PYG{n}{DDRB} \PYG{o}{|=} \PYG{p}{(}\PYG{l+m+mi}{1}\PYG{o}{\PYGZlt{}\PYGZlt{}}\PYG{n}{DDB2}\PYG{p}{)} \PYG{o}{|} \PYG{p}{(}\PYG{l+m+mi}{1}\PYG{o}{\PYGZlt{}\PYGZlt{}}\PYG{n}{DDB3}\PYG{p}{)} \PYG{o}{|} \PYG{p}{(}\PYG{l+m+mi}{1}\PYG{o}{\PYGZlt{}\PYGZlt{}}\PYG{n}{DDB5}\PYG{p}{);}
+	\PYG{c+c1}{// making MISO as input}
+	\PYG{n}{DDRB} \PYG{o}{\PYGZam{}=} \PYG{o}{\PYGZti{}}\PYG{p}{(}\PYG{l+m+mi}{1}\PYG{o}{\PYGZlt{}\PYGZlt{}}\PYG{n}{DDB4}\PYG{p}{);}
+
+	\PYG{c+c1}{// making SCK, MOSI,  as low}
+	\PYG{n}{PORTB} \PYG{o}{\PYGZam{}=}  \PYG{o}{\PYGZti{}}\PYG{p}{(}\PYG{l+m+mi}{1}\PYG{o}{\PYGZlt{}\PYGZlt{}}\PYG{n}{PORTB3}\PYG{p}{)} \PYG{o}{\PYGZam{}} \PYG{o}{\PYGZti{}}\PYG{p}{(}\PYG{l+m+mi}{1}\PYG{o}{\PYGZlt{}\PYGZlt{}}\PYG{n}{PORTB5}\PYG{p}{);}
+	\PYG{c+c1}{// making SS\PYGZsq{} as high}
+	\PYG{n}{ss\PYGZus{}high}
+	
+	
+	\PYG{c+c1}{// dISBALE SPIE bit for interrupt on Serial Transfer Completion}
+	\PYG{n}{SPCR} \PYG{o}{\PYGZam{}=} \PYG{o}{\PYGZti{}}\PYG{p}{(}\PYG{l+m+mi}{1}\PYG{o}{\PYGZlt{}\PYGZlt{}}\PYG{n}{SPIE}\PYG{p}{);}
+	
+	\PYG{c+c1}{// Select MSB first or LSB first by DORD}
+	\PYG{n}{SPCR} \PYG{o}{\PYGZam{}=} \PYG{o}{\PYGZti{}}\PYG{p}{(}\PYG{l+m+mi}{1}\PYG{o}{\PYGZlt{}\PYGZlt{}}\PYG{n}{DORD}\PYG{p}{);}
+	
+	\PYG{c+c1}{// Select this as Master}
+	\PYG{n}{SPCR} \PYG{o}{|=} \PYG{p}{(}\PYG{l+m+mi}{1}\PYG{o}{\PYGZlt{}\PYGZlt{}}\PYG{n}{MSTR}\PYG{p}{);}
+	
+	\PYG{c+c1}{// Let the clock polarity be SCK is low when idle}
+	\PYG{n}{SPCR} \PYG{o}{\PYGZam{}=} \PYG{o}{\PYGZti{}}\PYG{p}{(}\PYG{l+m+mi}{1}\PYG{o}{\PYGZlt{}\PYGZlt{}}\PYG{n}{CPOL}\PYG{p}{);}
+	
+	\PYG{c+c1}{// Sampled at Rising or Falling Edge}
+	\PYG{c+c1}{// we choose rising edge}
+	\PYG{n}{SPCR} \PYG{o}{\PYGZam{}=} \PYG{o}{\PYGZti{}}\PYG{p}{(}\PYG{l+m+mi}{1}\PYG{o}{\PYGZlt{}\PYGZlt{}}\PYG{n}{CPHA}\PYG{p}{);}
+	
+	\PYG{c+c1}{// Selecting a SCK frequnecy}
+	\PYG{c+c1}{// we select Fosc/4 by 000}
+	\PYG{n}{SPSR} \PYG{o}{\PYGZam{}=} \PYG{o}{\PYGZti{}}\PYG{p}{(}\PYG{l+m+mi}{1}\PYG{o}{\PYGZlt{}\PYGZlt{}}\PYG{n}{SPI2X}\PYG{p}{);}
+	\PYG{n}{SPCR} \PYG{o}{\PYGZam{}=} \PYG{o}{\PYGZti{}}\PYG{p}{(}\PYG{l+m+mi}{1}\PYG{o}{\PYGZlt{}\PYGZlt{}}\PYG{n}{SPR1}\PYG{p}{);}
+	\PYG{n}{SPCR} \PYG{o}{\PYGZam{}=} \PYG{o}{\PYGZti{}}\PYG{p}{(}\PYG{l+m+mi}{1}\PYG{o}{\PYGZlt{}\PYGZlt{}}\PYG{n}{SPR0}\PYG{p}{);}
+	
+	\PYG{c+c1}{// Enabling SPI}
+	\PYG{n}{SPCR} \PYG{o}{|=} \PYG{p}{(}\PYG{l+m+mi}{1}\PYG{o}{\PYGZlt{}\PYGZlt{}}\PYG{n}{SPE}\PYG{p}{);}
+	
+\PYG{p}{\PYGZcb{}}
+\PYG{k+kt}{uint8\PYGZus{}t} \PYG{n+nf}{SPI\PYGZus{}transfer\PYGZus{}byte}\PYG{p}{(}\PYG{k+kt}{uint8\PYGZus{}t} \PYG{n}{data\PYGZus{}}\PYG{p}{)}
+\PYG{p}{\PYGZob{}}
+	\PYG{n}{SPDR} \PYG{o}{=} \PYG{n}{data\PYGZus{}}\PYG{p}{;}
+	
+	\PYG{c+c1}{// wait till serial transmission is complete by checking the SPI Interrupt Flag}
+\PYG{k}{while}\PYG{p}{((}\PYG{n}{SPSR} \PYG{o}{\PYGZam{}} \PYG{p}{(}\PYG{l+m+mi}{1}\PYG{o}{\PYGZlt{}\PYGZlt{}}\PYG{n}{SPIF}\PYG{p}{))} \PYG{o}{==} \PYG{l+m+mi}{0} \PYG{p}{)} \PYG{p}{\PYGZob{}\PYGZcb{};}
+
+\PYG{c+c1}{// return the recieved data \PYGZhy{} can use it or ignore it}
+\PYG{k}{return} \PYG{n}{SPDR}\PYG{p}{;}
+\PYG{p}{\PYGZcb{}}
+
+
+\PYG{k+kt}{void} \PYG{n+nf}{EEPROM\PYGZus{}write\PYGZus{}string}\PYG{p}{(}\PYG{k+kt}{uint16\PYGZus{}t} \PYG{n}{address\PYGZus{}}\PYG{p}{,}\PYG{k+kt}{uint8\PYGZus{}t} \PYG{o}{*}\PYG{n}{c\PYGZus{}data}\PYG{p}{)}
+\PYG{p}{\PYGZob{}}
+	\PYG{n}{ss\PYGZus{}low}
+	\PYG{n}{SPI\PYGZus{}transfer\PYGZus{}byte}\PYG{p}{(}\PYG{l+m+mi}{0}\PYG{n}{X06}\PYG{p}{);} \PYG{c+c1}{// WREN instruction \PYGZhy{}\PYGZhy{} according to EEPROM}
+	\PYG{n}{ss\PYGZus{}high}
+	\PYG{n}{\PYGZus{}delay\PYGZus{}ms}\PYG{p}{(}\PYG{l+m+mi}{1}\PYG{p}{);}
+
+	
+	\PYG{n}{ss\PYGZus{}low}
+	\PYG{n}{SPI\PYGZus{}transfer\PYGZus{}byte}\PYG{p}{(}\PYG{l+m+mi}{0}\PYG{n}{X02}\PYG{p}{);} \PYG{c+c1}{// WRITE instruction \PYGZhy{}\PYGZhy{} according to EEPROM}
+	\PYG{c+c1}{// since  address is 16 bi}
+	\PYG{n}{SPI\PYGZus{}transfer\PYGZus{}byte}\PYG{p}{(}\PYG{n}{address\PYGZus{}}\PYG{o}{\PYGZgt{}\PYGZgt{}}\PYG{l+m+mi}{8}\PYG{p}{);} \PYG{c+c1}{// sendiNG MSB data first}
+	\PYG{n}{SPI\PYGZus{}transfer\PYGZus{}byte}\PYG{p}{(}\PYG{n}{address\PYGZus{}}\PYG{p}{);} \PYG{c+c1}{// address where data should be writen}
+	
+	\PYG{k}{while}\PYG{p}{(}\PYG{o}{*}\PYG{n}{c\PYGZus{}data} \PYG{o}{!=} \PYG{l+s+sc}{\PYGZsq{}\PYGZbs{}0\PYGZsq{}}\PYG{p}{)}
+	\PYG{p}{\PYGZob{}}
+		\PYG{n}{SPI\PYGZus{}transfer\PYGZus{}byte}\PYG{p}{(}\PYG{o}{*}\PYG{n}{c\PYGZus{}data}\PYG{o}{++}\PYG{p}{);} \PYG{c+c1}{// data to be written}
+	\PYG{p}{\PYGZcb{}}
+	
+	\PYG{n}{ss\PYGZus{}high}
+\PYG{p}{\PYGZcb{}}
+\PYG{k+kt}{void} \PYG{n+nf}{EEPROM\PYGZus{}write\PYGZus{}byte}\PYG{p}{(}\PYG{k+kt}{uint16\PYGZus{}t} \PYG{n}{address\PYGZus{}}\PYG{p}{,} \PYG{k+kt}{uint8\PYGZus{}t} \PYG{n}{data\PYGZus{}}\PYG{p}{)}
+\PYG{p}{\PYGZob{}}	
+	\PYG{n}{ss\PYGZus{}low}
+	\PYG{n}{SPI\PYGZus{}transfer\PYGZus{}byte}\PYG{p}{(}\PYG{l+m+mi}{0}\PYG{n}{X06}\PYG{p}{);} \PYG{c+c1}{// WREN instruction \PYGZhy{}\PYGZhy{} according to EEPROM}
+	\PYG{n}{ss\PYGZus{}high}
+	
+	\PYG{n}{\PYGZus{}delay\PYGZus{}ms}\PYG{p}{(}\PYG{l+m+mi}{1}\PYG{p}{);}
+	
+	\PYG{n}{ss\PYGZus{}low}
+	\PYG{n}{SPI\PYGZus{}transfer\PYGZus{}byte}\PYG{p}{(}\PYG{l+m+mi}{0}\PYG{n}{X02}\PYG{p}{);} \PYG{c+c1}{// WRITE instruction \PYGZhy{}\PYGZhy{} according to EEPROM}
+	
+	\PYG{c+c1}{// since  address is 16 bi}
+	\PYG{n}{SPI\PYGZus{}transfer\PYGZus{}byte}\PYG{p}{(}\PYG{n}{address\PYGZus{}}\PYG{o}{\PYGZgt{}\PYGZgt{}}\PYG{l+m+mi}{8}\PYG{p}{);} \PYG{c+c1}{// sendiNG MSB data first}
+	\PYG{n}{SPI\PYGZus{}transfer\PYGZus{}byte}\PYG{p}{(}\PYG{n}{address\PYGZus{}}\PYG{p}{);} \PYG{c+c1}{// address where data should be writen	}
+	
+	\PYG{n}{SPI\PYGZus{}transfer\PYGZus{}byte}\PYG{p}{(}\PYG{n}{data\PYGZus{}}\PYG{p}{);} \PYG{c+c1}{// data to be written	}
+	\PYG{n}{ss\PYGZus{}high}	
+	
+	\PYG{n}{\PYGZus{}delay\PYGZus{}ms}\PYG{p}{(}\PYG{l+m+mi}{1}\PYG{p}{);}
+\PYG{p}{\PYGZcb{}}
+\PYG{k+kt}{uint8\PYGZus{}t} \PYG{n+nf}{EEPROM\PYGZus{}read}\PYG{p}{(}\PYG{k+kt}{uint16\PYGZus{}t} \PYG{n}{address\PYGZus{}}\PYG{p}{)}
+\PYG{p}{\PYGZob{}}
+	\PYG{k+kt}{uint8\PYGZus{}t} \PYG{n}{data\PYGZus{}}\PYG{p}{;}
+	\PYG{n}{ss\PYGZus{}low}
+	\PYG{n}{SPI\PYGZus{}transfer\PYGZus{}byte}\PYG{p}{(}\PYG{l+m+mh}{0x03}\PYG{p}{);} \PYG{c+c1}{// READ instruction \PYGZhy{}\PYGZhy{} according to EEPROM}
+	
+	\PYG{n}{SPI\PYGZus{}transfer\PYGZus{}byte}\PYG{p}{(}\PYG{n}{address\PYGZus{}}\PYG{o}{\PYGZgt{}\PYGZgt{}}\PYG{l+m+mi}{8}\PYG{p}{);} \PYG{c+c1}{// sendiNG MSB data first}
+	\PYG{n}{SPI\PYGZus{}transfer\PYGZus{}byte}\PYG{p}{(}\PYG{n}{address\PYGZus{}}\PYG{p}{);} \PYG{c+c1}{// address where data should be writen}
+	
+	\PYG{n}{data\PYGZus{}}\PYG{o}{=}\PYG{n}{SPI\PYGZus{}transfer\PYGZus{}byte}\PYG{p}{(}\PYG{l+m+mi}{0}\PYG{n}{XFF}\PYG{p}{);} \PYG{c+c1}{// send empty value to get data from it}
+	
+	\PYG{n}{ss\PYGZus{}high}
+	
+	\PYG{n}{\PYGZus{}delay\PYGZus{}ms}\PYG{p}{(}\PYG{l+m+mi}{1}\PYG{p}{);}
+	\PYG{k}{return} \PYG{n}{data\PYGZus{}}\PYG{p}{;}
+\PYG{p}{\PYGZcb{}}
+\PYG{k+kt}{int} \PYG{n+nf}{main}\PYG{p}{(}\PYG{k+kt}{void}\PYG{p}{)}
+\PYG{p}{\PYGZob{}}
+	\PYG{n}{UARTLCD\PYGZus{}init}\PYG{p}{();}
+
+
+	\PYG{n}{SPI\PYGZus{}init}\PYG{p}{();}	
+	\PYG{n}{\PYGZus{}delay\PYGZus{}ms}\PYG{p}{(}\PYG{l+m+mi}{10}\PYG{p}{);}
+	
+	\PYG{n}{EEPROM\PYGZus{}write\PYGZus{}string}\PYG{p}{(}\PYG{l+m+mh}{0x0000}\PYG{p}{,(}\PYG{k+kt}{uint8\PYGZus{}t} \PYG{o}{*}\PYG{p}{)}\PYG{l+s}{\PYGZdq{}hi hello and welcome\PYGZdq{}}\PYG{p}{);}	
+	\PYG{n}{\PYGZus{}delay\PYGZus{}ms}\PYG{p}{(}\PYG{l+m+mi}{10}\PYG{p}{);}
+	\PYG{k}{for}\PYG{p}{(}\PYG{k+kt}{uint8\PYGZus{}t} \PYG{n}{i}\PYG{o}{=}\PYG{l+m+mi}{0}\PYG{p}{;} \PYG{n}{i}\PYG{o}{\PYGZlt{}}\PYG{l+m+mi}{16}\PYG{p}{;} \PYG{n}{i}\PYG{o}{++}\PYG{p}{)}
+	\PYG{p}{\PYGZob{}}
+		\PYG{k+kt}{uint8\PYGZus{}t} \PYG{n}{val} \PYG{o}{=} \PYG{n}{EEPROM\PYGZus{}read}\PYG{p}{(}\PYG{l+m+mh}{0x00}\PYG{o}{+}\PYG{n}{i}\PYG{p}{);}
+		\PYG{n}{UARTLCD\PYGZus{}set\PYGZus{}cursor}\PYG{p}{(}\PYG{l+m+mi}{2}\PYG{p}{,}\PYG{l+m+mi}{1}\PYG{o}{+}\PYG{n}{i}\PYG{p}{);}
+		\PYG{n}{UARTLCD\PYGZus{}send\PYGZus{}data}\PYG{p}{(}\PYG{n}{val}\PYG{p}{);}
+	\PYG{p}{\PYGZcb{}}	
+    \PYG{k}{while}\PYG{p}{(}\PYG{l+m+mi}{1}\PYG{p}{)}
+    \PYG{p}{\PYGZob{}}    \PYG{p}{\PYGZcb{}}
+\PYG{p}{\PYGZcb{}}
+\end{Verbatim}

@@ -1,0 +1,66 @@
+\begin{Verbatim}[commandchars=\\\{\}]
+\PYG{c+cp}{\PYGZsh{}define F\PYGZus{}CPU 16000000L}
+
+
+\PYG{c+cp}{\PYGZsh{}include} \PYG{c+cpf}{\PYGZlt{}avr/io.h\PYGZgt{}}
+\PYG{c+cp}{\PYGZsh{}include} \PYG{c+cpf}{\PYGZlt{}util/delay.h\PYGZgt{}}
+
+
+\PYG{c+cp}{\PYGZsh{}include} \PYG{c+cpf}{\PYGZdq{}I2CMASTERinclude.c\PYGZdq{}}
+
+\PYG{c+cp}{\PYGZsh{}define SLAVE\PYGZus{}ADDRESS 0x3E }\PYG{c+c1}{// obtained by reversing the I2C address in PROTESS I2C lcd address}
+
+\PYG{k+kt}{void} \PYG{n+nf}{I2CLCD\PYGZus{}send\PYGZus{}cmd}\PYG{p}{(}\PYG{k+kt}{uint8\PYGZus{}t} \PYG{n}{cmd\PYGZus{}}\PYG{p}{)}
+\PYG{p}{\PYGZob{}}
+	\PYG{c+c1}{// start condtion}
+	\PYG{n}{I2C\PYGZus{}Master\PYGZus{}START}\PYG{p}{();}
+	 \PYG{n}{\PYGZus{}delay\PYGZus{}ms}\PYG{p}{(}\PYG{l+m+mi}{10}\PYG{p}{);}
+	\PYG{c+c1}{// addressing the slave}
+	\PYG{n}{I2C\PYGZus{}Master\PYGZus{}Mode}\PYG{p}{(}\PYG{n}{SLAVE\PYGZus{}ADDRESS}\PYG{p}{,} \PYG{l+m+mi}{0}\PYG{p}{);}
+	 \PYG{n}{\PYGZus{}delay\PYGZus{}ms}\PYG{p}{(}\PYG{l+m+mi}{10}\PYG{p}{);}
+	\PYG{c+c1}{// sending command mode}
+	\PYG{n}{I2C\PYGZus{}Master\PYGZus{}DataTransmitByte}\PYG{p}{(}\PYG{l+m+mh}{0x00}\PYG{p}{);}
+	 \PYG{n}{\PYGZus{}delay\PYGZus{}ms}\PYG{p}{(}\PYG{l+m+mi}{10}\PYG{p}{);}
+	\PYG{c+c1}{// Sending actual command}
+	\PYG{n}{I2C\PYGZus{}Master\PYGZus{}DataTransmitByte}\PYG{p}{(}\PYG{n}{cmd\PYGZus{}}\PYG{p}{);}
+	 \PYG{n}{\PYGZus{}delay\PYGZus{}ms}\PYG{p}{(}\PYG{l+m+mi}{10}\PYG{p}{);}
+	\PYG{n}{I2C\PYGZus{}Master\PYGZus{}STOP}\PYG{p}{();}	
+    \PYG{n}{\PYGZus{}delay\PYGZus{}ms}\PYG{p}{(}\PYG{l+m+mi}{10}\PYG{p}{);}
+\PYG{p}{\PYGZcb{}}
+\PYG{k+kt}{void} \PYG{n+nf}{I2CLCD\PYGZus{}send\PYGZus{}data}\PYG{p}{(}\PYG{k+kt}{uint8\PYGZus{}t} \PYG{n}{data\PYGZus{}}\PYG{p}{)}
+\PYG{p}{\PYGZob{}}
+	\PYG{c+c1}{// start condtion}
+	\PYG{n}{I2C\PYGZus{}Master\PYGZus{}START}\PYG{p}{();}
+	 \PYG{n}{\PYGZus{}delay\PYGZus{}ms}\PYG{p}{(}\PYG{l+m+mi}{10}\PYG{p}{);}
+	\PYG{c+c1}{// addressing the slave}
+	\PYG{n}{I2C\PYGZus{}Master\PYGZus{}Mode}\PYG{p}{(}\PYG{n}{SLAVE\PYGZus{}ADDRESS}\PYG{p}{,} \PYG{l+m+mi}{0}\PYG{p}{);}
+	 \PYG{n}{\PYGZus{}delay\PYGZus{}ms}\PYG{p}{(}\PYG{l+m+mi}{10}\PYG{p}{);}
+	\PYG{c+c1}{// sending data mode}
+	\PYG{n}{I2C\PYGZus{}Master\PYGZus{}DataTransmitByte}\PYG{p}{(}\PYG{l+m+mh}{0x40}\PYG{p}{);}
+	 \PYG{n}{\PYGZus{}delay\PYGZus{}ms}\PYG{p}{(}\PYG{l+m+mi}{10}\PYG{p}{);}
+	\PYG{c+c1}{// Sending actual data}
+	\PYG{n}{I2C\PYGZus{}Master\PYGZus{}DataTransmitByte}\PYG{p}{(}\PYG{n}{data\PYGZus{}}\PYG{p}{);}
+	 \PYG{n}{\PYGZus{}delay\PYGZus{}ms}\PYG{p}{(}\PYG{l+m+mi}{10}\PYG{p}{);}
+	\PYG{n}{I2C\PYGZus{}Master\PYGZus{}STOP}\PYG{p}{();}
+    \PYG{n}{\PYGZus{}delay\PYGZus{}ms}\PYG{p}{(}\PYG{l+m+mi}{10}\PYG{p}{);}
+\PYG{p}{\PYGZcb{}}
+\PYG{k+kt}{void} \PYG{n+nf}{I2CLCD\PYGZus{}init}\PYG{p}{()}
+\PYG{p}{\PYGZob{}}
+	\PYG{n}{I2C\PYGZus{}Master\PYGZus{}Init}\PYG{p}{();}	
+	\PYG{n}{I2CLCD\PYGZus{}send\PYGZus{}cmd}\PYG{p}{(}\PYG{l+m+mh}{0x38}\PYG{p}{);}	
+	\PYG{n}{I2CLCD\PYGZus{}send\PYGZus{}cmd}\PYG{p}{(}\PYG{l+m+mh}{0x06}\PYG{p}{);} \PYG{c+c1}{// cursoR left moment and display not shift}
+	\PYG{n}{I2CLCD\PYGZus{}send\PYGZus{}cmd}\PYG{p}{(}\PYG{l+m+mh}{0x0E}\PYG{p}{);} \PYG{c+c1}{// dsiply on cursor on blink on}
+	\PYG{n}{I2CLCD\PYGZus{}send\PYGZus{}data}\PYG{p}{(}\PYG{l+m+mh}{0x80}\PYG{p}{);} \PYG{c+c1}{// BGIGIND OF libne}
+\PYG{p}{\PYGZcb{}}
+\PYG{k+kt}{int} \PYG{n+nf}{main}\PYG{p}{(}\PYG{k+kt}{void}\PYG{p}{)}
+\PYG{p}{\PYGZob{}}
+	\PYG{n}{I2CLCD\PYGZus{}init}\PYG{p}{();}
+	\PYG{n}{I2CLCD\PYGZus{}send\PYGZus{}data}\PYG{p}{(}\PYG{l+s+sc}{\PYGZsq{}a\PYGZsq{}}\PYG{p}{);}
+    
+	\PYG{n}{I2CLCD\PYGZus{}send\PYGZus{}data}\PYG{p}{(}\PYG{l+s+sc}{\PYGZsq{}v\PYGZsq{}}\PYG{p}{);}
+    \PYG{k}{while}\PYG{p}{(}\PYG{l+m+mi}{1}\PYG{p}{)}
+    \PYG{p}{\PYGZob{}}
+        \PYG{c+c1}{//TODO:: Please write your application code }
+    \PYG{p}{\PYGZcb{}}
+\PYG{p}{\PYGZcb{}}
+\end{Verbatim}

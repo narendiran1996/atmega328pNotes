@@ -1,6 +1,0 @@
-\begin{Verbatim}[commandchars=\\\{\}]
-\PYG{n}{ISR}\PYG{p}{(}\PYG{n}{TIMER2\PYGZus{}OVF\PYGZus{}vect}\PYG{p}{)}
-\PYG{p}{\PYGZob{}}
-    \PYG{c+c1}{// do the thing when overflows.}
-\PYG{p}{\PYGZcb{}}
-\end{Verbatim}

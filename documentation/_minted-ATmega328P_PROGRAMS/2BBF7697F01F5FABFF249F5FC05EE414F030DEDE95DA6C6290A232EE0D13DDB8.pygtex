@@ -1,0 +1,209 @@
+\begin{Verbatim}[commandchars=\\\{\}]
+\PYG{c+cp}{\PYGZsh{}define F\PYGZus{}CPU 16000000L}
+\PYG{c+cp}{\PYGZsh{}include} \PYG{c+cpf}{\PYGZlt{}avr/io.h\PYGZgt{}}
+\PYG{c+cp}{\PYGZsh{}include} \PYG{c+cpf}{\PYGZlt{}util/delay.h\PYGZgt{}}
+\PYG{c+cp}{\PYGZsh{}include} \PYG{c+cpf}{\PYGZlt{}avr/interrupt.h\PYGZgt{}}
+
+\PYG{c+c1}{// Reset}
+\PYG{c+cp}{\PYGZsh{}define RST PORTB0}
+\PYG{c+c1}{// Data/Command}
+\PYG{c+cp}{\PYGZsh{}define DC PORTB1}
+\PYG{c+c1}{// Chip Enable}
+\PYG{c+cp}{\PYGZsh{}define SS PORTB2}
+\PYG{c+c1}{// Data In}
+\PYG{c+cp}{\PYGZsh{}define SIN PORTB3}
+\PYG{c+c1}{// Serial Clock}
+\PYG{c+cp}{\PYGZsh{}define SCK PORTB5}
+
+\PYG{c+cp}{\PYGZsh{}define chip\PYGZus{}enable PORTB \PYGZam{}= \PYGZti{}(1\PYGZlt{}\PYGZlt{}SS)}
+\PYG{c+cp}{\PYGZsh{}define chip\PYGZus{}disable PORTB |= (1\PYGZlt{}\PYGZlt{}SS)}
+\PYG{c+cp}{\PYGZsh{}define cmd\PYGZus{}mode PORTB \PYGZam{}= \PYGZti{}(1\PYGZlt{}\PYGZlt{}DC)}
+\PYG{c+cp}{\PYGZsh{}define data\PYGZus{}mode PORTB |= (1\PYGZlt{}\PYGZlt{}DC)}
+
+
+\PYG{k+kt}{void} \PYG{n+nf}{SPILCD\PYGZus{}init\PYGZus{}pins}\PYG{p}{()}
+\PYG{p}{\PYGZob{}}
+	\PYG{n}{DDRB} \PYG{o}{|=} \PYG{p}{(}\PYG{l+m+mi}{1}\PYG{o}{\PYGZlt{}\PYGZlt{}}\PYG{n}{RST}\PYG{p}{)} \PYG{o}{|} \PYG{p}{(}\PYG{l+m+mi}{1}\PYG{o}{\PYGZlt{}\PYGZlt{}}\PYG{n}{DC}\PYG{p}{)} \PYG{o}{|} \PYG{p}{(}\PYG{l+m+mi}{1}\PYG{o}{\PYGZlt{}\PYGZlt{}}\PYG{n}{SS}\PYG{p}{)} \PYG{o}{|} \PYG{p}{(}\PYG{l+m+mi}{1}\PYG{o}{\PYGZlt{}\PYGZlt{}}\PYG{n}{SIN}\PYG{p}{)} \PYG{o}{|} \PYG{p}{(}\PYG{l+m+mi}{1}\PYG{o}{\PYGZlt{}\PYGZlt{}}\PYG{n}{SCK}\PYG{p}{);}
+	
+	\PYG{n}{PORTB} \PYG{o}{|=} \PYG{p}{(}\PYG{l+m+mi}{1}\PYG{o}{\PYGZlt{}\PYGZlt{}}\PYG{n}{RST}\PYG{p}{);} \PYG{c+c1}{// initially let\PYGZsq{}s reset}
+	\PYG{n}{PORTB} \PYG{o}{\PYGZam{}=} \PYG{o}{\PYGZti{}}\PYG{p}{(}\PYG{l+m+mi}{1}\PYG{o}{\PYGZlt{}\PYGZlt{}}\PYG{n}{DC}\PYG{p}{);} \PYG{c+c1}{// initially command mode}
+	\PYG{n}{PORTB} \PYG{o}{|=} \PYG{p}{(}\PYG{l+m+mi}{1}\PYG{o}{\PYGZlt{}\PYGZlt{}}\PYG{n}{SS}\PYG{p}{);} \PYG{c+c1}{// initially disable chip	}
+	\PYG{n}{PORTB} \PYG{o}{\PYGZam{}=} \PYG{o}{\PYGZti{}}\PYG{p}{(}\PYG{l+m+mi}{1}\PYG{o}{\PYGZlt{}\PYGZlt{}}\PYG{n}{SIN}\PYG{p}{);} \PYG{c+c1}{// initially SIN is 0}
+	\PYG{n}{PORTB} \PYG{o}{\PYGZam{}=} \PYG{o}{\PYGZti{}}\PYG{p}{(}\PYG{l+m+mi}{1}\PYG{o}{\PYGZlt{}\PYGZlt{}}\PYG{n}{SCK}\PYG{p}{);} \PYG{c+c1}{// initially SCK is 0}
+
+\PYG{p}{\PYGZcb{}}
+\PYG{k+kt}{void} \PYG{n+nf}{SPILCD\PYGZus{}shiftOut}\PYG{p}{(}  \PYG{k+kt}{uint8\PYGZus{}t} \PYG{n}{val}\PYG{p}{)}
+\PYG{p}{\PYGZob{}}
+	\PYG{k+kt}{uint8\PYGZus{}t} \PYG{n}{i}\PYG{p}{;}
+
+	\PYG{k}{for} \PYG{p}{(}\PYG{n}{i} \PYG{o}{=} \PYG{l+m+mi}{0}\PYG{p}{;} \PYG{n}{i}\PYG{o}{\PYGZlt{}}\PYG{l+m+mi}{8}\PYG{p}{;} \PYG{n}{i}\PYG{o}{++}\PYG{p}{)}  
+	\PYG{p}{\PYGZob{}}
+		\PYG{k}{if} \PYG{p}{((}\PYG{n}{val} \PYG{o}{\PYGZam{}} \PYG{p}{(}\PYG{l+m+mi}{1}\PYG{o}{\PYGZlt{}\PYGZlt{}}\PYG{p}{(}\PYG{l+m+mi}{7}\PYG{o}{\PYGZhy{}}\PYG{n}{i}\PYG{p}{)))} \PYG{o}{==} \PYG{l+m+mi}{0}\PYG{p}{)}
+		\PYG{p}{\PYGZob{}}
+			\PYG{n}{PORTB} \PYG{o}{\PYGZam{}=} \PYG{o}{\PYGZti{}}\PYG{p}{(}\PYG{l+m+mi}{1}\PYG{o}{\PYGZlt{}\PYGZlt{}}\PYG{n}{SIN}\PYG{p}{);}
+		\PYG{p}{\PYGZcb{}}
+		\PYG{k}{else}
+		\PYG{p}{\PYGZob{}}
+			\PYG{n}{PORTB} \PYG{o}{|=} \PYG{p}{(}\PYG{l+m+mi}{1}\PYG{o}{\PYGZlt{}\PYGZlt{}}\PYG{n}{SIN}\PYG{p}{);}
+		\PYG{p}{\PYGZcb{}}
+		
+		\PYG{n}{PORTB} \PYG{o}{|=} \PYG{p}{(}\PYG{l+m+mi}{1}\PYG{o}{\PYGZlt{}\PYGZlt{}}\PYG{n}{SCK}\PYG{p}{);}
+		\PYG{n}{PORTB} \PYG{o}{\PYGZam{}=} \PYG{o}{\PYGZti{}}\PYG{p}{(}\PYG{l+m+mi}{1}\PYG{o}{\PYGZlt{}\PYGZlt{}}\PYG{n}{SCK}\PYG{p}{);}
+	\PYG{p}{\PYGZcb{}}
+\PYG{p}{\PYGZcb{}}
+\PYG{k+kt}{void} \PYG{n+nf}{SPILCD\PYGZus{}reset\PYGZus{}procedure}\PYG{p}{()}
+\PYG{p}{\PYGZob{}}
+	\PYG{n}{PORTB} \PYG{o}{|=} \PYG{p}{(}\PYG{l+m+mi}{1}\PYG{o}{\PYGZlt{}\PYGZlt{}}\PYG{n}{RST}\PYG{p}{);} \PYG{c+c1}{// initially let\PYGZsq{}s reset}
+	
+	\PYG{n}{chip\PYGZus{}disable}\PYG{p}{;}
+	\PYG{n}{PORTB} \PYG{o}{\PYGZam{}=} \PYG{o}{\PYGZti{}}\PYG{p}{(}\PYG{l+m+mi}{1}\PYG{o}{\PYGZlt{}\PYGZlt{}}\PYG{n}{RST}\PYG{p}{);} \PYG{c+c1}{// remove reset}
+	\PYG{n}{\PYGZus{}delay\PYGZus{}ms}\PYG{p}{(}\PYG{l+m+mi}{100}\PYG{p}{);}
+	\PYG{n}{PORTB} \PYG{o}{|=} \PYG{p}{(}\PYG{l+m+mi}{1}\PYG{o}{\PYGZlt{}\PYGZlt{}}\PYG{n}{RST}\PYG{p}{);} \PYG{c+c1}{// initially let\PYGZsq{}s reset}
+\PYG{p}{\PYGZcb{}}
+\PYG{k+kt}{void} \PYG{n+nf}{SPILCD\PYGZus{}send\PYGZus{}cmd}\PYG{p}{(}\PYG{k+kt}{uint8\PYGZus{}t} \PYG{n}{cmd\PYGZus{}}\PYG{p}{)}
+\PYG{p}{\PYGZob{}}
+	\PYG{n}{cmd\PYGZus{}mode}\PYG{p}{;}
+	
+	\PYG{n}{chip\PYGZus{}enable}\PYG{p}{;}
+	
+	\PYG{n}{SPILCD\PYGZus{}shiftOut}\PYG{p}{(}\PYG{n}{cmd\PYGZus{}}\PYG{p}{);}
+	\PYG{n}{chip\PYGZus{}disable}\PYG{p}{;}
+\PYG{p}{\PYGZcb{}}	
+\PYG{k+kt}{void} \PYG{n+nf}{SPILCD\PYGZus{}send\PYGZus{}data}\PYG{p}{(}\PYG{k+kt}{uint8\PYGZus{}t} \PYG{n}{data\PYGZus{}}\PYG{p}{)}
+\PYG{p}{\PYGZob{}}
+	\PYG{n}{data\PYGZus{}mode}\PYG{p}{;}
+	
+	\PYG{n}{chip\PYGZus{}enable}\PYG{p}{;}
+	\PYG{n}{SPILCD\PYGZus{}shiftOut}\PYG{p}{(}\PYG{n}{data\PYGZus{}}\PYG{p}{);}
+	\PYG{n}{chip\PYGZus{}disable}\PYG{p}{;}
+\PYG{p}{\PYGZcb{}}
+\PYG{k+kt}{void} \PYG{n+nf}{SPILCD\PYGZus{}init}\PYG{p}{()}
+\PYG{p}{\PYGZob{}}
+	\PYG{n}{SPILCD\PYGZus{}init\PYGZus{}pins}\PYG{p}{();}
+	\PYG{n}{SPILCD\PYGZus{}reset\PYGZus{}procedure}\PYG{p}{();}
+
+	
+	\PYG{c+cm}{/* Function Set \PYGZhy{}\PYGZhy{} DB[7:0] \PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZgt{} 0010\PYGZus{}0(PD)(V)(H)}
+\PYG{c+cm}{	   PD = 1 \PYGZhy{} POWER DOWN mode}
+\PYG{c+cm}{	   PD = 0 \PYGZhy{} chip is active mode}
+\PYG{c+cm}{	   V = 0 \PYGZhy{} horizontal addressing}
+\PYG{c+cm}{	   V = 1 \PYGZhy{} vertical addressing}
+\PYG{c+cm}{	   H = 0 \PYGZhy{} Basic Instruction Set}
+\PYG{c+cm}{	   H = 1 \PYGZhy{} Extended Instruction Set */}
+	\PYG{c+c1}{// We use chip active, horizontal addressing and extended instruction Set}
+	\PYG{c+c1}{// Extended because we need to set bias, temperature and OPERATING voltage}
+	\PYG{c+c1}{// So DB[7:0] \PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZgt{} 0010\PYGZus{}0001 = 0X21}
+	\PYG{n}{SPILCD\PYGZus{}send\PYGZus{}cmd}\PYG{p}{(}\PYG{l+m+mh}{0x21}\PYG{p}{);}
+	\PYG{c+cm}{/* SEtting Vop \PYGZhy{} lcd voltage \PYGZhy{} operating voltage }
+\PYG{c+cm}{	DB[7:0] \PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZgt{} 1(Vop6)(Vop5)(Vop4)(Vop3)(Vop2)(Vop1)(Vop0)}
+\PYG{c+cm}{	\PYGZhy{}\PYGZhy{} setting 5V we need == 100\PYGZus{}0000 */}
+	\PYG{c+c1}{// So DB[7:0] \PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZgt{} 1100\PYGZus{}0000 = 0XC0}
+	\PYG{n}{SPILCD\PYGZus{}send\PYGZus{}cmd}\PYG{p}{(}\PYG{l+m+mh}{0xc0}\PYG{p}{);}
+	
+	\PYG{c+cm}{/* Bias System \PYGZhy{}\PYGZhy{} DB[7:0] \PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZgt{} 0001\PYGZus{}0(BS2)(BS1)(BS0)}
+\PYG{c+cm}{	   \PYGZhy{}\PYGZhy{} setting bias voltage level (n = 4, 1:48) \PYGZhy{}\PYGZhy{}\PYGZhy{} 011}
+\PYG{c+cm}{	   So DB[7:0] \PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZgt{} 0001\PYGZus{}0011 = 0X13 */}
+	\PYG{n}{SPILCD\PYGZus{}send\PYGZus{}cmd}\PYG{p}{(}\PYG{l+m+mh}{0x13}\PYG{p}{);}
+	
+	\PYG{c+cm}{/* Temperature Control  \PYGZhy{}\PYGZhy{} DB[7:0] \PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZgt{} 0000\PYGZus{}01(TC1)(TC0)}
+\PYG{c+cm}{	   we take temparture coefficent 3 */}
+	\PYG{c+c1}{// So PB[7:0] \PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZgt{} 0000\PYGZus{}0111 = 0X07}
+    \PYG{n}{SPILCD\PYGZus{}send\PYGZus{}cmd}\PYG{p}{(}\PYG{l+m+mh}{0x07}\PYG{p}{);}
+	
+	\PYG{c+cm}{/* Function Set \PYGZhy{}\PYGZhy{} DB[7:0] \PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZgt{} 0010\PYGZus{}0(PD)(V)(H)}
+\PYG{c+cm}{	   PD = 1 \PYGZhy{} POWER DOWN mode}
+\PYG{c+cm}{	   PD = 0 \PYGZhy{} chip is active mode}
+\PYG{c+cm}{	   V = 0 \PYGZhy{} horizontal addressing}
+\PYG{c+cm}{	   V = 1 \PYGZhy{} vertical addressing}
+\PYG{c+cm}{	   H = 0 \PYGZhy{} Basic Instruction Set}
+\PYG{c+cm}{	   H = 1 \PYGZhy{} Extended Instruction Set */}
+	\PYG{c+c1}{// We use chip active, horizontal addressing and BASIC instruction Set}
+	\PYG{c+c1}{// Basic because we are going to work now}
+	\PYG{c+c1}{// So DB[7:0] \PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZgt{} 0010\PYGZus{}0000 = 0X20	}
+	\PYG{n}{SPILCD\PYGZus{}send\PYGZus{}cmd}\PYG{p}{(}\PYG{l+m+mh}{0x20}\PYG{p}{);}
+	
+	\PYG{c+cm}{/* Display Control \PYGZhy{}\PYGZhy{} DB[7:0] \PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZgt{} 0000\PYGZus{}1(D)0(E)}
+\PYG{c+cm}{	   D | E \PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{} Mode \PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZhy{} Description}
+\PYG{c+cm}{	   0   0     Display Blank    No Display on LCD}
+\PYG{c+cm}{	   0   1     Normal Mode      usual display on LCD}
+\PYG{c+cm}{	   1   0     All Segment on   every position in the LCD is on}
+\PYG{c+cm}{	   1   1     Inverse Mode     Display data is inverted */}
+	\PYG{c+c1}{// So we select NOrmal mode}
+	\PYG{c+c1}{// So DB[7:0] \PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZgt{} 0000\PYGZus{}1100 = 0x0c}
+	\PYG{n}{SPILCD\PYGZus{}send\PYGZus{}cmd}\PYG{p}{(}\PYG{l+m+mh}{0x0C}\PYG{p}{);}
+	
+	\PYG{c+cm}{/* setting X address varying pixel from 0 to 83[53H]}
+\PYG{c+cm}{	   PB[7:0] \PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZgt{} 1(X6)(X5)(X4)(X3)(X2)(X1)(X0)}
+\PYG{c+cm}{	   X[6:0] is from 000\PYGZus{}0000[00H] to 101\PYGZus{}0011[53H] */}
+	\PYG{c+c1}{// We select the middle column == 84/2 = 42[2A] }
+	\PYG{c+c1}{// So PB[7:0] \PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZgt{} 1010\PYGZus{}1010 = 0xAA}
+	\PYG{n}{SPILCD\PYGZus{}send\PYGZus{}cmd}\PYG{p}{(}\PYG{l+m+mh}{0xAA}\PYG{p}{);}
+	
+	\PYG{c+cm}{/* setting Y address varying blank from 0 to 5[5H]}
+\PYG{c+cm}{	   PB[7:0] \PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZgt{} 0100\PYGZus{}0(Y2)(Y1)(Y0)}
+\PYG{c+cm}{	   Y[2:0] is from 000[0H] to 101[5H] */}
+	\PYG{c+c1}{// We select the middle row == 0}
+	\PYG{c+c1}{// So PB[7:0] \PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZgt{} 0100\PYGZus{}0000 = 0x40}
+	\PYG{n}{SPILCD\PYGZus{}send\PYGZus{}cmd}\PYG{p}{(}\PYG{l+m+mh}{0x40}\PYG{p}{);}
+	\PYG{c+cm}{/* Sending data to draw }
+\PYG{c+cm}{	   DB[7:0] \PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZgt{} (D7)(D6)(D5)(D4)(D3)(D2)(D1)(D0) }
+\PYG{c+cm}{	   each bit represent each pixel in a blank */}
+	\PYG{c+c1}{// So lets\PYGZsq{} draw something }
+	\PYG{n}{SPILCD\PYGZus{}send\PYGZus{}data}\PYG{p}{(}\PYG{l+m+mi}{0}\PYG{n}{b10101010}\PYG{p}{);}
+\PYG{p}{\PYGZcb{}}
+\PYG{k+kt}{void} \PYG{n+nf}{SPILCD\PYGZus{}pixel}\PYG{p}{(}\PYG{k+kt}{uint8\PYGZus{}t} \PYG{n}{blank}\PYG{p}{,} \PYG{k+kt}{uint8\PYGZus{}t} \PYG{n}{column}\PYG{p}{)}
+\PYG{p}{\PYGZob{}}
+	\PYG{c+cm}{/* setting X address varying pixel from 0 to 83[53H]}
+\PYG{c+cm}{	PB[7:0] \PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZgt{} 1(X6)(X5)(X4)(X3)(X2)(X1)(X0)}
+\PYG{c+cm}{	X[6:0] is from 000\PYGZus{}0000[00H] to 101\PYGZus{}0011[53H] */}
+	\PYG{n}{SPILCD\PYGZus{}send\PYGZus{}cmd}\PYG{p}{(}\PYG{l+m+mh}{0x80} \PYG{o}{+} \PYG{n}{column}\PYG{p}{);}
+	
+	\PYG{c+cm}{/* setting Y address varying blank from 0 to 5[5H]}
+\PYG{c+cm}{	PB[7:0] \PYGZhy{}\PYGZhy{}\PYGZhy{}\PYGZgt{} 0100\PYGZus{}0(Y2)(Y1)(Y0)}
+\PYG{c+cm}{	Y[2:0] is from 000[0H] to 101[5H] */}
+	\PYG{n}{SPILCD\PYGZus{}send\PYGZus{}cmd}\PYG{p}{(}\PYG{l+m+mh}{0x40} \PYG{o}{+} \PYG{n}{blank}\PYG{p}{);}
+\PYG{p}{\PYGZcb{}}
+\PYG{k+kt}{void} \PYG{n+nf}{SPILCD\PYGZus{}demo}\PYG{p}{()}
+\PYG{p}{\PYGZob{}}
+	\PYG{n}{SPILCD\PYGZus{}pixel}\PYG{p}{(}\PYG{l+m+mi}{0}\PYG{p}{,}\PYG{l+m+mi}{0}\PYG{p}{);}
+	\PYG{n}{SPILCD\PYGZus{}send\PYGZus{}data}\PYG{p}{(}\PYG{l+m+mi}{0}\PYG{n}{b11111111}\PYG{p}{);}	
+	\PYG{n}{SPILCD\PYGZus{}pixel}\PYG{p}{(}\PYG{l+m+mi}{0}\PYG{p}{,}\PYG{l+m+mi}{2}\PYG{p}{);}
+	\PYG{n}{SPILCD\PYGZus{}send\PYGZus{}data}\PYG{p}{(}\PYG{l+m+mi}{0}\PYG{n}{b11111111}\PYG{p}{);}	
+	\PYG{n}{SPILCD\PYGZus{}pixel}\PYG{p}{(}\PYG{l+m+mi}{0}\PYG{p}{,}\PYG{l+m+mi}{4}\PYG{p}{);}
+	\PYG{n}{SPILCD\PYGZus{}send\PYGZus{}data}\PYG{p}{(}\PYG{l+m+mi}{0}\PYG{n}{b11110000}\PYG{p}{);}	
+	\PYG{n}{SPILCD\PYGZus{}pixel}\PYG{p}{(}\PYG{l+m+mi}{0}\PYG{p}{,}\PYG{l+m+mi}{6}\PYG{p}{);}
+	\PYG{n}{SPILCD\PYGZus{}send\PYGZus{}data}\PYG{p}{(}\PYG{l+m+mi}{0}\PYG{n}{b00001111}\PYG{p}{);}	
+	\PYG{n}{SPILCD\PYGZus{}pixel}\PYG{p}{(}\PYG{l+m+mi}{0}\PYG{p}{,}\PYG{l+m+mi}{8}\PYG{p}{);}
+	\PYG{n}{SPILCD\PYGZus{}send\PYGZus{}data}\PYG{p}{(}\PYG{l+m+mi}{0}\PYG{n}{b11001100}\PYG{p}{);}	
+	\PYG{n}{SPILCD\PYGZus{}pixel}\PYG{p}{(}\PYG{l+m+mi}{0}\PYG{p}{,}\PYG{l+m+mi}{10}\PYG{p}{);}
+	\PYG{n}{SPILCD\PYGZus{}send\PYGZus{}data}\PYG{p}{(}\PYG{l+m+mi}{0}\PYG{n}{b10010010}\PYG{p}{);}
+	
+	\PYG{k}{for} \PYG{p}{(}\PYG{k+kt}{uint8\PYGZus{}t} \PYG{n}{i}\PYG{o}{=}\PYG{l+m+mi}{0}\PYG{p}{;} \PYG{n}{i}\PYG{o}{\PYGZlt{}}\PYG{l+m+mi}{84}\PYG{p}{;} \PYG{n}{i}\PYG{o}{++}\PYG{p}{)}
+	\PYG{p}{\PYGZob{}}
+		\PYG{n}{SPILCD\PYGZus{}pixel}\PYG{p}{(}\PYG{l+m+mi}{2}\PYG{p}{,}\PYG{l+m+mi}{0}\PYG{o}{+}\PYG{n}{i}\PYG{p}{);}
+		\PYG{n}{SPILCD\PYGZus{}send\PYGZus{}data}\PYG{p}{(}\PYG{l+m+mi}{0}\PYG{n}{b00000001}\PYG{p}{);}
+	\PYG{p}{\PYGZcb{}}
+	\PYG{k}{for} \PYG{p}{(}\PYG{k+kt}{uint8\PYGZus{}t} \PYG{n}{i}\PYG{o}{=}\PYG{l+m+mi}{0}\PYG{p}{;}\PYG{n}{i}\PYG{o}{\PYGZlt{}}\PYG{l+m+mi}{6}\PYG{p}{;}\PYG{n}{i}\PYG{o}{++}\PYG{p}{)}
+	\PYG{p}{\PYGZob{}}
+		\PYG{n}{SPILCD\PYGZus{}pixel}\PYG{p}{(}\PYG{l+m+mi}{0}\PYG{o}{+}\PYG{n}{i}\PYG{p}{,}\PYG{l+m+mi}{12}\PYG{p}{);}
+		\PYG{n}{SPILCD\PYGZus{}send\PYGZus{}data}\PYG{p}{(}\PYG{l+m+mi}{0}\PYG{n}{b11111111}\PYG{p}{);}
+	\PYG{p}{\PYGZcb{}}
+	\PYG{k+kt}{uint8\PYGZus{}t} \PYG{n}{heartine}\PYG{p}{[]}\PYG{o}{=}\PYG{p}{\PYGZob{}} \PYG{l+m+mh}{0x18}\PYG{p}{,} \PYG{l+m+mh}{0x3c}\PYG{p}{,} \PYG{l+m+mh}{0x7c}\PYG{p}{,} \PYG{l+m+mh}{0x3c}\PYG{p}{,} \PYG{l+m+mh}{0x18}\PYG{p}{\PYGZcb{};}
+	\PYG{k}{for}\PYG{p}{(}\PYG{k+kt}{uint8\PYGZus{}t} \PYG{n}{i}\PYG{o}{=}\PYG{l+m+mi}{0}\PYG{p}{;}\PYG{n}{i}\PYG{o}{\PYGZlt{}}\PYG{l+m+mi}{5}\PYG{p}{;}\PYG{n}{i}\PYG{o}{++}\PYG{p}{)}
+	\PYG{p}{\PYGZob{}}
+		\PYG{n}{SPILCD\PYGZus{}pixel}\PYG{p}{(}\PYG{l+m+mi}{3}\PYG{p}{,}\PYG{l+m+mi}{42}\PYG{o}{+}\PYG{n}{i}\PYG{p}{);}
+		\PYG{n}{SPILCD\PYGZus{}send\PYGZus{}data}\PYG{p}{(}\PYG{n}{heartine}\PYG{p}{[}\PYG{n}{i}\PYG{p}{]);}
+	\PYG{p}{\PYGZcb{}}	
+\PYG{p}{\PYGZcb{}}
+\PYG{k+kt}{int} \PYG{n+nf}{main}\PYG{p}{(}\PYG{k+kt}{void}\PYG{p}{)}
+\PYG{p}{\PYGZob{}}
+	\PYG{c+c1}{//lcd\PYGZus{}init();}
+	\PYG{c+c1}{//lcd\PYGZus{}send\PYGZus{}string(\PYGZdq{}hi guys\PYGZdq{});}
+	\PYG{n}{SPILCD\PYGZus{}init}\PYG{p}{();}
+	\PYG{n}{SPILCD\PYGZus{}demo}\PYG{p}{();}
+    \PYG{k}{while}\PYG{p}{(}\PYG{l+m+mi}{1}\PYG{p}{)}
+    \PYG{p}{\PYGZob{}}
+        \PYG{c+c1}{//TODO:: Please write your application code }
+    \PYG{p}{\PYGZcb{}}
+\PYG{p}{\PYGZcb{}}
+\end{Verbatim}

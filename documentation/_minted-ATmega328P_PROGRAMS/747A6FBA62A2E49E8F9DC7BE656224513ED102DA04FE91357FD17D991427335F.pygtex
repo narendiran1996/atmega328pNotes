@@ -1,0 +1,65 @@
+\begin{Verbatim}[commandchars=\\\{\}]
+\PYG{c+cp}{\PYGZsh{}define F\PYGZus{}CPU 16000000L}
+\PYG{c+cp}{\PYGZsh{}include} \PYG{c+cpf}{\PYGZlt{}avr/io.h\PYGZgt{}}
+\PYG{c+cp}{\PYGZsh{}include} \PYG{c+cpf}{\PYGZlt{}util/delay.h\PYGZgt{}}
+\PYG{c+cp}{\PYGZsh{}include} \PYG{c+cpf}{\PYGZlt{}avr/interrupt.h\PYGZgt{}}
+
+\PYG{k+kt}{void} \PYG{n+nf}{externalInterruptINT0}\PYG{p}{()}
+\PYG{p}{\PYGZob{}}
+	\PYG{c+c1}{// making PD2 as input for INT0, though not neeced}
+	\PYG{n}{DDRD} \PYG{o}{\PYGZam{}=} \PYG{o}{\PYGZti{}}\PYG{p}{(}\PYG{l+m+mi}{1}\PYG{o}{\PYGZlt{}\PYGZlt{}}\PYG{l+m+mi}{2}\PYG{p}{);}
+	\PYG{c+c1}{// enabling the internal pull\PYGZhy{}up register for PD2 for INT0}
+	\PYG{n}{PORTD} \PYG{o}{|=} \PYG{p}{(}\PYG{l+m+mi}{1}\PYG{o}{\PYGZlt{}\PYGZlt{}}\PYG{l+m+mi}{2}\PYG{p}{);}
+	\PYG{c+c1}{// making EICRA\PYGZsq{}s ISC01 and ISC00 as 10 for falling edge detection at INT0}
+	\PYG{n}{EICRA} \PYG{o}{|=} \PYG{p}{(}\PYG{l+m+mi}{1}\PYG{o}{\PYGZlt{}\PYGZlt{}}\PYG{n}{ISC01}\PYG{p}{);}
+	\PYG{n}{EICRA} \PYG{o}{\PYGZam{}=} \PYG{o}{\PYGZti{}}\PYG{p}{(}\PYG{l+m+mi}{1}\PYG{o}{\PYGZlt{}\PYGZlt{}}\PYG{n}{ISC00}\PYG{p}{);}
+	\PYG{c+c1}{// making EIMSK\PYGZsq{}s INT0 as 1 to enable External Interrput Request for INT0}
+	\PYG{n}{EIMSK} \PYG{o}{|=} \PYG{p}{(}\PYG{l+m+mi}{1}\PYG{o}{\PYGZlt{}\PYGZlt{}}\PYG{n}{INT0}\PYG{p}{);}	
+	\PYG{c+c1}{// Enabling global Interrupts}
+	\PYG{n}{sei}\PYG{p}{();}		
+\PYG{p}{\PYGZcb{}}
+\PYG{k+kt}{void} \PYG{n+nf}{externalInterruptINT1}\PYG{p}{()}
+\PYG{p}{\PYGZob{}}
+	\PYG{c+c1}{// making PD3 as input for INT1, though not neeced}
+	\PYG{n}{DDRD} \PYG{o}{\PYGZam{}=} \PYG{o}{\PYGZti{}}\PYG{p}{(}\PYG{l+m+mi}{1}\PYG{o}{\PYGZlt{}\PYGZlt{}}\PYG{l+m+mi}{3}\PYG{p}{);}
+	\PYG{c+c1}{// enabling the internal pull\PYGZhy{}up register for PD3 for INT1}
+	\PYG{n}{PORTD} \PYG{o}{|=} \PYG{p}{(}\PYG{l+m+mi}{1}\PYG{o}{\PYGZlt{}\PYGZlt{}}\PYG{l+m+mi}{3}\PYG{p}{);}
+	\PYG{c+c1}{// making EICRA\PYGZsq{}s ISC21 and ISC20 as 11 for rising edge detection at INT1}
+	\PYG{n}{EICRA} \PYG{o}{|=} \PYG{p}{((}\PYG{l+m+mi}{1}\PYG{o}{\PYGZlt{}\PYGZlt{}}\PYG{n}{ISC11}\PYG{p}{)} \PYG{o}{|} \PYG{p}{(}\PYG{l+m+mi}{1}\PYG{o}{\PYGZlt{}\PYGZlt{}}\PYG{n}{ISC10}\PYG{p}{));}
+	\PYG{c+c1}{// making EIMSK\PYGZsq{}s INT2 as 1 to enable External Interrput Request for INT1}
+	\PYG{n}{EIMSK} \PYG{o}{|=} \PYG{p}{(}\PYG{l+m+mi}{1}\PYG{o}{\PYGZlt{}\PYGZlt{}}\PYG{n}{INT1}\PYG{p}{);}	
+	\PYG{c+c1}{// Enabling global Interrupts}
+	\PYG{n}{sei}\PYG{p}{();}		
+\PYG{p}{\PYGZcb{}}
+\PYG{k+kt}{int} \PYG{n+nf}{main}\PYG{p}{(}\PYG{k+kt}{void}\PYG{p}{)}
+\PYG{p}{\PYGZob{}}
+	\PYG{c+c1}{// making PC[1:0] as output for led}
+	\PYG{n}{DDRC} \PYG{o}{|=} \PYG{l+m+mi}{0}\PYG{n}{X03}\PYG{p}{;}
+	\PYG{c+c1}{// PC[1:0] is made 0}
+	\PYG{n}{PORTC} \PYG{o}{\PYGZam{}=} \PYG{l+m+mi}{0}\PYG{n}{XFC}\PYG{p}{;}
+	\PYG{n}{externalInterruptINT0}\PYG{p}{();}
+	\PYG{n}{externalInterruptINT1}\PYG{p}{();}
+	\PYG{k}{while}\PYG{p}{(}\PYG{l+m+mi}{1}\PYG{p}{)}
+	\PYG{p}{\PYGZob{}}
+	\PYG{p}{\PYGZcb{}}
+	\PYG{k}{return} \PYG{l+m+mi}{0}\PYG{p}{;}
+\PYG{p}{\PYGZcb{}}
+
+\PYG{n}{ISR}\PYG{p}{(}\PYG{n}{INT0\PYGZus{}vect}\PYG{p}{)}
+\PYG{p}{\PYGZob{}}
+	\PYG{c+c1}{// INT0 interrupt as occured}
+	\PYG{k}{if}\PYG{p}{((}\PYG{n}{EIFR} \PYG{o}{\PYGZam{}} \PYG{p}{(}\PYG{l+m+mi}{1}\PYG{o}{\PYGZlt{}\PYGZlt{}}\PYG{n}{INTF0}\PYG{p}{))} \PYG{o}{!=} \PYG{l+m+mi}{0}\PYG{p}{)}
+	\PYG{p}{\PYGZob{}}		
+		\PYG{c+c1}{//toggle Led at pinc 0}
+		\PYG{n}{PINC} \PYG{o}{|=} \PYG{p}{(}\PYG{l+m+mi}{1}\PYG{o}{\PYGZlt{}\PYGZlt{}}\PYG{l+m+mi}{0}\PYG{p}{);}
+	\PYG{p}{\PYGZcb{}}
+\PYG{p}{\PYGZcb{}}
+\PYG{n}{ISR}\PYG{p}{(}\PYG{n}{INT1\PYGZus{}vect}\PYG{p}{)}
+\PYG{p}{\PYGZob{}}	\PYG{c+c1}{// INT1 interrupt as occured}
+	\PYG{k}{if}\PYG{p}{((}\PYG{n}{EIFR} \PYG{o}{\PYGZam{}} \PYG{p}{(}\PYG{l+m+mi}{1}\PYG{o}{\PYGZlt{}\PYGZlt{}}\PYG{n}{INTF1}\PYG{p}{))} \PYG{o}{!=} \PYG{l+m+mi}{0}\PYG{p}{)}
+	\PYG{p}{\PYGZob{}}
+		\PYG{c+c1}{//toggle Led at pinc 1}
+		\PYG{n}{PINC} \PYG{o}{|=} \PYG{p}{(}\PYG{l+m+mi}{1}\PYG{o}{\PYGZlt{}\PYGZlt{}}\PYG{l+m+mi}{1}\PYG{p}{);}
+	\PYG{p}{\PYGZcb{}}
+\PYG{p}{\PYGZcb{}}
+\end{Verbatim}

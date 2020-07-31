@@ -1,0 +1,53 @@
+\begin{Verbatim}[commandchars=\\\{\}]
+\PYG{c+cp}{\PYGZsh{}define F\PYGZus{}CPU 16000000L}
+
+\PYG{c+cp}{\PYGZsh{}include} \PYG{c+cpf}{\PYGZlt{}avr/io.h\PYGZgt{}}
+\PYG{c+cp}{\PYGZsh{}include} \PYG{c+cpf}{\PYGZlt{}util/delay.h\PYGZgt{}}
+\PYG{k+kt}{void} \PYG{n+nf}{SPI\PYGZus{}Init}\PYG{p}{()}
+\PYG{p}{\PYGZob{}}
+    \PYG{c+c1}{// making SCK, MOSI, SS\PYGZsq{} as outptut}
+    \PYG{n}{DDRB} \PYG{o}{|=} \PYG{p}{(}\PYG{l+m+mi}{1}\PYG{o}{\PYGZlt{}\PYGZlt{}}\PYG{n}{DDB2}\PYG{p}{)} \PYG{o}{|} \PYG{p}{(}\PYG{l+m+mi}{1}\PYG{o}{\PYGZlt{}\PYGZlt{}}\PYG{n}{DDB3}\PYG{p}{)} \PYG{o}{|} \PYG{p}{(}\PYG{l+m+mi}{1}\PYG{o}{\PYGZlt{}\PYGZlt{}}\PYG{n}{DDB5}\PYG{p}{);}
+    \PYG{c+c1}{// making MISO as input}
+    \PYG{n}{DDRB} \PYG{o}{\PYGZam{}=} \PYG{o}{\PYGZti{}}\PYG{p}{(}\PYG{l+m+mi}{1}\PYG{o}{\PYGZlt{}\PYGZlt{}}\PYG{n}{DDB4}\PYG{p}{);}
+    \PYG{c+c1}{// making SCK, MOSI, as low}
+    \PYG{n}{PORTB} \PYG{o}{\PYGZam{}=} \PYG{o}{\PYGZti{}}\PYG{p}{(}\PYG{l+m+mi}{1}\PYG{o}{\PYGZlt{}\PYGZlt{}}\PYG{n}{PORTB3}\PYG{p}{)} \PYG{o}{\PYGZam{}} \PYG{o}{\PYGZti{}}\PYG{p}{(}\PYG{l+m+mi}{1}\PYG{o}{\PYGZlt{}\PYGZlt{}}\PYG{n}{PORTB5}\PYG{p}{);}
+    \PYG{c+c1}{// making SS\PYGZsq{} as high}
+    \PYG{n}{PORTB} \PYG{o}{|=} \PYG{p}{(}\PYG{l+m+mi}{1}\PYG{o}{\PYGZlt{}\PYGZlt{}}\PYG{n}{PORTB2}\PYG{p}{);}
+    \PYG{c+c1}{// Select MSB first or LSB first by DORD}
+    \PYG{n}{SPCR} \PYG{o}{\PYGZam{}=} \PYG{o}{\PYGZti{}}\PYG{p}{(}\PYG{l+m+mi}{1}\PYG{o}{\PYGZlt{}\PYGZlt{}}\PYG{n}{DORD}\PYG{p}{);}
+    \PYG{c+c1}{// Select this as Master}
+    \PYG{n}{SPCR} \PYG{o}{|=} \PYG{p}{(}\PYG{l+m+mi}{1}\PYG{o}{\PYGZlt{}\PYGZlt{}}\PYG{n}{MSTR}\PYG{p}{);}
+    \PYG{c+c1}{// Let the clock polarity be SCK is low when idle}
+    \PYG{n}{SPCR} \PYG{o}{\PYGZam{}=} \PYG{o}{\PYGZti{}}\PYG{p}{(}\PYG{l+m+mi}{1}\PYG{o}{\PYGZlt{}\PYGZlt{}}\PYG{n}{CPOL}\PYG{p}{);}
+    \PYG{c+c1}{// Sampled at Rising or Falling Edge}
+    \PYG{c+c1}{// we choose rising edge}
+    \PYG{n}{SPCR} \PYG{o}{\PYGZam{}=} \PYG{o}{\PYGZti{}}\PYG{p}{(}\PYG{l+m+mi}{1}\PYG{o}{\PYGZlt{}\PYGZlt{}}\PYG{n}{CPHA}\PYG{p}{);}
+    \PYG{c+c1}{// Selecting a SCK frequnecy}
+    \PYG{c+c1}{// we select Fosc/4 by 000}
+    \PYG{n}{SPSR} \PYG{o}{\PYGZam{}=} \PYG{o}{\PYGZti{}}\PYG{p}{(}\PYG{l+m+mi}{1}\PYG{o}{\PYGZlt{}\PYGZlt{}}\PYG{n}{SPI2X}\PYG{p}{);}
+    \PYG{n}{SPCR} \PYG{o}{\PYGZam{}=} \PYG{o}{\PYGZti{}}\PYG{p}{(}\PYG{l+m+mi}{1}\PYG{o}{\PYGZlt{}\PYGZlt{}}\PYG{n}{SPR1}\PYG{p}{);}
+    \PYG{n}{SPCR} \PYG{o}{\PYGZam{}=} \PYG{o}{\PYGZti{}}\PYG{p}{(}\PYG{l+m+mi}{1}\PYG{o}{\PYGZlt{}\PYGZlt{}}\PYG{n}{SPR0}\PYG{p}{);}
+    \PYG{c+c1}{// dISBALE SPIE bit for interrupt on Serial Transfer Completion}
+    \PYG{n}{SPCR} \PYG{o}{\PYGZam{}=} \PYG{o}{\PYGZti{}}\PYG{p}{(}\PYG{l+m+mi}{1}\PYG{o}{\PYGZlt{}\PYGZlt{}}\PYG{n}{SPIE}\PYG{p}{);}
+    \PYG{c+c1}{// Enabling SPI}
+    \PYG{n}{SPCR} \PYG{o}{|=} \PYG{p}{(}\PYG{l+m+mi}{1}\PYG{o}{\PYGZlt{}\PYGZlt{}}\PYG{n}{SPE}\PYG{p}{);}
+\PYG{p}{\PYGZcb{}}
+\PYG{k+kt}{uint8\PYGZus{}t} \PYG{n+nf}{SPITransferReceive}\PYG{p}{(}\PYG{k+kt}{uint8\PYGZus{}t} \PYG{n}{data\PYGZus{}}\PYG{p}{)}
+\PYG{p}{\PYGZob{}}
+    \PYG{n}{SPDR} \PYG{o}{=} \PYG{n}{data\PYGZus{}}\PYG{p}{;}
+    \PYG{c+c1}{// wait till serial transmission is complete by checking the SPI Interrupt Flag}
+    \PYG{k}{while}\PYG{p}{((}\PYG{n}{SPSR} \PYG{o}{\PYGZam{}} \PYG{p}{(}\PYG{l+m+mi}{1}\PYG{o}{\PYGZlt{}\PYGZlt{}}\PYG{n}{SPIF}\PYG{p}{))} \PYG{o}{==} \PYG{l+m+mi}{0} \PYG{p}{)} \PYG{p}{\PYGZob{}\PYGZcb{};}
+    \PYG{c+c1}{// return the recieved data \PYGZhy{} can use it or ignore it}
+    \PYG{k}{return} \PYG{n}{SPDR}\PYG{p}{;}
+\PYG{p}{\PYGZcb{}}
+\PYG{k+kt}{int} \PYG{n+nf}{main}\PYG{p}{(}\PYG{k+kt}{void}\PYG{p}{)}
+\PYG{p}{\PYGZob{}}
+    \PYG{n}{SPI\PYGZus{}Init}\PYG{p}{();}
+    \PYG{n}{PORTB} \PYG{o}{\PYGZam{}=} \PYG{o}{\PYGZti{}}\PYG{p}{(}\PYG{l+m+mi}{1}\PYG{o}{\PYGZlt{}\PYGZlt{}}\PYG{n}{PORTB2}\PYG{p}{);}
+    \PYG{n}{SPITransferReceive}\PYG{p}{(}\PYG{l+s+sc}{\PYGZsq{}A\PYGZsq{}}\PYG{p}{);}
+    \PYG{k}{while}\PYG{p}{(}\PYG{l+m+mi}{1}\PYG{p}{)}
+    \PYG{p}{\PYGZob{}}
+
+    \PYG{p}{\PYGZcb{}}
+\PYG{p}{\PYGZcb{}}
+\end{Verbatim}

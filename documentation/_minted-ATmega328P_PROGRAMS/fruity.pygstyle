@@ -1,0 +1,111 @@
+
+\makeatletter
+\def\PYGfruity@reset{\let\PYGfruity@it=\relax \let\PYGfruity@bf=\relax%
+    \let\PYGfruity@ul=\relax \let\PYGfruity@tc=\relax%
+    \let\PYGfruity@bc=\relax \let\PYGfruity@ff=\relax}
+\def\PYGfruity@tok#1{\csname PYGfruity@tok@#1\endcsname}
+\def\PYGfruity@toks#1+{\ifx\relax#1\empty\else%
+    \PYGfruity@tok{#1}\expandafter\PYGfruity@toks\fi}
+\def\PYGfruity@do#1{\PYGfruity@bc{\PYGfruity@tc{\PYGfruity@ul{%
+    \PYGfruity@it{\PYGfruity@bf{\PYGfruity@ff{#1}}}}}}}
+\def\PYGfruity#1#2{\PYGfruity@reset\PYGfruity@toks#1+\relax+\PYGfruity@do{#2}}
+
+\expandafter\def\csname PYGfruity@tok@\endcsname{\def\PYGfruity@tc##1{\textcolor[rgb]{1.00,1.00,1.00}{##1}}}
+\expandafter\def\csname PYGfruity@tok@w\endcsname{\def\PYGfruity@tc##1{\textcolor[rgb]{0.53,0.53,0.53}{##1}}}
+\expandafter\def\csname PYGfruity@tok@g\endcsname{\def\PYGfruity@tc##1{\textcolor[rgb]{1.00,1.00,1.00}{##1}}}
+\expandafter\def\csname PYGfruity@tok@go\endcsname{\def\PYGfruity@tc##1{\textcolor[rgb]{0.27,0.27,0.27}{##1}}\def\PYGfruity@bc##1{\setlength{\fboxsep}{0pt}\colorbox[rgb]{0.13,0.13,0.13}{\strut ##1}}}
+\expandafter\def\csname PYGfruity@tok@k\endcsname{\let\PYGfruity@bf=\textbf\def\PYGfruity@tc##1{\textcolor[rgb]{0.98,0.40,0.04}{##1}}}
+\expandafter\def\csname PYGfruity@tok@kp\endcsname{\def\PYGfruity@tc##1{\textcolor[rgb]{0.98,0.40,0.04}{##1}}}
+\expandafter\def\csname PYGfruity@tok@l\endcsname{\def\PYGfruity@tc##1{\textcolor[rgb]{1.00,1.00,1.00}{##1}}}
+\expandafter\def\csname PYGfruity@tok@m\endcsname{\let\PYGfruity@bf=\textbf\def\PYGfruity@tc##1{\textcolor[rgb]{0.00,0.53,0.97}{##1}}}
+\expandafter\def\csname PYGfruity@tok@n\endcsname{\def\PYGfruity@tc##1{\textcolor[rgb]{1.00,1.00,1.00}{##1}}}
+\expandafter\def\csname PYGfruity@tok@nt\endcsname{\let\PYGfruity@bf=\textbf\def\PYGfruity@tc##1{\textcolor[rgb]{0.98,0.40,0.04}{##1}}}
+\expandafter\def\csname PYGfruity@tok@nv\endcsname{\def\PYGfruity@tc##1{\textcolor[rgb]{0.98,0.40,0.04}{##1}}}
+\expandafter\def\csname PYGfruity@tok@c\endcsname{\let\PYGfruity@it=\textit\def\PYGfruity@tc##1{\textcolor[rgb]{0.00,0.53,0.00}{##1}}\def\PYGfruity@bc##1{\setlength{\fboxsep}{0pt}\colorbox[rgb]{0.06,0.08,0.06}{\strut ##1}}}
+\expandafter\def\csname PYGfruity@tok@na\endcsname{\let\PYGfruity@bf=\textbf\def\PYGfruity@tc##1{\textcolor[rgb]{1.00,0.00,0.53}{##1}}}
+\expandafter\def\csname PYGfruity@tok@s\endcsname{\def\PYGfruity@tc##1{\textcolor[rgb]{0.00,0.53,0.82}{##1}}}
+\expandafter\def\csname PYGfruity@tok@nf\endcsname{\let\PYGfruity@bf=\textbf\def\PYGfruity@tc##1{\textcolor[rgb]{1.00,0.00,0.53}{##1}}}
+\expandafter\def\csname PYGfruity@tok@gh\endcsname{\let\PYGfruity@bf=\textbf\def\PYGfruity@tc##1{\textcolor[rgb]{1.00,1.00,1.00}{##1}}}
+\expandafter\def\csname PYGfruity@tok@kt\endcsname{\let\PYGfruity@bf=\textbf\def\PYGfruity@tc##1{\textcolor[rgb]{0.80,0.79,0.66}{##1}}}
+\expandafter\def\csname PYGfruity@tok@gu\endcsname{\let\PYGfruity@bf=\textbf\def\PYGfruity@tc##1{\textcolor[rgb]{1.00,1.00,1.00}{##1}}}
+\expandafter\def\csname PYGfruity@tok@no\endcsname{\def\PYGfruity@tc##1{\textcolor[rgb]{0.00,0.53,0.82}{##1}}}
+\expandafter\def\csname PYGfruity@tok@cp\endcsname{\let\PYGfruity@bf=\textbf\let\PYGfruity@it=\textit\def\PYGfruity@tc##1{\textcolor[rgb]{1.00,0.00,0.03}{##1}}\def\PYGfruity@bc##1{\setlength{\fboxsep}{0pt}\colorbox[rgb]{0.06,0.08,0.06}{\strut ##1}}}
+\expandafter\def\csname PYGfruity@tok@esc\endcsname{\def\PYGfruity@tc##1{\textcolor[rgb]{1.00,1.00,1.00}{##1}}}
+\expandafter\def\csname PYGfruity@tok@err\endcsname{\def\PYGfruity@tc##1{\textcolor[rgb]{1.00,1.00,1.00}{##1}}}
+\expandafter\def\csname PYGfruity@tok@x\endcsname{\def\PYGfruity@tc##1{\textcolor[rgb]{1.00,1.00,1.00}{##1}}}
+\expandafter\def\csname PYGfruity@tok@kc\endcsname{\let\PYGfruity@bf=\textbf\def\PYGfruity@tc##1{\textcolor[rgb]{0.98,0.40,0.04}{##1}}}
+\expandafter\def\csname PYGfruity@tok@kd\endcsname{\let\PYGfruity@bf=\textbf\def\PYGfruity@tc##1{\textcolor[rgb]{0.98,0.40,0.04}{##1}}}
+\expandafter\def\csname PYGfruity@tok@kn\endcsname{\let\PYGfruity@bf=\textbf\def\PYGfruity@tc##1{\textcolor[rgb]{0.98,0.40,0.04}{##1}}}
+\expandafter\def\csname PYGfruity@tok@kr\endcsname{\let\PYGfruity@bf=\textbf\def\PYGfruity@tc##1{\textcolor[rgb]{0.98,0.40,0.04}{##1}}}
+\expandafter\def\csname PYGfruity@tok@nb\endcsname{\def\PYGfruity@tc##1{\textcolor[rgb]{1.00,1.00,1.00}{##1}}}
+\expandafter\def\csname PYGfruity@tok@bp\endcsname{\def\PYGfruity@tc##1{\textcolor[rgb]{1.00,1.00,1.00}{##1}}}
+\expandafter\def\csname PYGfruity@tok@nc\endcsname{\def\PYGfruity@tc##1{\textcolor[rgb]{1.00,1.00,1.00}{##1}}}
+\expandafter\def\csname PYGfruity@tok@nd\endcsname{\def\PYGfruity@tc##1{\textcolor[rgb]{1.00,1.00,1.00}{##1}}}
+\expandafter\def\csname PYGfruity@tok@ni\endcsname{\def\PYGfruity@tc##1{\textcolor[rgb]{1.00,1.00,1.00}{##1}}}
+\expandafter\def\csname PYGfruity@tok@ne\endcsname{\def\PYGfruity@tc##1{\textcolor[rgb]{1.00,1.00,1.00}{##1}}}
+\expandafter\def\csname PYGfruity@tok@fm\endcsname{\let\PYGfruity@bf=\textbf\def\PYGfruity@tc##1{\textcolor[rgb]{1.00,0.00,0.53}{##1}}}
+\expandafter\def\csname PYGfruity@tok@py\endcsname{\def\PYGfruity@tc##1{\textcolor[rgb]{1.00,1.00,1.00}{##1}}}
+\expandafter\def\csname PYGfruity@tok@nl\endcsname{\def\PYGfruity@tc##1{\textcolor[rgb]{1.00,1.00,1.00}{##1}}}
+\expandafter\def\csname PYGfruity@tok@nn\endcsname{\def\PYGfruity@tc##1{\textcolor[rgb]{1.00,1.00,1.00}{##1}}}
+\expandafter\def\csname PYGfruity@tok@nx\endcsname{\def\PYGfruity@tc##1{\textcolor[rgb]{1.00,1.00,1.00}{##1}}}
+\expandafter\def\csname PYGfruity@tok@vc\endcsname{\def\PYGfruity@tc##1{\textcolor[rgb]{0.98,0.40,0.04}{##1}}}
+\expandafter\def\csname PYGfruity@tok@vg\endcsname{\def\PYGfruity@tc##1{\textcolor[rgb]{0.98,0.40,0.04}{##1}}}
+\expandafter\def\csname PYGfruity@tok@vi\endcsname{\def\PYGfruity@tc##1{\textcolor[rgb]{0.98,0.40,0.04}{##1}}}
+\expandafter\def\csname PYGfruity@tok@vm\endcsname{\def\PYGfruity@tc##1{\textcolor[rgb]{0.98,0.40,0.04}{##1}}}
+\expandafter\def\csname PYGfruity@tok@ld\endcsname{\def\PYGfruity@tc##1{\textcolor[rgb]{1.00,1.00,1.00}{##1}}}
+\expandafter\def\csname PYGfruity@tok@sa\endcsname{\def\PYGfruity@tc##1{\textcolor[rgb]{0.00,0.53,0.82}{##1}}}
+\expandafter\def\csname PYGfruity@tok@sb\endcsname{\def\PYGfruity@tc##1{\textcolor[rgb]{0.00,0.53,0.82}{##1}}}
+\expandafter\def\csname PYGfruity@tok@sc\endcsname{\def\PYGfruity@tc##1{\textcolor[rgb]{0.00,0.53,0.82}{##1}}}
+\expandafter\def\csname PYGfruity@tok@dl\endcsname{\def\PYGfruity@tc##1{\textcolor[rgb]{0.00,0.53,0.82}{##1}}}
+\expandafter\def\csname PYGfruity@tok@sd\endcsname{\def\PYGfruity@tc##1{\textcolor[rgb]{0.00,0.53,0.82}{##1}}}
+\expandafter\def\csname PYGfruity@tok@s2\endcsname{\def\PYGfruity@tc##1{\textcolor[rgb]{0.00,0.53,0.82}{##1}}}
+\expandafter\def\csname PYGfruity@tok@se\endcsname{\def\PYGfruity@tc##1{\textcolor[rgb]{0.00,0.53,0.82}{##1}}}
+\expandafter\def\csname PYGfruity@tok@sh\endcsname{\def\PYGfruity@tc##1{\textcolor[rgb]{0.00,0.53,0.82}{##1}}}
+\expandafter\def\csname PYGfruity@tok@si\endcsname{\def\PYGfruity@tc##1{\textcolor[rgb]{0.00,0.53,0.82}{##1}}}
+\expandafter\def\csname PYGfruity@tok@sx\endcsname{\def\PYGfruity@tc##1{\textcolor[rgb]{0.00,0.53,0.82}{##1}}}
+\expandafter\def\csname PYGfruity@tok@sr\endcsname{\def\PYGfruity@tc##1{\textcolor[rgb]{0.00,0.53,0.82}{##1}}}
+\expandafter\def\csname PYGfruity@tok@s1\endcsname{\def\PYGfruity@tc##1{\textcolor[rgb]{0.00,0.53,0.82}{##1}}}
+\expandafter\def\csname PYGfruity@tok@ss\endcsname{\def\PYGfruity@tc##1{\textcolor[rgb]{0.00,0.53,0.82}{##1}}}
+\expandafter\def\csname PYGfruity@tok@mb\endcsname{\let\PYGfruity@bf=\textbf\def\PYGfruity@tc##1{\textcolor[rgb]{0.00,0.53,0.97}{##1}}}
+\expandafter\def\csname PYGfruity@tok@mf\endcsname{\let\PYGfruity@bf=\textbf\def\PYGfruity@tc##1{\textcolor[rgb]{0.00,0.53,0.97}{##1}}}
+\expandafter\def\csname PYGfruity@tok@mh\endcsname{\let\PYGfruity@bf=\textbf\def\PYGfruity@tc##1{\textcolor[rgb]{0.00,0.53,0.97}{##1}}}
+\expandafter\def\csname PYGfruity@tok@mi\endcsname{\let\PYGfruity@bf=\textbf\def\PYGfruity@tc##1{\textcolor[rgb]{0.00,0.53,0.97}{##1}}}
+\expandafter\def\csname PYGfruity@tok@il\endcsname{\let\PYGfruity@bf=\textbf\def\PYGfruity@tc##1{\textcolor[rgb]{0.00,0.53,0.97}{##1}}}
+\expandafter\def\csname PYGfruity@tok@mo\endcsname{\let\PYGfruity@bf=\textbf\def\PYGfruity@tc##1{\textcolor[rgb]{0.00,0.53,0.97}{##1}}}
+\expandafter\def\csname PYGfruity@tok@o\endcsname{\def\PYGfruity@tc##1{\textcolor[rgb]{1.00,1.00,1.00}{##1}}}
+\expandafter\def\csname PYGfruity@tok@ow\endcsname{\def\PYGfruity@tc##1{\textcolor[rgb]{1.00,1.00,1.00}{##1}}}
+\expandafter\def\csname PYGfruity@tok@p\endcsname{\def\PYGfruity@tc##1{\textcolor[rgb]{1.00,1.00,1.00}{##1}}}
+\expandafter\def\csname PYGfruity@tok@ch\endcsname{\let\PYGfruity@it=\textit\def\PYGfruity@tc##1{\textcolor[rgb]{0.00,0.53,0.00}{##1}}\def\PYGfruity@bc##1{\setlength{\fboxsep}{0pt}\colorbox[rgb]{0.06,0.08,0.06}{\strut ##1}}}
+\expandafter\def\csname PYGfruity@tok@cm\endcsname{\let\PYGfruity@it=\textit\def\PYGfruity@tc##1{\textcolor[rgb]{0.00,0.53,0.00}{##1}}\def\PYGfruity@bc##1{\setlength{\fboxsep}{0pt}\colorbox[rgb]{0.06,0.08,0.06}{\strut ##1}}}
+\expandafter\def\csname PYGfruity@tok@cpf\endcsname{\let\PYGfruity@it=\textit\def\PYGfruity@tc##1{\textcolor[rgb]{0.00,0.53,0.00}{##1}}\def\PYGfruity@bc##1{\setlength{\fboxsep}{0pt}\colorbox[rgb]{0.06,0.08,0.06}{\strut ##1}}}
+\expandafter\def\csname PYGfruity@tok@c1\endcsname{\let\PYGfruity@it=\textit\def\PYGfruity@tc##1{\textcolor[rgb]{0.00,0.53,0.00}{##1}}\def\PYGfruity@bc##1{\setlength{\fboxsep}{0pt}\colorbox[rgb]{0.06,0.08,0.06}{\strut ##1}}}
+\expandafter\def\csname PYGfruity@tok@cs\endcsname{\let\PYGfruity@it=\textit\def\PYGfruity@tc##1{\textcolor[rgb]{0.00,0.53,0.00}{##1}}\def\PYGfruity@bc##1{\setlength{\fboxsep}{0pt}\colorbox[rgb]{0.06,0.08,0.06}{\strut ##1}}}
+\expandafter\def\csname PYGfruity@tok@gd\endcsname{\def\PYGfruity@tc##1{\textcolor[rgb]{1.00,1.00,1.00}{##1}}}
+\expandafter\def\csname PYGfruity@tok@ge\endcsname{\def\PYGfruity@tc##1{\textcolor[rgb]{1.00,1.00,1.00}{##1}}}
+\expandafter\def\csname PYGfruity@tok@gr\endcsname{\def\PYGfruity@tc##1{\textcolor[rgb]{1.00,1.00,1.00}{##1}}}
+\expandafter\def\csname PYGfruity@tok@gi\endcsname{\def\PYGfruity@tc##1{\textcolor[rgb]{1.00,1.00,1.00}{##1}}}
+\expandafter\def\csname PYGfruity@tok@gp\endcsname{\def\PYGfruity@tc##1{\textcolor[rgb]{1.00,1.00,1.00}{##1}}}
+\expandafter\def\csname PYGfruity@tok@gs\endcsname{\def\PYGfruity@tc##1{\textcolor[rgb]{1.00,1.00,1.00}{##1}}}
+\expandafter\def\csname PYGfruity@tok@gt\endcsname{\def\PYGfruity@tc##1{\textcolor[rgb]{1.00,1.00,1.00}{##1}}}
+
+\def\PYGfruityZbs{\char`\\}
+\def\PYGfruityZus{\char`\_}
+\def\PYGfruityZob{\char`\{}
+\def\PYGfruityZcb{\char`\}}
+\def\PYGfruityZca{\char`\^}
+\def\PYGfruityZam{\char`\&}
+\def\PYGfruityZlt{\char`\<}
+\def\PYGfruityZgt{\char`\>}
+\def\PYGfruityZsh{\char`\#}
+\def\PYGfruityZpc{\char`\%}
+\def\PYGfruityZdl{\char`\$}
+\def\PYGfruityZhy{\char`\-}
+\def\PYGfruityZsq{\char`\'}
+\def\PYGfruityZdq{\char`\"}
+\def\PYGfruityZti{\char`\~}
+% for compatibility with earlier versions
+\def\PYGfruityZat{@}
+\def\PYGfruityZlb{[}
+\def\PYGfruityZrb{]}
+\makeatother
+

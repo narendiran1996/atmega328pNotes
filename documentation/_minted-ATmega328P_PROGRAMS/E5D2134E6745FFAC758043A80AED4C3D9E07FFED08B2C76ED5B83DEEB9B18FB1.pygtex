@@ -1,0 +1,40 @@
+\begin{Verbatim}[commandchars=\\\{\}]
+\PYG{c+cp}{\PYGZsh{}define F\PYGZus{}CPU 16000000L}
+\PYG{c+cp}{\PYGZsh{}include} \PYG{c+cpf}{\PYGZlt{}avr/io.h\PYGZgt{}}
+\PYG{c+cp}{\PYGZsh{}include} \PYG{c+cpf}{\PYGZlt{}util/delay.h\PYGZgt{}}
+\PYG{c+cp}{\PYGZsh{}include} \PYG{c+cpf}{\PYGZlt{}avr/interrupt.h\PYGZgt{}}
+
+\PYG{k+kt}{void} \PYG{n+nf}{pinChangeInterrupt\PYGZus{}PCINT20}\PYG{p}{()}
+\PYG{p}{\PYGZob{}}
+	\PYG{c+c1}{// making PD4 as input for PCI20}
+	\PYG{n}{DDRD} \PYG{o}{\PYGZam{}=} \PYG{o}{\PYGZti{}}\PYG{p}{(}\PYG{l+m+mi}{1}\PYG{o}{\PYGZlt{}\PYGZlt{}}\PYG{l+m+mi}{4}\PYG{p}{);}
+	\PYG{c+c1}{// enabling the internal pull\PYGZhy{}up register for PD4 for PCI20}
+	\PYG{n}{PORTD} \PYG{o}{|=} \PYG{p}{(}\PYG{l+m+mi}{1}\PYG{o}{\PYGZlt{}\PYGZlt{}}\PYG{l+m+mi}{4}\PYG{p}{);}
+ 	\PYG{c+c1}{// Selecting the PCINT20 for PCI2 intterupt}
+	\PYG{n}{PCMSK2} \PYG{o}{|=} \PYG{p}{(}\PYG{l+m+mi}{1}\PYG{o}{\PYGZlt{}\PYGZlt{}}\PYG{n}{PCINT20}\PYG{p}{);}
+	\PYG{c+c1}{// Enabling the PCI2 interupt}
+	\PYG{n}{PCICR} \PYG{o}{|=} \PYG{p}{(}\PYG{l+m+mi}{1}\PYG{o}{\PYGZlt{}\PYGZlt{}}\PYG{n}{PCIE2}\PYG{p}{);}	
+	\PYG{c+c1}{// Enabling global Interrupts}
+	\PYG{n}{sei}\PYG{p}{();}		
+\PYG{p}{\PYGZcb{}}
+\PYG{k+kt}{int} \PYG{n+nf}{main}\PYG{p}{(}\PYG{k+kt}{void}\PYG{p}{)}
+\PYG{p}{\PYGZob{}}
+	\PYG{n}{DDRC} \PYG{o}{|=} \PYG{l+m+mi}{0}\PYG{n}{X01}\PYG{p}{;} \PYG{c+c1}{// making PC0 as output for led}
+	\PYG{n}{PORTC} \PYG{o}{\PYGZam{}=} \PYG{l+m+mi}{0}\PYG{n}{XFE}\PYG{p}{;} \PYG{c+c1}{// PC0 is made 0}
+	\PYG{n}{pinChangeInterrupt\PYGZus{}PCINT20}\PYG{p}{();}
+	\PYG{k}{while}\PYG{p}{(}\PYG{l+m+mi}{1}\PYG{p}{)}
+	\PYG{p}{\PYGZob{}}
+	\PYG{p}{\PYGZcb{}}
+	\PYG{k}{return} \PYG{l+m+mi}{0}\PYG{p}{;}
+\PYG{p}{\PYGZcb{}}
+
+\PYG{n}{ISR}\PYG{p}{(}\PYG{n}{PCINT2\PYGZus{}vect}\PYG{p}{)}
+\PYG{p}{\PYGZob{}}
+	\PYG{c+c1}{// PCI2 interrupt as occured}
+	\PYG{k}{if}\PYG{p}{((}\PYG{n}{PCIFR} \PYG{o}{\PYGZam{}} \PYG{p}{(}\PYG{l+m+mi}{1}\PYG{o}{\PYGZlt{}\PYGZlt{}}\PYG{n}{PCIF2}\PYG{p}{))} \PYG{o}{!=} \PYG{l+m+mi}{0}\PYG{p}{)}
+	\PYG{p}{\PYGZob{}}		
+		\PYG{c+c1}{//toggle Led at pinc 0}
+		\PYG{n}{PINC} \PYG{o}{|=} \PYG{p}{(}\PYG{l+m+mi}{1}\PYG{o}{\PYGZlt{}\PYGZlt{}}\PYG{l+m+mi}{0}\PYG{p}{);}
+	\PYG{p}{\PYGZcb{}}
+\PYG{p}{\PYGZcb{}}
+\end{Verbatim}

@@ -1,0 +1,115 @@
+\begin{Verbatim}[commandchars=\\\{\}]
+\PYG{c+cp}{\PYGZsh{}define F\PYGZus{}CPU 16000000L}
+\PYG{c+cp}{\PYGZsh{}include} \PYG{c+cpf}{\PYGZlt{}avr/io.h\PYGZgt{}}
+\PYG{c+cp}{\PYGZsh{}include} \PYG{c+cpf}{\PYGZlt{}avr/interrupt.h\PYGZgt{}}
+
+\PYG{k+kt}{void} \PYG{n+nf}{Timer0\PYGZus{}asTimer}\PYG{p}{()}
+\PYG{p}{\PYGZob{}}		
+	\PYG{c+cm}{/* TCNT0 starts from 0X00 goes upto 0XFF and restarts */}
+	\PYG{c+cm}{/* No possible use case as it just goes upto 0xFF and restarts */}
+	\PYG{c+c1}{// MOde of operation to Normal Mode \PYGZhy{}\PYGZhy{} WGM0[2:0] === 000}
+	\PYG{c+cm}{/* WGM0[2](bit3) from TCCR0B, WGM0[1](bit1)  from TCCR0A,}
+\PYG{c+cm}{	 WGM0[0](bit0)  from TCCR0A*/}
+	\PYG{n}{TCCR0A} \PYG{o}{=} \PYG{n}{TCCR0A} \PYG{o}{\PYGZam{}} \PYG{p}{(}\PYG{o}{\PYGZti{}}\PYG{p}{(}\PYG{l+m+mi}{1}\PYG{o}{\PYGZlt{}\PYGZlt{}}\PYG{l+m+mi}{0}\PYG{p}{)} \PYG{o}{\PYGZam{}} \PYG{o}{\PYGZti{}}\PYG{p}{(}\PYG{l+m+mi}{1}\PYG{o}{\PYGZlt{}\PYGZlt{}}\PYG{l+m+mi}{1}\PYG{p}{));}
+	\PYG{n}{TCCR0B} \PYG{o}{=} \PYG{n}{TCCR0B} \PYG{o}{\PYGZam{}} \PYG{o}{\PYGZti{}}\PYG{p}{(}\PYG{l+m+mi}{1}\PYG{o}{\PYGZlt{}\PYGZlt{}}\PYG{l+m+mi}{3}\PYG{p}{);}	
+	\PYG{c+cm}{/* What to do when timer reaches the MAX(0xFF) value */}	
+	\PYG{c+c1}{// toggle OC0A and OC0B on each time when reaches the MAX(0xFF) }
+	\PYG{c+c1}{// which is reflected in PD6 and PD5    }
+	\PYG{c+c1}{// Output OC0A to toglle when reaches MAX \PYGZhy{}\PYGZhy{} COM0A[1:0] === 01}
+	\PYG{c+c1}{// COM0A[1](bit7) from TCCR0A, COM0A[0](bit6) from TCCR0A}
+	\PYG{n}{TCCR0A} \PYG{o}{=} \PYG{n}{TCCR0A} \PYG{o}{\PYGZam{}} \PYG{o}{\PYGZti{}}\PYG{p}{(}\PYG{l+m+mi}{1}\PYG{o}{\PYGZlt{}\PYGZlt{}}\PYG{l+m+mi}{7}\PYG{p}{);}
+	\PYG{n}{TCCR0A} \PYG{o}{=} \PYG{n}{TCCR0A} \PYG{o}{|} \PYG{p}{(}\PYG{l+m+mi}{1}\PYG{o}{\PYGZlt{}\PYGZlt{}}\PYG{l+m+mi}{6}\PYG{p}{);}
+    \PYG{c+c1}{// Output OC0B to toglle when reaches MAX \PYGZhy{}\PYGZhy{} COM0B1:0] === 01}
+	\PYG{c+c1}{// COM0B[1](bit7) from TCCR0A, COM0B[0](bit6) from TCCR0A}
+	\PYG{n}{TCCR0A} \PYG{o}{=} \PYG{n}{TCCR0A} \PYG{o}{\PYGZam{}} \PYG{o}{\PYGZti{}}\PYG{p}{(}\PYG{l+m+mi}{1}\PYG{o}{\PYGZlt{}\PYGZlt{}}\PYG{l+m+mi}{5}\PYG{p}{);}
+	\PYG{n}{TCCR0A} \PYG{o}{=} \PYG{n}{TCCR0A} \PYG{o}{|} \PYG{p}{(}\PYG{l+m+mi}{1}\PYG{o}{\PYGZlt{}\PYGZlt{}}\PYG{l+m+mi}{4}\PYG{p}{);}	
+	\PYG{c+c1}{//Enable Interrupt of OVERFLOW flag so that interrupt can be generated}
+	\PYG{n}{TIMSK0} \PYG{o}{=} \PYG{n}{TIMSK0} \PYG{o}{|} \PYG{p}{(}\PYG{l+m+mi}{1}\PYG{o}{\PYGZlt{}\PYGZlt{}}\PYG{l+m+mi}{0}\PYG{p}{);}		
+	\PYG{c+c1}{// start timer by setting the clock prescalar}
+	\PYG{c+c1}{// DIVIDE BY 8 from I/O clock}
+	\PYG{c+c1}{// DIVIDE BY 8\PYGZhy{}\PYGZhy{} CS0[2:0] === 010}
+	\PYG{c+cm}{/* CS0[2](bit2) from TCCR0B,CS0[1](bit1) from TCCR0B,}
+\PYG{c+cm}{	CS0[0](bit0) from TCCR0B*/}
+	\PYG{n}{TCCR0B} \PYG{o}{=} \PYG{n}{TCCR0B} \PYG{o}{|} \PYG{p}{(}\PYG{l+m+mi}{1}\PYG{o}{\PYGZlt{}\PYGZlt{}}\PYG{l+m+mi}{1}\PYG{p}{);}
+	\PYG{n}{TCCR0B} \PYG{o}{=} \PYG{n}{TCCR0B} \PYG{o}{\PYGZam{}} \PYG{p}{(}\PYG{o}{\PYGZti{}}\PYG{p}{(}\PYG{l+m+mi}{1}\PYG{o}{\PYGZlt{}\PYGZlt{}}\PYG{l+m+mi}{0}\PYG{p}{)} \PYG{o}{\PYGZam{}} \PYG{o}{\PYGZti{}}\PYG{p}{(}\PYG{l+m+mi}{1}\PYG{o}{\PYGZlt{}\PYGZlt{}}\PYG{l+m+mi}{2}\PYG{p}{));}	
+	\PYG{c+c1}{// enabling global interrupt}
+	\PYG{n}{sei}\PYG{p}{();}
+	\PYG{c+c1}{// SO ON TIME = max\PYGZus{}count / (F\PYGZus{}CPU / PRESCALAR)}
+	\PYG{c+c1}{// ON TIME = 0xFF / (16000000/8) = 128us}
+	\PYG{c+c1}{// since symmetric as toggling OFF TIME = 128us}
+	\PYG{c+c1}{// hence, we get a square wave of fequency 1 / 256us = 3.906kHz		 }
+\PYG{p}{\PYGZcb{}}
+\PYG{k+kt}{void} \PYG{n+nf}{Timer0\PYGZus{}asCounter}\PYG{p}{()}
+\PYG{p}{\PYGZob{}}
+	\PYG{c+cm}{/* TCNT0 starts from 0X00 goes upto 0XFF and restarts */}
+	\PYG{c+cm}{/* No possible use case as it just goes upto 0xFF and restarts */}
+	\PYG{c+c1}{// MOde of operation to Normal Mode \PYGZhy{}\PYGZhy{} WGM0[2:0] === 000}
+	\PYG{c+cm}{/* WGM0[2](bit3) from TCCR0B, WGM0[1](bit1)  from TCCR0A, }
+\PYG{c+cm}{	WGM0[0](bit0)  from TCCR0A*/}
+	\PYG{n}{TCCR0A} \PYG{o}{=} \PYG{n}{TCCR0A} \PYG{o}{\PYGZam{}} \PYG{p}{(}\PYG{o}{\PYGZti{}}\PYG{p}{(}\PYG{l+m+mi}{1}\PYG{o}{\PYGZlt{}\PYGZlt{}}\PYG{l+m+mi}{0}\PYG{p}{)} \PYG{o}{\PYGZam{}} \PYG{o}{\PYGZti{}}\PYG{p}{(}\PYG{l+m+mi}{1}\PYG{o}{\PYGZlt{}\PYGZlt{}}\PYG{l+m+mi}{1}\PYG{p}{));}
+	\PYG{n}{TCCR0B} \PYG{o}{=} \PYG{n}{TCCR0B} \PYG{o}{\PYGZam{}} \PYG{o}{\PYGZti{}}\PYG{p}{(}\PYG{l+m+mi}{1}\PYG{o}{\PYGZlt{}\PYGZlt{}}\PYG{l+m+mi}{3}\PYG{p}{);}		
+	\PYG{c+cm}{/* to count external event \PYGZhy{}we must connect source to T0 (PD4) */}
+	\PYG{c+c1}{// THE CLK IS CLOCKED FROM external source}
+	\PYG{c+c1}{// Falling edge of T0(PD4) \PYGZhy{}\PYGZhy{} CS0[2:0] === 110}
+	\PYG{c+c1}{// CS0[2](bit2) from TCCR0B,CS0[1](bit1) from TCCR0B,CS0[0](bit0) from TCCR0B}
+	\PYG{n}{TCCR0B} \PYG{o}{=} \PYG{n}{TCCR0B} \PYG{o}{|} \PYG{p}{(}\PYG{l+m+mi}{1}\PYG{o}{\PYGZlt{}\PYGZlt{}}\PYG{l+m+mi}{2}\PYG{p}{);}
+	\PYG{n}{TCCR0B} \PYG{o}{=} \PYG{n}{TCCR0B} \PYG{o}{|} \PYG{p}{(}\PYG{l+m+mi}{1}\PYG{o}{\PYGZlt{}\PYGZlt{}}\PYG{l+m+mi}{1}\PYG{p}{);}
+	\PYG{n}{TCCR0B} \PYG{o}{=} \PYG{n}{TCCR0B} \PYG{o}{\PYGZam{}} \PYG{o}{\PYGZti{}}\PYG{p}{(}\PYG{l+m+mi}{1}\PYG{o}{\PYGZlt{}\PYGZlt{}}\PYG{l+m+mi}{0}\PYG{p}{);}	
+\PYG{p}{\PYGZcb{}}
+\PYG{k+kt}{void} \PYG{n+nf}{Timer0\PYGZus{}asDelay}\PYG{p}{()}
+\PYG{p}{\PYGZob{}}
+	\PYG{c+cm}{/* TCNT0 starts from 0X00 goes upto 0XFF and restarts */}
+	\PYG{c+cm}{/* No possible use case as it just goes upto 0xFF and restarts */}
+	\PYG{c+c1}{// MOde of operation to Normal Mode \PYGZhy{}\PYGZhy{} WGM0[2:0] === 000}
+	\PYG{c+cm}{/* WGM0[2](bit3) from TCCR0B, WGM0[1](bit1)  from TCCR0A,}
+\PYG{c+cm}{	 WGM0[0](bit0)  from TCCR0A*/}
+	\PYG{n}{TCCR0A} \PYG{o}{=} \PYG{n}{TCCR0A} \PYG{o}{\PYGZam{}} \PYG{p}{(}\PYG{o}{\PYGZti{}}\PYG{p}{(}\PYG{l+m+mi}{1}\PYG{o}{\PYGZlt{}\PYGZlt{}}\PYG{l+m+mi}{0}\PYG{p}{)} \PYG{o}{\PYGZam{}} \PYG{o}{\PYGZti{}}\PYG{p}{(}\PYG{l+m+mi}{1}\PYG{o}{\PYGZlt{}\PYGZlt{}}\PYG{l+m+mi}{1}\PYG{p}{));}
+	\PYG{n}{TCCR0B} \PYG{o}{=} \PYG{n}{TCCR0B} \PYG{o}{\PYGZam{}} \PYG{o}{\PYGZti{}}\PYG{p}{(}\PYG{l+m+mi}{1}\PYG{o}{\PYGZlt{}\PYGZlt{}}\PYG{l+m+mi}{3}\PYG{p}{);}	
+	\PYG{c+cm}{/* What to do when timer reaches the MAX(0xFF) value */}
+	\PYG{c+c1}{// nothing should be done on OC0A for delay}
+	\PYG{c+c1}{// nothing  \PYGZhy{}\PYGZhy{} COM0A[1:0] === 00}
+	\PYG{c+c1}{// COM0A[1](bit7) from TCCR0A, COM0A[0](bit6) from TCCR0A}
+	\PYG{n}{TCCR0A} \PYG{o}{=} \PYG{n}{TCCR0A} \PYG{o}{\PYGZam{}} \PYG{o}{\PYGZti{}}\PYG{p}{(}\PYG{l+m+mi}{1}\PYG{o}{\PYGZlt{}\PYGZlt{}}\PYG{l+m+mi}{7}\PYG{p}{);}
+	\PYG{n}{TCCR0A} \PYG{o}{=} \PYG{n}{TCCR0A} \PYG{o}{\PYGZam{}} \PYG{o}{\PYGZti{}}\PYG{p}{(}\PYG{l+m+mi}{1}\PYG{o}{\PYGZlt{}\PYGZlt{}}\PYG{l+m+mi}{6}\PYG{p}{);}		
+	\PYG{c+cm}{/* The delay possible = 0xff / (F\PYGZus{}CPU/prescalar) */}
+	\PYG{c+c1}{// lowest delay = 0xff / (16000000 / 1) = 16us}
+	\PYG{c+c1}{// when prescalar == 8 \PYGZhy{}\PYGZhy{}\PYGZgt{} delay = 0xff / (16000000 / 8) = 128us}
+	\PYG{c+c1}{// when prescalar == 64 \PYGZhy{}\PYGZhy{}\PYGZgt{} delay = 0xff / (16000000 / 64) = 1.024ms}
+	\PYG{c+c1}{// when prescalar == 256 \PYGZhy{}\PYGZhy{}\PYGZgt{} delay = 0xff / (16000000 / 256) = 4.096ms}
+	\PYG{c+c1}{// highest delay possible = 0xff / (16000000 / 1024) = 16.38ms}
+	
+	\PYG{c+c1}{// start timer by setting the clock prescalar}
+	\PYG{c+c1}{// DIVIDE BY 8 use the same clock from I/O clock}
+	\PYG{c+c1}{// DIVIDE BY 8\PYGZhy{}\PYGZhy{} CS0[2:0] === 010}
+	\PYG{c+c1}{// CS0[2](bit2) from TCCR0B,CS0[1](bit1) from TCCR0B,CS0[0](bit0) from TCCR0B}
+	\PYG{n}{TCCR0B} \PYG{o}{=} \PYG{n}{TCCR0B} \PYG{o}{\PYGZam{}} \PYG{o}{\PYGZti{}}\PYG{p}{(}\PYG{l+m+mi}{1}\PYG{o}{\PYGZlt{}\PYGZlt{}}\PYG{l+m+mi}{0}\PYG{p}{);}
+	\PYG{n}{TCCR0B} \PYG{o}{=} \PYG{n}{TCCR0B} \PYG{o}{|} \PYG{p}{(}\PYG{l+m+mi}{1}\PYG{o}{\PYGZlt{}\PYGZlt{}}\PYG{l+m+mi}{1}\PYG{p}{);}
+	\PYG{n}{TCCR0B} \PYG{o}{=} \PYG{n}{TCCR0B} \PYG{o}{\PYGZam{}} \PYG{o}{\PYGZti{}}\PYG{p}{(}\PYG{l+m+mi}{1}\PYG{o}{\PYGZlt{}\PYGZlt{}}\PYG{l+m+mi}{2}\PYG{p}{);}	
+	\PYG{c+c1}{// actual delaying \PYGZhy{} wait until delay happens}
+	\PYG{k}{while}\PYG{p}{((}\PYG{n}{TIFR0} \PYG{o}{\PYGZam{}} \PYG{l+m+mh}{0x01}\PYG{p}{)} \PYG{o}{==} \PYG{l+m+mh}{0x00}\PYG{p}{);} \PYG{c+c1}{// checking overflow flag when overflow happns}
+	\PYG{c+c1}{// clearing the overflag so that we can further utilize}
+	\PYG{n}{TIFR0} \PYG{o}{=} \PYG{n}{TIFR0} \PYG{o}{|} \PYG{l+m+mh}{0x01}\PYG{p}{;}
+\PYG{p}{\PYGZcb{}}
+\PYG{k+kt}{int} \PYG{n+nf}{main}\PYG{p}{(}\PYG{k+kt}{void}\PYG{p}{)}
+\PYG{p}{\PYGZob{}}
+	\PYG{c+c1}{// making the PD5 and PD6 as output}
+	\PYG{n}{DDRD} \PYG{o}{=} \PYG{n}{DDRD} \PYG{o}{|} \PYG{p}{(}\PYG{l+m+mi}{1}\PYG{o}{\PYGZlt{}\PYGZlt{}}\PYG{l+m+mi}{6}\PYG{p}{)} \PYG{o}{|} \PYG{p}{(}\PYG{l+m+mi}{1}\PYG{o}{\PYGZlt{}\PYGZlt{}}\PYG{l+m+mi}{5}\PYG{p}{);}
+	\PYG{n}{DDRD} \PYG{o}{=} \PYG{n}{DDRD} \PYG{o}{\PYGZam{}} \PYG{o}{\PYGZti{}}\PYG{p}{(}\PYG{l+m+mi}{1}\PYG{o}{\PYGZlt{}\PYGZlt{}}\PYG{l+m+mi}{4}\PYG{p}{);}
+	\PYG{n}{DDRC} \PYG{o}{|=} \PYG{p}{(}\PYG{l+m+mi}{1}\PYG{o}{\PYGZlt{}\PYGZlt{}}\PYG{l+m+mi}{0}\PYG{p}{)} \PYG{o}{|} \PYG{p}{(}\PYG{l+m+mi}{1}\PYG{o}{\PYGZlt{}\PYGZlt{}}\PYG{l+m+mi}{1}\PYG{p}{);}
+	\PYG{n}{PORTC} \PYG{o}{\PYGZam{}=} \PYG{o}{\PYGZti{}}\PYG{p}{(}\PYG{l+m+mi}{1}\PYG{o}{\PYGZlt{}\PYGZlt{}}\PYG{l+m+mi}{0}\PYG{p}{);}
+	\PYG{c+c1}{// Timer0\PYGZus{}asTimer();}
+	\PYG{c+c1}{// Timer0\PYGZus{}asCounter();}
+	\PYG{k}{while}\PYG{p}{(}\PYG{l+m+mi}{1}\PYG{p}{)}
+	\PYG{p}{\PYGZob{}}
+		\PYG{n}{PORTC} \PYG{o}{\PYGZam{}=} \PYG{o}{\PYGZti{}}\PYG{p}{(}\PYG{l+m+mi}{1}\PYG{o}{\PYGZlt{}\PYGZlt{}}\PYG{l+m+mi}{0}\PYG{p}{);}
+		\PYG{n}{Timer0\PYGZus{}asDelay}\PYG{p}{();}
+		\PYG{n}{PORTC} \PYG{o}{|=} \PYG{p}{(}\PYG{l+m+mi}{1}\PYG{o}{\PYGZlt{}\PYGZlt{}}\PYG{l+m+mi}{0}\PYG{p}{);}
+		\PYG{n}{Timer0\PYGZus{}asDelay}\PYG{p}{();}
+	\PYG{p}{\PYGZcb{}}
+\PYG{p}{\PYGZcb{}}
+\PYG{n}{ISR}\PYG{p}{(}\PYG{n}{TIMER0\PYGZus{}OVF\PYGZus{}vect}\PYG{p}{)}
+\PYG{p}{\PYGZob{}}
+	\PYG{c+c1}{// toggle PC1 when overflows}
+	\PYG{n}{PINC} \PYG{o}{|=} \PYG{p}{(}\PYG{l+m+mi}{1}\PYG{o}{\PYGZlt{}\PYGZlt{}}\PYG{l+m+mi}{1}\PYG{p}{);}
+\PYG{p}{\PYGZcb{}}
+\end{Verbatim}

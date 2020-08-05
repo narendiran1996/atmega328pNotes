@@ -15,7 +15,7 @@ export programmerBaud="115200"
 export headerLoc="./HeaderFiles/."
 
 
-while getopts 'i:p:c:P:' OPTION; do
+while getopts 'i:p:c:P:I:b:' OPTION; do
   case "$OPTION" in
     i)
       avrFileName="$OPTARG"

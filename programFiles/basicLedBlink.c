@@ -4,14 +4,14 @@
 #include <util/delay.h>
 int main(void)
 {
-	DDRC |= (1<<0);
-	PORTC &= ~(1<<0);
+	DDRB |= (1<<5);
+	PORTB &= ~(1<<5);
 
     while(1)
     {
-		PORTC |= (1<<0);
-		_delay_ms(1000);
-		PORTC &= ~(1<<0);
-		_delay_ms(1000);
+		PORTB |= (1<<5);
+		_delay_ms(100);
+		PORTB &= ~(1<<5);
+		_delay_ms(100);
     }
 }
